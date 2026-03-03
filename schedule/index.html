@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Class Schedule — Oregon Jiu Jitsu Lab</title>
+    <meta
+      name="description"
+      content="View the full class schedule for Oregon Jiu Jitsu Lab. Adult BJJ, youth programs, and open mat times."
+    />
+    <meta property="og:title" content="Class Schedule — Oregon Jiu Jitsu Lab" />
+    <meta
+      property="og:description"
+      content="View the full class schedule for Oregon Jiu Jitsu Lab. Adult BJJ, youth programs, and open mat times."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header role="banner">
+      <!-- ojj-site-header (Phase 1) -->
+      <nav aria-label="Main">
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/schedule/" aria-current="page">Schedule</a>
+        <a href="/programs/">Programs</a>
+        <a href="/shop/">Shop</a>
+        <a href="/login/">Login</a>
+      </nav>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <h1>Class Schedule</h1>
+      <p>Live schedule loads below. <a href="/login/">Log in</a> to book classes.</p>
+      <!-- ojj-schedule-embed (Phase 3) -->
+    </main>
+
+    <footer role="contentinfo">
+      <p>&copy; <span id="year"></span> Oregon Jiu Jitsu Lab. All rights reserved.</p>
+    </footer>
+
+    <script type="module">
+      document.getElementById('year').textContent = new Date().getFullYear()
+    </script>
+    <script type="module" src="/src/components/index.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Member Login — Oregon Jiu Jitsu Lab</title>
+    <meta
+      name="description"
+      content="Access your Oregon Jiu Jitsu Lab member account to view your schedule, attendance, and billing."
+    />
+    <meta property="og:title" content="Member Login — Oregon Jiu Jitsu Lab" />
+    <meta
+      property="og:description"
+      content="Access your Oregon Jiu Jitsu Lab member account to view your schedule, attendance, and billing."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header role="banner">
+      <!-- ojj-site-header (Phase 1) -->
+      <nav aria-label="Main">
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/schedule/">Schedule</a>
+        <a href="/programs/">Programs</a>
+        <a href="/shop/">Shop</a>
+        <a href="/login/" aria-current="page">Login</a>
+      </nav>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <section aria-labelledby="login-heading">
+        <h1 id="login-heading">Member Login</h1>
+        <p>Access your schedule, attendance, and account through our member portal.</p>
+        <a
+          href="#"
+          id="gymdesk-login-link"
+          rel="noopener noreferrer"
+          target="_blank"
+          aria-describedby="login-external-notice"
+        >
+          Go to Member Portal
+        </a>
+        <p id="login-external-notice">
+          Opens GymDesk — our member management system. You will be redirected to an external site.
+        </p>
+      </section>
+    </main>
+
+    <footer role="contentinfo">
+      <p>&copy; <span id="year"></span> Oregon Jiu Jitsu Lab. All rights reserved.</p>
+    </footer>
+
+    <script type="module">
+      document.getElementById('year').textContent = new Date().getFullYear()
+      // GymDesk login URL is injected at build time via environment variable.
+      // In development, the link renders as a placeholder (#).
+      const loginUrl = import.meta.env.VITE_GYMDESK_LOGIN_URL
+      if (loginUrl) {
+        document.getElementById('gymdesk-login-link').href = loginUrl
+      }
+    </script>
+    <script type="module" src="/src/components/index.ts"></script>
+  </body>
+</html>

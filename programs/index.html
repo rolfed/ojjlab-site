@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Programs — Oregon Jiu Jitsu Lab</title>
+    <meta
+      name="description"
+      content="Explore BJJ programs at Oregon Jiu Jitsu Lab: adult Brazilian Jiu Jitsu, youth BJJ, and competition team training."
+    />
+    <meta property="og:title" content="Programs — Oregon Jiu Jitsu Lab" />
+    <meta
+      property="og:description"
+      content="Explore BJJ programs at Oregon Jiu Jitsu Lab: adult Brazilian Jiu Jitsu, youth BJJ, and competition team training."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header role="banner">
+      <!-- ojj-site-header (Phase 1) -->
+      <nav aria-label="Main">
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/schedule/">Schedule</a>
+        <a href="/programs/" aria-current="page">Programs</a>
+        <a href="/shop/">Shop</a>
+        <a href="/login/">Login</a>
+      </nav>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <h1>Programs</h1>
+
+      <section aria-labelledby="adult-bjj">
+        <h2 id="adult-bjj">Adult Brazilian Jiu Jitsu</h2>
+        <p>All levels welcome. No experience necessary.</p>
+      </section>
+
+      <section aria-labelledby="youth-bjj">
+        <h2 id="youth-bjj">Youth BJJ</h2>
+        <p>Structured curriculum for children and teenagers.</p>
+      </section>
+
+      <section aria-labelledby="competition-team">
+        <h2 id="competition-team">Competition Team</h2>
+        <p>Advanced training for competitors.</p>
+      </section>
+
+      <a href="/schedule/">View Schedule</a>
+    </main>
+
+    <footer role="contentinfo">
+      <p>&copy; <span id="year"></span> Oregon Jiu Jitsu Lab. All rights reserved.</p>
+    </footer>
+
+    <script type="module">
+      document.getElementById('year').textContent = new Date().getFullYear()
+    </script>
+    <script type="module" src="/src/components/index.ts"></script>
+  </body>
+</html>

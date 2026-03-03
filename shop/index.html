@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop — Oregon Jiu Jitsu Lab</title>
+    <meta
+      name="description"
+      content="Oregon Jiu Jitsu Lab gear, apparel, and training equipment."
+    />
+    <meta property="og:title" content="Shop — Oregon Jiu Jitsu Lab" />
+    <meta
+      property="og:description"
+      content="Oregon Jiu Jitsu Lab gear, apparel, and training equipment."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header role="banner">
+      <!-- ojj-site-header (Phase 1) -->
+      <nav aria-label="Main">
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/schedule/">Schedule</a>
+        <a href="/programs/">Programs</a>
+        <a href="/shop/" aria-current="page">Shop</a>
+        <a href="/login/">Login</a>
+      </nav>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <h1>Shop</h1>
+      <p>OJJ Lab gear and apparel coming soon.</p>
+      <a href="/">Back to Home</a>
+    </main>
+
+    <footer role="contentinfo">
+      <p>&copy; <span id="year"></span> Oregon Jiu Jitsu Lab. All rights reserved.</p>
+    </footer>
+
+    <script type="module">
+      document.getElementById('year').textContent = new Date().getFullYear()
+    </script>
+    <script type="module" src="/src/components/index.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page Not Found — Oregon Jiu Jitsu Lab</title>
+    <meta name="description" content="The page you're looking for doesn't exist." />
+    <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header role="banner">
+      <nav aria-label="Main">
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/schedule/">Schedule</a>
+        <a href="/programs/">Programs</a>
+        <a href="/shop/">Shop</a>
+        <a href="/login/">Login</a>
+      </nav>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <h1>Page Not Found</h1>
+      <p>That page doesn't exist.</p>
+      <a href="/">Go to Home</a>
+    </main>
+
+    <footer role="contentinfo">
+      <p>&copy; <span id="year"></span> Oregon Jiu Jitsu Lab. All rights reserved.</p>
+    </footer>
+
+    <script type="module">
+      document.getElementById('year').textContent = new Date().getFullYear()
+    </script>
+  </body>
+</html>
