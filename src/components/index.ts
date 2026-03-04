@@ -1,15 +1,25 @@
 /**
  * Component registry — imports and registers all custom elements.
- * Import this file as the main script entry point in each HTML page.
- *
- * Add new component registrations here as they are built.
- * Phase 0: No components registered yet — BaseElement is abstract.
+ * Imported by src/main.ts which is the shared entry point for all pages.
  */
 
-// Phase 1 components will be registered here:
-// import './primitives/OJJButton'
-// import './primitives/OJJIcon'
-// import './layout/OJJSiteHeader'
-// import './layout/OJJNavDrawer'
-// import './layout/OJJSiteFooter'
-// import './layout/OJJPageHero'
+// Primitives
+import './primitives/OJJIcon'
+import './primitives/OJJButton'
+import './primitives/OJJBadge'
+
+// Layout
+import './layout/OJJNav'
+import './layout/OJJNavDrawer'
+import './layout/OJJSiteHeader'
+import './layout/OJJSiteFooter'
+import './layout/OJJPageHero'
+
+// Modules
+import './modules/OJJMarquee'
+import './modules/OJJProgramsSection'
+import './modules/OJJProgramCard'
+import './modules/OJJStatsBar'
+import './modules/OJJInstructorCard'
+import './modules/OJJTestimonial'
+import './modules/OJJTrialForm'

@@ -16,34 +16,226 @@
     <meta property="og:type" content="website" />
     <link rel="stylesheet" href="/src/styles/main.css" />
   </head>
-  <body>
+  <body class="bg-brand-primary text-neutral-100">
     <a class="skip-link" href="#main-content">Skip to main content</a>
 
-    <header role="banner">
-      <!-- ojj-site-header (Phase 1) -->
-      <nav aria-label="Main">
-        <a href="/" aria-current="page">Home</a>
-        <a href="/about/">About</a>
-        <a href="/schedule/">Schedule</a>
-        <a href="/programs/">Programs</a>
-        <a href="/shop/">Shop</a>
-        <a href="/login/">Login</a>
-      </nav>
-    </header>
+    <!-- Site Header -->
+    <ojj-site-header current-page="/" transparent></ojj-site-header>
 
     <main id="main-content" tabindex="-1">
-      <h1>Oregon Jiu Jitsu Lab</h1>
-      <p>Brazilian Jiu Jitsu training for adults and youth in Oregon.</p>
-      <a href="/schedule/">View Schedule</a>
+
+      <!-- 1. Hero -->
+      <ojj-page-hero
+        headline="Train. Submit. Repeat."
+        subheadline="Brazilian Jiu Jitsu for adults, youth, and competitors in Oregon. All levels welcome — your first class is on us."
+        cta-label="Book a Free Trial"
+        cta-href="/schedule/"
+      ></ojj-page-hero>
+
+      <!-- 2. Marquee Strip -->
+      <ojj-marquee></ojj-marquee>
+
+      <!-- 3. Programs (Pinned Horizontal Scroll on desktop) -->
+      <section class="bg-neutral-950 py-4">
+        <ojj-programs-section></ojj-programs-section>
+      </section>
+
+      <!-- 4. Why OJJ -->
+      <section
+        aria-labelledby="why-heading"
+        class="bg-brand-primary py-20"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+            <!-- Text column -->
+            <div>
+              <h2
+                id="why-heading"
+                data-why-heading
+                class="font-heading text-3xl sm:text-4xl font-black text-white mb-6"
+              >
+                Why Oregon Jiu Jitsu Lab?
+              </h2>
+              <ul class="space-y-4" data-why-list>
+                <li class="flex gap-3">
+                  <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                  <div>
+                    <strong class="text-white block mb-0.5">Structured curriculum</strong>
+                    <span class="text-neutral-400 text-sm">A clear path from white belt to black belt — no guesswork.</span>
+                  </div>
+                </li>
+                <li class="flex gap-3">
+                  <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                  <div>
+                    <strong class="text-white block mb-0.5">World-class instruction</strong>
+                    <span class="text-neutral-400 text-sm">Learn from black belts with competition and teaching experience.</span>
+                  </div>
+                </li>
+                <li class="flex gap-3">
+                  <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                  <div>
+                    <strong class="text-white block mb-0.5">Welcoming community</strong>
+                    <span class="text-neutral-400 text-sm">Ego-free training environment where everyone helps each other improve.</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Image column (placeholder) -->
+            <div
+              class="relative aspect-square lg:aspect-auto lg:h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-neutral-800 to-neutral-950 flex items-center justify-center"
+              aria-hidden="true"
+            >
+              <span class="text-neutral-600 text-6xl font-black">OJJ</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats Bar -->
+      <ojj-stats-bar></ojj-stats-bar>
+
+      <!-- 5. Instructors -->
+      <section
+        aria-labelledby="instructors-heading"
+        class="bg-neutral-950 py-20"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-12">
+            <h2
+              id="instructors-heading"
+              data-instructors-heading
+              class="font-heading text-3xl sm:text-4xl font-black text-white mb-4"
+            >
+              Meet Your Instructors
+            </h2>
+            <p class="text-neutral-400 text-lg">
+              Experienced black belts dedicated to your development on and off the mat.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" data-instructors-grid>
+            <ojj-instructor-card
+              name="Coach Alex Rivera"
+              belt="black"
+              title="Head Instructor"
+              bio="3rd degree black belt with 15+ years of competitive and coaching experience. IBJJF World Champion 2018."
+            ></ojj-instructor-card>
+
+            <ojj-instructor-card
+              name="Coach Maria Santos"
+              belt="black"
+              title="Women's Program Lead"
+              bio="2nd degree black belt and 3× Pan American Champion. Passionate about creating safe, empowering training spaces for women."
+            ></ojj-instructor-card>
+
+            <ojj-instructor-card
+              name="Coach Jordan Lee"
+              belt="brown"
+              title="Youth Program Director"
+              bio="Brown belt with a background in youth athletics coaching. Specialises in age-appropriate curriculum and positive reinforcement."
+            ></ojj-instructor-card>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Testimonials -->
+      <section
+        aria-labelledby="testimonials-heading"
+        class="bg-brand-primary py-20"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-12">
+            <h2
+              id="testimonials-heading"
+              class="font-heading text-3xl sm:text-4xl font-black text-white mb-4"
+            >
+              What Our Students Say
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6" data-testimonials-grid>
+            <ojj-testimonial
+              quote="I walked in nervous and knowing nothing. Within two weeks I felt like part of a family. The coaching is world-class and the vibe is zero ego."
+              author="Tyler M."
+              belt="White Belt"
+            ></ojj-testimonial>
+
+            <ojj-testimonial
+              quote="The women's class completely changed my relationship with fitness and self-confidence. Coach Maria is an incredible teacher. 10/10 would recommend to any woman."
+              author="Priya K."
+              belt="Blue Belt"
+            ></ojj-testimonial>
+
+            <ojj-testimonial
+              quote="My son started at 7 and is now 10. His confidence, focus, and discipline have transformed. Coach Jordan is amazing with kids."
+              author="David C."
+              belt="Parent"
+            ></ojj-testimonial>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. Trial Class CTA -->
+      <section
+        aria-labelledby="trial-heading"
+        class="bg-neutral-950 py-20"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2
+            id="trial-heading"
+            data-trial-heading
+            class="font-heading text-3xl sm:text-4xl font-black text-white mb-4"
+          >
+            Your First Class is Free
+          </h2>
+          <p
+            data-trial-sub
+            class="text-neutral-400 text-lg max-w-xl mx-auto mb-10"
+          >
+            No experience needed. No contract. Just show up, learn, and see if BJJ is for you.
+          </p>
+
+          <ojj-trial-form data-trial-form></ojj-trial-form>
+        </div>
+      </section>
+
     </main>
 
-    <footer role="contentinfo">
-      <p>&copy; <span id="year"></span> Oregon Jiu Jitsu Lab. All rights reserved.</p>
-    </footer>
+    <!-- Site Footer -->
+    <ojj-site-footer></ojj-site-footer>
 
+    <!-- Shared entry: registers GSAP plugins + all components -->
+    <script type="module" src="/src/main.ts"></script>
+
+    <!-- Page-level scroll animations (Why OJJ, Instructors, Testimonials, Trial CTA) -->
     <script type="module">
-      document.getElementById('year').textContent = new Date().getFullYear()
+      import { scrollReveal } from '/src/animations/animate.ts'
+
+      // Why OJJ section
+      const whyHeading = document.querySelector('[data-why-heading]')
+      const whyItems = document.querySelectorAll('[data-why-list] li')
+      if (whyHeading) scrollReveal(whyHeading, 'fadeUp')
+      if (whyItems.length) scrollReveal(whyItems, 'stagger')
+
+      // Instructors
+      const instructorsHeading = document.querySelector('[data-instructors-heading]')
+      const instructorCards = document.querySelectorAll('[data-instructors-grid] ojj-instructor-card')
+      if (instructorsHeading) scrollReveal(instructorsHeading, 'fadeUp')
+      if (instructorCards.length) scrollReveal(instructorCards, 'stagger')
+
+      // Testimonials
+      const testimonials = document.querySelectorAll('[data-testimonials-grid] ojj-testimonial')
+      if (testimonials.length) scrollReveal(testimonials, 'stagger')
+
+      // Trial CTA
+      const trialHeading = document.querySelector('[data-trial-heading]')
+      const trialSub = document.querySelector('[data-trial-sub]')
+      const trialForm = document.querySelector('[data-trial-form]')
+      if (trialHeading) scrollReveal(trialHeading, 'fadeUp')
+      if (trialSub) scrollReveal(trialSub, 'fadeUp', { delay: 0.1 })
+      if (trialForm) scrollReveal(trialForm, 'fadeUp', { delay: 0.2 })
     </script>
-    <script type="module" src="/src/components/index.ts"></script>
   </body>
 </html>
