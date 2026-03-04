@@ -73,6 +73,60 @@ Every page contains:
 
 ---
 
+## Mobile-First Design Mandate
+
+**All UI is designed and built mobile-first. No exceptions.**
+
+### What this means in practice
+
+- **Tailwind:** Start with base (mobile) utilities. Layer `sm:`, `md:`, `lg:` breakpoints to progressively enhance for larger screens. Never write desktop styles first and override down.
+- **Layout:** Every component must be fully functional and visually complete at 375px width before any responsive breakpoints are added.
+- **Touch targets:** All interactive elements minimum 44×44px (WCAG 2.5.5). Use `min-h-11 min-w-11` as a floor.
+- **Spacing:** Mobile padding baseline is `px-4` (1rem). Scale up with `sm:px-6 lg:px-8`.
+- **Typography:** Mobile base sizes are the design truth. Desktop sizes scale up, never down.
+- **Animations:** Scrub-based effects (parallax, pinHorizontal) are disabled below 768px — content falls back to natural document flow. All other animations are designed to look correct on mobile first.
+- **Navigation:** Mobile drawer is the primary navigation pattern. Desktop nav is an enhancement.
+
+### Self-check before any PR
+
+Before committing UI changes, verify at these viewports:
+1. **375px** (iPhone SE / minimum supported)
+2. **390px** (iPhone 14)
+3. **768px** (tablet breakpoint)
+4. **1280px** (desktop)
+
+### UX Best Practice Self-Review Checklist
+
+Apply this checklist to every section and component before marking work done:
+
+**Layout & Spacing**
+- [ ] Consistent vertical rhythm — sections use uniform padding (`py-20` or deliberate deviation)
+- [ ] Heading-to-content gap is uniform across sections
+- [ ] No orphaned headings (heading immediately followed by content, no floating gaps)
+
+**Typography**
+- [ ] Headlines ≤ 8 words (per copy rules)
+- [ ] Line length 60–80 chars max on desktop (`max-w-2xl` or `max-w-prose`)
+- [ ] Sufficient contrast (4.5:1 for body, 3:1 for large text)
+
+**Interaction**
+- [ ] All interactive elements have visible focus states
+- [ ] Tap targets ≥ 44×44px on mobile
+- [ ] Hover states exist for all clickable elements
+- [ ] No interactive element relies on color alone for state
+
+**Content hierarchy**
+- [ ] One primary CTA per section (never two competing CTAs at equal weight)
+- [ ] Visual hierarchy matches reading order (h1 → h2 → body)
+- [ ] No dead ends — every terminal section links forward
+
+**Performance signals**
+- [ ] Images have explicit width/height (prevent CLS)
+- [ ] LCP element has `fetchpriority="high"` or is inline
+- [ ] No layout-shifting elements on load
+
+---
+
 ## 2026 UX Best Practices Applied
 
 **Applied patterns:**

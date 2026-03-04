@@ -11,6 +11,14 @@
 - Components expose a minimal, documented API — no surprise behaviors
 - Every component is independently testable in isolation
 
+## Mobile-First Component Rules
+
+- **Base styles target 375px.** Every component must be complete and usable at minimum mobile width before any `sm:` / `md:` / `lg:` breakpoints are added.
+- **Tailwind breakpoint order is always min-width ascending:** `base → sm: → md: → lg: → xl:`
+- **Touch targets:** All interactive elements (`button`, `a`, inputs) must be at minimum `min-h-11` (44px) tall. Use padding to achieve this — never shrink the target.
+- **Scrub animations (parallax, pinHorizontal) are mobile-disabled** — `isMobile()` guard in `animate.ts` returns `null` below 768px. Components that use these must render usable content without them.
+- **Mobile layout is the canonical layout.** Desktop is a progressive enhancement.
+
 ---
 
 ## Naming Conventions

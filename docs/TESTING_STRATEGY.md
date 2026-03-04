@@ -89,6 +89,44 @@ Integration tests cover **component interactions within a rendered page fragment
 
 ---
 
+## Playwright MCP (In-Session Browser Testing)
+
+The Playwright MCP server is configured in Claude Code settings. It provides live browser tools during development:
+
+```
+browser_navigate    — load a URL (e.g. http://localhost:5173)
+browser_screenshot  — capture current viewport as image
+browser_snapshot    — accessibility tree snapshot (faster than screenshot for logic checks)
+browser_click       — interact with elements
+browser_resize      — switch between mobile/desktop viewports
+```
+
+### Standard self-test workflow
+
+After completing any UI change, before committing:
+
+```
+1. pnpm dev                          (in terminal)
+2. browser_navigate http://localhost:5173
+3. browser_resize 375 812            (iPhone SE — mobile-first check)
+4. browser_screenshot                (inspect layout)
+5. browser_resize 1280 800           (desktop check)
+6. browser_screenshot
+7. Verify UX checklist from UX_STRATEGY.md
+8. Run axe via Playwright if structural changes made
+```
+
+### Mobile viewport sizes used for self-testing
+
+| Label      | Width | Height | Breakpoint |
+|------------|-------|--------|------------|
+| iPhone SE  | 375   | 667    | base       |
+| iPhone 14  | 390   | 844    | base       |
+| Tablet     | 768   | 1024   | sm         |
+| Desktop    | 1280  | 800    | lg         |
+
+---
+
 ## Playwright Setup Structure
 
 ```
