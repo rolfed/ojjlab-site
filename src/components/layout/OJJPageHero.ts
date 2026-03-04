@@ -75,13 +75,6 @@ export class OJJPageHero extends AnimatableMixin(BaseElement) {
           </div>
         </div>
 
-        <!-- Scroll indicator -->
-        <div
-          class="absolute bottom-8 left-1/2 -translate-x-1/2 text-neutral-400 animate-bounce"
-          aria-hidden="true"
-        >
-          <ojj-icon name="chevron-right" size="24" style="transform: rotate(90deg)"></ojj-icon>
-        </div>
       </section>
     `
   }
