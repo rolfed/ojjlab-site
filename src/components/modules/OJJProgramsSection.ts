@@ -62,7 +62,7 @@ export class OJJProgramsSection extends AnimatableMixin(BaseElement) {
 
     this.innerHTML = `
       <section aria-labelledby="programs-heading" class="relative" data-container>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="text-center mb-12">
             <h2
               id="programs-heading"
