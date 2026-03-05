@@ -82,6 +82,12 @@
     font-weight: 700;
   }
 
+  body {
+    /* clip (not hidden) — clips overflow visually without creating a scroll container,
+       so GSAP ScrollTrigger can still use window as the scroller. */
+    overflow-x: clip;
+  }
+
   img,
   video {
     max-width: 100%;
@@ -98,6 +104,18 @@
   /* Remove focus ring for mouse users */
   :focus:not(:focus-visible) {
     outline: none;
+  }
+
+  /* Custom elements default to display:inline — layout components must be block */
+  ojj-programs-section,
+  ojj-instructors-section,
+  ojj-stats-bar,
+  ojj-marquee,
+  ojj-trial-form,
+  ojj-site-footer,
+  ojj-site-header,
+  ojj-page-hero {
+    display: block;
   }
 }
 

@@ -1,5 +1,5 @@
 /**
- * ojj-programs-section — 4-card programs carousel.
+ * ojj-instructors-section — instructor carousel / grid.
  *
  * Desktop (≥768px): pinned viewport with GSAP scroll, heading fades, cards scale at center.
  * Mobile (<768px): vertical stagger grid.
@@ -9,63 +9,48 @@ import { AnimatableMixin } from '../../animations/mixin'
 import { BaseElement } from '../base/BaseElement'
 import { isMobile } from '../../animations/animate'
 
-const PROGRAMS = [
+const INSTRUCTORS = [
   {
-    title: 'Adult BJJ',
-    badge: 'Adults',
-    description:
-      'Comprehensive BJJ curriculum for adults of all experience levels. Learn takedowns, guard passing, submissions, and competition strategy in a structured environment.',
-    ctaHref: '/programs/#adult',
-    accentColor: '#1a1a2e',
+    name: 'Coach Alex Rivera',
+    belt: 'black',
+    title: 'Head Instructor',
+    bio: '3rd degree black belt with 15+ years of competitive and coaching experience. IBJJF World Champion 2018.',
   },
   {
-    title: 'Youth BJJ',
-    badge: 'Youth',
-    description:
-      'Fun, safe, and structured BJJ training for kids ages 5–15. We build confidence, discipline, and self-defense skills through age-appropriate drilling and positional sparring.',
-    ctaHref: '/programs/#youth',
-    accentColor: '#0f3460',
+    name: 'Coach Maria Santos',
+    belt: 'black',
+    title: "Women's Program Lead",
+    bio: '2nd degree black belt and 3× Pan American Champion. Passionate about creating safe, empowering training spaces for women.',
   },
   {
-    title: 'Jiu Jitsu 101',
-    badge: 'Beginners',
-    description:
-      'No experience? No problem. Jiu Jitsu 101 breaks down the fundamentals in a structured, beginner-only environment — perfect for your first month on the mat.',
-    ctaHref: '/programs/#101',
-    accentColor: '#0d3b2e',
-  },
-  {
-    title: 'Competition Team',
-    badge: 'Competition',
-    description:
-      'Intensive training for athletes who want to compete. Covers tournament strategy, advanced techniques, and match preparation under experienced coaching.',
-    ctaHref: '/programs/#competition',
-    accentColor: '#4a0e0e',
+    name: 'Coach Jordan Lee',
+    belt: 'brown',
+    title: 'Youth Program Director',
+    bio: 'Brown belt with a background in youth athletics coaching. Specialises in age-appropriate curriculum and positive reinforcement.',
   },
 ]
 
-function renderCard(program: (typeof PROGRAMS)[number]): string {
-  const { title, badge, description, ctaHref, accentColor } = program
+function renderCard(instructor: (typeof INSTRUCTORS)[number]): string {
+  const { name, belt, title, bio } = instructor
   return `
     <div class="flex-shrink-0 w-72 lg:w-80">
-      <ojj-program-card
+      <ojj-instructor-card
+        name="${name}"
+        belt="${belt}"
         title="${title}"
-        badge="${badge}"
-        description="${description}"
-        cta-href="${ctaHref}"
-        accent-color="${accentColor}"
-      ></ojj-program-card>
+        bio="${bio}"
+      ></ojj-instructor-card>
     </div>
   `
 }
 
-export class OJJProgramsSection extends AnimatableMixin(BaseElement) {
+export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
   protected render(): void {
-    const cards = PROGRAMS.map(renderCard).join('')
+    const cards = INSTRUCTORS.map(renderCard).join('')
 
     this.innerHTML = `
-      <section aria-label="Programs for Every Level"
-               class="relative bg-neutral-950"
+      <section aria-label="Meet Your Instructors"
+               class="relative bg-brand-primary"
                data-carousel-section>
 
         <!-- Desktop: absolute heading overlay — centred, fades on scroll -->
@@ -74,10 +59,10 @@ export class OJJProgramsSection extends AnimatableMixin(BaseElement) {
              data-heading-block>
           <h2 data-heading
               class="font-heading text-5xl lg:text-7xl font-black text-white leading-none mb-4">
-            Programs for Every Level
+            Meet Your Instructors
           </h2>
           <p data-sub class="text-neutral-400 text-lg">
-            From your first class to your first gold medal.
+            Black belts dedicated to your development on and off the mat.
           </p>
           <p data-scroll-hint class="mt-6 text-sm text-neutral-500 flex items-center justify-center gap-2">
             Scroll to explore
@@ -92,11 +77,11 @@ export class OJJProgramsSection extends AnimatableMixin(BaseElement) {
 
         <!-- Mobile: standard vertical layout -->
         <div class="md:hidden px-4 py-16">
-          <h2 id="programs-heading" class="font-heading text-3xl font-black text-white mb-2">
-            Programs for Every Level
+          <h2 id="instructors-heading" class="font-heading text-3xl font-black text-white mb-2">
+            Meet Your Instructors
           </h2>
-          <p class="text-neutral-400 mb-8">From your first class to your first gold medal.</p>
-          <div data-mobile-cards class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <p class="text-neutral-400 mb-8">Black belts dedicated to your development.</p>
+          <div data-mobile-cards class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
             ${cards}
           </div>
         </div>
@@ -124,4 +109,4 @@ export class OJJProgramsSection extends AnimatableMixin(BaseElement) {
   }
 }
 
-customElements.define('ojj-programs-section', OJJProgramsSection)
+customElements.define('ojj-instructors-section', OJJInstructorsSection)
