@@ -1,8 +1,8 @@
 /**
- * ojj-programs-section — 4-card programs carousel.
+ * ojj-programs-section — 4-card programs section.
  *
- * Desktop (≥768px): pinned viewport with GSAP scroll, heading fades, cards scale at center.
- * Mobile (<768px): vertical stagger grid.
+ * Desktop: pinned horizontal scroll via pinHorizontal().
+ * Mobile: vertical stagger grid (pinHorizontal returns null, CSS takes over).
  */
 
 import { AnimatableMixin } from '../../animations/mixin'
@@ -27,12 +27,12 @@ const PROGRAMS = [
     accentColor: '#0f3460',
   },
   {
-    title: 'Jiu Jitsu 101',
-    badge: 'Beginners',
+    title: "Women's BJJ",
+    badge: "Women's",
     description:
-      'No experience? No problem. Jiu Jitsu 101 breaks down the fundamentals in a structured, beginner-only environment — perfect for your first month on the mat.',
-    ctaHref: '/programs/#101',
-    accentColor: '#0d3b2e',
+      'A dedicated women-only class creating a supportive, welcoming space to learn BJJ. All levels welcome — no prior experience necessary.',
+    ctaHref: '/programs/#womens',
+    accentColor: '#2d1b4e',
   },
   {
     title: 'Competition Team',
@@ -44,83 +44,70 @@ const PROGRAMS = [
   },
 ]
 
-function renderCard(program: (typeof PROGRAMS)[number]): string {
-  const { title, badge, description, ctaHref, accentColor } = program
-  return `
-    <div class="flex-shrink-0 w-72 lg:w-80">
-      <ojj-program-card
-        title="${title}"
-        badge="${badge}"
-        description="${description}"
-        cta-href="${ctaHref}"
-        accent-color="${accentColor}"
-      ></ojj-program-card>
-    </div>
-  `
-}
-
 export class OJJProgramsSection extends AnimatableMixin(BaseElement) {
   protected render(): void {
-    const cards = PROGRAMS.map(renderCard).join('')
+    const cards = PROGRAMS.map(
+      ({ title, badge, description, ctaHref, accentColor }) => `
+        <div class="flex-shrink-0 w-80 md:w-96">
+          <ojj-program-card
+            title="${title}"
+            badge="${badge}"
+            description="${description}"
+            cta-href="${ctaHref}"
+            accent-color="${accentColor}"
+          ></ojj-program-card>
+        </div>
+      `
+    ).join('')
 
     this.innerHTML = `
-      <section aria-label="Programs for Every Level"
-               class="relative bg-neutral-950"
-               data-carousel-section>
-
-        <!-- Desktop: absolute heading overlay — centred, fades on scroll -->
-        <div class="hidden md:flex absolute inset-0 flex-col items-center justify-center
-                    z-10 pointer-events-none text-center"
-             data-heading-block>
-          <h2 data-heading
-              class="font-heading text-5xl lg:text-7xl font-black text-white leading-none mb-4">
-            Programs for Every Level
-          </h2>
-          <p data-sub class="text-neutral-400 text-lg">
-            From your first class to your first gold medal.
-          </p>
-          <p data-scroll-hint class="mt-6 text-sm text-neutral-500 flex items-center justify-center gap-2">
-            Scroll to explore
-            <ojj-icon name="arrow-right" size="14" aria-hidden="true"></ojj-icon>
-          </p>
+      <section aria-labelledby="programs-heading" class="relative" data-container>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div class="text-center mb-12">
+            <h2
+              id="programs-heading"
+              data-animate="heading"
+              class="font-heading text-3xl sm:text-4xl font-black text-white mb-4"
+            >
+              Programs for Every Level
+            </h2>
+            <p data-animate="sub" class="text-neutral-400 text-lg max-w-2xl mx-auto">
+              From your first class to your first gold medal — we have a program designed for you.
+            </p>
+          </div>
         </div>
 
-        <!-- Desktop: horizontal carousel track -->
-        <div class="hidden md:flex items-center h-screen will-change-transform" data-track>
-          ${cards}
-        </div>
-
-        <!-- Mobile: standard vertical layout -->
-        <div class="md:hidden px-4 py-16">
-          <h2 id="programs-heading" class="font-heading text-3xl font-black text-white mb-2">
-            Programs for Every Level
-          </h2>
-          <p class="text-neutral-400 mb-8">From your first class to your first gold medal.</p>
-          <div data-mobile-cards class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <!-- Horizontal scroll track (desktop: pinned, mobile: hidden — cards below shown instead) -->
+        <div class="hidden md:block" data-pin-wrapper>
+          <div data-track class="flex gap-6 px-8 pb-8 will-change-transform" style="width: max-content">
             ${cards}
           </div>
         </div>
 
+        <!-- Mobile: vertical grid -->
+        <div class="md:hidden px-4 pb-16">
+          <div data-mobile-cards class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            ${cards}
+          </div>
+        </div>
       </section>
     `
   }
 
   protected override bindEvents(): void {
-    const section = this.querySelector<HTMLElement>('[data-carousel-section]')
-    const track = this.querySelector<HTMLElement>('[data-track]')
-    const heading = this.querySelector<HTMLElement>('[data-heading]')
-    const sub = this.querySelector<HTMLElement>('[data-sub]')
-    const cardWrappers = Array.from(this.querySelectorAll<HTMLElement>('[data-track] > div'))
+    const heading = this.querySelector<HTMLElement>('[data-animate="heading"]')
+    const sub = this.querySelector<HTMLElement>('[data-animate="sub"]')
 
-    // Only stagger-reveal the mobile grid when actually on mobile — the elements
-    // are always in the DOM (hidden md:flex hides them via CSS), so without this
-    // guard we'd register live ScrollTriggers against invisible desktop elements.
-    if (isMobile()) {
+    this.scrollReveal([heading, sub].filter((el): el is HTMLElement => el !== null), 'stagger')
+
+    if (!isMobile()) {
+      const container = this.querySelector<HTMLElement>('[data-pin-wrapper]')
+      const track = this.querySelector<HTMLElement>('[data-track]')
+      this.pinHorizontal(container, track)
+    } else {
       const mobileCards = this.querySelectorAll<HTMLElement>('[data-mobile-cards] > div')
-      if (mobileCards.length) this.scrollReveal(mobileCards, 'stagger')
+      this.scrollReveal(mobileCards, 'stagger')
     }
-
-    this.pinnedCardCarousel(section, track, heading, sub, cardWrappers)
   }
 }
 

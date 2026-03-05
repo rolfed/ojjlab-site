@@ -97,27 +97,48 @@
       <ojj-stats-bar></ojj-stats-bar>
 
       <!-- 5. Instructors -->
-      <!-- Static fallback renders without JS; component replaces on connect -->
-      <ojj-instructors-section>
-        <section aria-label="Meet Your Instructors" class="bg-brand-primary py-20">
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="font-heading text-3xl sm:text-4xl font-black text-white mb-4 text-center">
+      <section
+        aria-labelledby="instructors-heading"
+        class="bg-neutral-950 py-20"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-12">
+            <h2
+              id="instructors-heading"
+              data-instructors-heading
+              class="font-heading text-3xl sm:text-4xl font-black text-white mb-4"
+            >
               Meet Your Instructors
             </h2>
-            <p class="text-neutral-400 text-center mb-12">
-              Black belts dedicated to your development on and off the mat.
+            <p class="text-neutral-400 text-lg">
+              Experienced black belts dedicated to your development on and off the mat.
             </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              <ojj-instructor-card name="Coach Alex Rivera" belt="black" title="Head Instructor"
-                bio="3rd degree black belt with 15+ years of competitive and coaching experience. IBJJF World Champion 2018."></ojj-instructor-card>
-              <ojj-instructor-card name="Coach Maria Santos" belt="black" title="Women's Program Lead"
-                bio="2nd degree black belt and 3× Pan American Champion. Passionate about creating safe, empowering training spaces for women."></ojj-instructor-card>
-              <ojj-instructor-card name="Coach Jordan Lee" belt="brown" title="Youth Program Director"
-                bio="Brown belt with a background in youth athletics coaching. Specialises in age-appropriate curriculum and positive reinforcement."></ojj-instructor-card>
-            </div>
           </div>
-        </section>
-      </ojj-instructors-section>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" data-instructors-grid>
+            <ojj-instructor-card
+              name="Coach Alex Rivera"
+              belt="black"
+              title="Head Instructor"
+              bio="3rd degree black belt with 15+ years of competitive and coaching experience. IBJJF World Champion 2018."
+            ></ojj-instructor-card>
+
+            <ojj-instructor-card
+              name="Coach Maria Santos"
+              belt="black"
+              title="Women's Program Lead"
+              bio="2nd degree black belt and 3× Pan American Champion. Passionate about creating safe, empowering training spaces for women."
+            ></ojj-instructor-card>
+
+            <ojj-instructor-card
+              name="Coach Jordan Lee"
+              belt="brown"
+              title="Youth Program Director"
+              bio="Brown belt with a background in youth athletics coaching. Specialises in age-appropriate curriculum and positive reinforcement."
+            ></ojj-instructor-card>
+          </div>
+        </div>
+      </section>
 
       <!-- 6. Testimonials -->
       <section

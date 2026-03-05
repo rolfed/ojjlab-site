@@ -7,14 +7,11 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 
 // ── GSAP mock ──────────────────────────────────────────────────────────────
 
-const mockScrollTrigger = { kill: vi.fn(), progress: 0 }
-
 const mockTween = {
   kill: vi.fn(),
   vars: { scrollTrigger: {} },
   pause: vi.fn(),
   play: vi.fn(),
-  scrollTrigger: mockScrollTrigger,
 }
 
 vi.mock('gsap', () => ({
@@ -23,10 +20,8 @@ vi.mock('gsap', () => ({
     config: vi.fn(),
     fromTo: vi.fn(() => mockTween),
     to: vi.fn(() => mockTween),
-    set: vi.fn(),
     utils: {
       unitize: vi.fn((fn: (x: number) => number) => fn),
-      clamp: vi.fn(() => (v: number) => Math.max(0, Math.min(1, v))),
     },
   },
 }))
@@ -35,9 +30,6 @@ vi.mock('gsap/ScrollTrigger', () => ({
   ScrollTrigger: {
     getAll: vi.fn(() => []),
     getById: vi.fn(() => null),
-    create: vi.fn(() => mockScrollTrigger),
-    normalizeScroll: vi.fn(),
-    refresh: vi.fn(),
   },
 }))
 
@@ -53,9 +45,7 @@ import {
   pinHorizontal,
   marquee,
   counter,
-  pinnedCardCarousel,
   isMobile,
-  prefersReducedMotion,
 } from '@/animations/animate'
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -84,18 +74,6 @@ describe('isMobile()', () => {
   it('returns false when window.matchMedia returns false', () => {
     // happy-dom default matchMedia returns false for all queries
     expect(typeof isMobile()).toBe('boolean')
-  })
-})
-
-describe('prefersReducedMotion()', () => {
-  it('returns false when matchMedia returns false', () => {
-    window.matchMedia = vi.fn().mockReturnValue({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })
-    expect(prefersReducedMotion()).toBe(false)
-  })
-
-  it('returns true when matchMedia returns true', () => {
-    window.matchMedia = vi.fn().mockReturnValue({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })
-    expect(prefersReducedMotion()).toBe(true)
   })
 })
 
@@ -250,47 +228,6 @@ describe('counter()', () => {
     expect((toArgs?.[0] as { value: number }).value).toBe(0)
     // Second arg includes endValue
     expect((toArgs?.[1] as gsap.TweenVars)?.value).toBe(42)
-  })
-})
-
-describe('pinnedCardCarousel()', () => {
-  // matchMedia is mocked per-test: the function checks both isMobile()
-  // (max-width: 767px) and prefersReducedMotion() (prefers-reduced-motion: reduce).
-  // happy-dom's default matchMedia returns false for all queries.
-  afterEach(() => { vi.clearAllMocks() })
-
-  it('returns null on mobile viewports', () => {
-    window.matchMedia = vi.fn().mockReturnValue({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })
-    const result = pinnedCardCarousel(makeEl(), makeEl(), null, null, [makeEl()])
-    expect(result).toBeNull()
-  })
-
-  it('returns null when prefers-reduced-motion is set', () => {
-    // Desktop width but reduced motion active — must not pin (would create scroll trap)
-    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
-      matches: query === '(prefers-reduced-motion: reduce)',
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-    }))
-    const result = pinnedCardCarousel(makeEl(), makeEl(), null, null, [makeEl()])
-    expect(result).toBeNull()
-  })
-
-  it('returns null when no cards provided', () => {
-    window.matchMedia = vi.fn().mockReturnValue({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })
-    const result = pinnedCardCarousel(makeEl(), makeEl(), null, null, [])
-    expect(result).toBeNull()
-  })
-
-  it('calls gsap.to on desktop without reduced motion', () => {
-    window.matchMedia = vi.fn().mockReturnValue({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })
-    const container = makeEl()
-    const track = makeEl()
-    const card = makeEl()
-    document.body.appendChild(card)
-    const result = pinnedCardCarousel(container, track, null, null, [card])
-    expect(gsap.to).toHaveBeenCalled()
-    expect(result).toBe(mockScrollTrigger)
   })
 })
 

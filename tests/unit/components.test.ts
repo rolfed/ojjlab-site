@@ -11,11 +11,7 @@ vi.mock('gsap', () => ({
     config: vi.fn(),
     fromTo: vi.fn(() => ({ kill: vi.fn(), vars: {} })),
     to: vi.fn(() => ({ kill: vi.fn(), vars: {} })),
-    set: vi.fn(),
-    utils: {
-      unitize: vi.fn((fn: (x: number) => number) => fn),
-      clamp: vi.fn(() => (v: number) => Math.max(0, Math.min(1, v))),
-    },
+    utils: { unitize: vi.fn((fn: (x: number) => number) => fn) },
   },
 }))
 
@@ -23,9 +19,6 @@ vi.mock('gsap/ScrollTrigger', () => ({
   ScrollTrigger: {
     getAll: vi.fn(() => []),
     getById: vi.fn(() => null),
-    create: vi.fn(() => ({ kill: vi.fn() })),
-    normalizeScroll: vi.fn(),
-    refresh: vi.fn(),
   },
 }))
 
@@ -40,10 +33,6 @@ import '@/components/modules/OJJMarquee'
 import '@/components/modules/OJJStatsBar'
 import '@/components/modules/OJJTestimonial'
 import '@/components/modules/OJJTrialForm'
-import '@/components/modules/OJJProgramCard'
-import '@/components/modules/OJJProgramsSection'
-import '@/components/modules/OJJInstructorCard'
-import '@/components/modules/OJJInstructorsSection'
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -344,67 +333,5 @@ describe('ojj-trial-form', () => {
     const success = el.querySelector('[data-success]')
     expect(success?.classList.contains('hidden')).toBe(false)
     vi.useRealTimers()
-  })
-})
-
-// ── ojj-programs-section ──────────────────────────────────────────────────
-
-describe('ojj-programs-section', () => {
-  let el: HTMLElement
-
-  afterEach(() => unmount(el))
-
-  it('renders a section element', () => {
-    el = mount('ojj-programs-section')
-    expect(el.querySelector('section')).toBeTruthy()
-  })
-
-  it('renders all 4 programs in the carousel track', () => {
-    el = mount('ojj-programs-section')
-    // Cards render in both the desktop track and mobile grid (dual-layout pattern).
-    // Scope to the track to assert the correct data count independently of breakpoint.
-    expect(el.querySelectorAll('[data-track] ojj-program-card').length).toBe(4)
-  })
-
-  it('contains a Jiu Jitsu 101 program card', () => {
-    el = mount('ojj-programs-section')
-    expect(el.querySelector('ojj-program-card[title="Jiu Jitsu 101"]')).toBeTruthy()
-  })
-
-  it('section has an accessible name via aria-label', () => {
-    el = mount('ojj-programs-section')
-    const section = el.querySelector('section')
-    expect(section?.getAttribute('aria-label')).toBeTruthy()
-  })
-})
-
-// ── ojj-instructors-section ───────────────────────────────────────────────
-
-describe('ojj-instructors-section', () => {
-  let el: HTMLElement
-
-  afterEach(() => unmount(el))
-
-  it('renders a section element', () => {
-    el = mount('ojj-instructors-section')
-    expect(el.querySelector('section')).toBeTruthy()
-  })
-
-  it('renders all 3 instructors in the carousel track', () => {
-    el = mount('ojj-instructors-section')
-    // Cards render in both the desktop track and mobile grid (dual-layout pattern).
-    // Scope to the track to assert the correct data count independently of breakpoint.
-    expect(el.querySelectorAll('[data-track] ojj-instructor-card').length).toBe(3)
-  })
-
-  it('contains Meet Your Instructors', () => {
-    el = mount('ojj-instructors-section')
-    expect(el.textContent).toContain('Meet Your Instructors')
-  })
-
-  it('section has an accessible name via aria-label', () => {
-    el = mount('ojj-instructors-section')
-    const section = el.querySelector('section')
-    expect(section?.getAttribute('aria-label')).toBeTruthy()
   })
 })

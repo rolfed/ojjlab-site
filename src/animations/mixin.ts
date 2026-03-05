@@ -14,7 +14,6 @@ import {
   marquee,
   parallax,
   pinHorizontal,
-  pinnedCardCarousel,
   scrollReveal,
   type AnimationOptions,
 } from './animate'
@@ -29,12 +28,7 @@ type BaseElementConstructor = abstract new (...args: any[]) => BaseElement
 export function AnimatableMixin<TBase extends BaseElementConstructor>(Base: TBase) {
   abstract class Animatable extends Base {
     private _tweens: gsap.core.Tween[] = []
-    private _killables: Array<{ kill(): void }> = []
-
-    /** Register any killable (e.g. a ScrollTrigger instance) for cleanup. Null-safe. */
-    protected trackKillable(k: { kill(): void } | null): void {
-      if (k) this._killables.push(k)
-    }
+    /** Snapshot of ScrollTrigger count before an animation call, for tracking new ones. */
 
     /** Register a tween for cleanup. Null-safe — pass the return value of any executor. */
     protected trackTween(tween: gsap.core.Tween | null): gsap.core.Tween | null {
@@ -105,24 +99,10 @@ export function AnimatableMixin<TBase extends BaseElementConstructor>(Base: TBas
       return this.trackTween(counter(target, endValue, opts))
     }
 
-    protected pinnedCardCarousel(
-      container: Element | null,
-      track: Element | null,
-      heading: Element | null,
-      sub: Element | null,
-      cards: Element[]
-    ): void {
-      this.trackKillable(pinnedCardCarousel(container, track, heading, sub, cards))
-    }
-
     // ── Cleanup ────────────────────────────────────────────────────────────
 
     protected override cleanup(): void {
-      // Kill ScrollTriggers and other killables first
-      this._killables.forEach((k) => k.kill())
-      this._killables = []
-
-      // Kill tweens (and any ScrollTriggers stored as tweens via trackScrollingTween)
+      // Kill everything registered (tweens + any ScrollTriggers stored as tweens)
       this._tweens.forEach((t) => {
         if (t && typeof t.kill === 'function') t.kill()
       })
