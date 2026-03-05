@@ -11,27 +11,27 @@ import { isMobile } from '../../animations/animate'
 
 const PROGRAMS = [
   {
-    title: 'Adult BJJ',
-    badge: 'Adults',
-    description:
-      'Comprehensive BJJ curriculum for adults of all experience levels. Learn takedowns, guard passing, submissions, and competition strategy in a structured environment.',
-    ctaHref: '/programs/#adult',
-    accentColor: '#1a1a2e',
-  },
-  {
     title: 'Youth BJJ',
     badge: 'Youth',
     description:
-      'Fun, safe, and structured BJJ training for kids ages 5–15. We build confidence, discipline, and self-defense skills through age-appropriate drilling and positional sparring.',
+      'Fun, safe, and structured BJJ training for kids of all ages. We build confidence, discipline, and self-defense skills through age-appropriate drilling and positional sparring.',
     ctaHref: '/programs/#youth',
     accentColor: '#0f3460',
   },
   {
-    title: "Women's BJJ",
-    badge: "Women's",
+    title: 'Jiu Jitsu 101',
+    badge: 'Beginners',
     description:
-      'A dedicated women-only class creating a supportive, welcoming space to learn BJJ. All levels welcome — no prior experience necessary.',
-    ctaHref: '/programs/#womens',
+      'New to BJJ? Start here. Jiu Jitsu 101 covers the fundamental positions, movements, and submissions in a welcoming, no-pressure environment. No experience required.',
+    ctaHref: '/programs/#101',
+    accentColor: '#1a1a2e',
+  },
+  {
+    title: 'Adult Jiu Jitsu',
+    badge: 'Adults',
+    description:
+      'Comprehensive BJJ curriculum for adults of all experience levels. Learn takedowns, guard passing, submissions, and live rolling in a structured, supportive environment.',
+    ctaHref: '/programs/#adult',
     accentColor: '#2d1b4e',
   },
   {
