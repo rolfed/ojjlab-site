@@ -140,37 +140,53 @@
         </div>
       </section>
 
-      <!-- 6. Testimonials -->
+      <!-- 6. Reviews -->
       <section
-        aria-labelledby="testimonials-heading"
+        aria-labelledby="reviews-heading"
         class="bg-brand-primary py-24"
       >
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2
-            id="testimonials-heading"
-            class="font-heading text-3xl sm:text-4xl font-black text-white text-center mb-12"
+            id="reviews-heading"
+            class="font-heading text-3xl sm:text-4xl font-black text-white text-center mb-2"
           >
-            What Our Students Say
+            What Our Members Say
           </h2>
+          <p class="text-center text-neutral-400 mb-12">
+            ★★★★★ &nbsp;Verified Google Reviews
+          </p>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-testimonials-grid>
-            <ojj-testimonial
-              quote="I walked in nervous and knowing nothing. Within two weeks I felt like part of a family. The coaching is world-class and the vibe is zero ego."
-              author="Tyler M."
-              belt="White Belt"
-            ></ojj-testimonial>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-reviews-grid>
+            <ojj-review-card
+              author="Phong Nguyen"
+              rating="5"
+              date="5 months ago"
+              text="This is more than a dojo, my teenage girls feel at home here. Adam and Dan have done a good job creating a community that welcomes all skill levels. It has been a wonderful place to build skills and confidence."
+            ></ojj-review-card>
 
-            <ojj-testimonial
-              quote="The women's class completely changed my relationship with fitness and self-confidence. Coach Maria is an incredible teacher. 10/10 would recommend to any woman."
-              author="Priya K."
-              belt="Blue Belt"
-            ></ojj-testimonial>
+            <ojj-review-card
+              author="Noah Murphy"
+              rating="5"
+              date="a year ago"
+              text="Was a little apprehensive to start BJJ at 41 but after one class, I was hooked. It is such a great environment to learn and train in for whatever your goals in Jiu Jitsu are. The coaches are very knowledgeable and amazing teachers. A lot of good times and even better friends have been made here!"
+            ></ojj-review-card>
 
-            <ojj-testimonial
-              quote="My son started at 7 and is now 10. His confidence, focus, and discipline have transformed. Coach Jordan is amazing with kids."
-              author="David C."
-              belt="Parent"
-            ></ojj-testimonial>
+            <ojj-review-card
+              author="Luis Sierra"
+              rating="5"
+              date="3 months ago"
+              text="Been here for close to 2 years. First review I write for any gym. I really like the warm ups, move breakdowns and how much time we actually get to roll. Adam and Dan have a great environment any bjj athlete."
+            ></ojj-review-card>
+          </div>
+
+          <div class="text-center mt-10">
+            <a
+              href="/reviews/"
+              class="inline-flex items-center gap-2 text-sm font-semibold text-neutral-300 hover:text-white transition-colors"
+            >
+              See all 22 Google reviews
+              <ojj-icon name="arrow-right" size="16" aria-hidden="true"></ojj-icon>
+            </a>
           </div>
         </div>
       </section>
@@ -290,9 +306,9 @@
       if (whyHeading) scrollReveal(whyHeading, 'fadeUp')
       if (whyItems.length) scrollReveal(whyItems, 'stagger')
 
-      // Testimonials
-      const testimonials = document.querySelectorAll('[data-testimonials-grid] ojj-testimonial')
-      if (testimonials.length) scrollReveal(testimonials, 'stagger')
+      // Reviews
+      const reviews = document.querySelectorAll('[data-reviews-grid] ojj-review-card')
+      if (reviews.length) scrollReveal(reviews, 'stagger')
 
       // Trial CTA
       const trialHeading = document.querySelector('[data-trial-heading]')

@@ -19,6 +19,7 @@ export default defineConfig({
         programs: `${root}/programs/index.html`,
         shop: `${root}/shop/index.html`,
         login: `${root}/login/index.html`,
+        reviews: `${root}/reviews/index.html`,
         '404': `${root}/404.html`,
       },
     },

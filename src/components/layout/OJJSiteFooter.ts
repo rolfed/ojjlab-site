@@ -40,6 +40,7 @@ export class OJJSiteFooter extends BaseElement {
                 <li><a href="/about/" class="hover:text-white transition-colors">About</a></li>
                 <li><a href="/schedule/" class="hover:text-white transition-colors">Schedule</a></li>
                 <li><a href="/programs/" class="hover:text-white transition-colors">Programs</a></li>
+                <li><a href="/reviews/" class="hover:text-white transition-colors">Reviews</a></li>
                 <li><a href="/shop/" class="hover:text-white transition-colors">Shop</a></li>
                 <li><a href="/login/" class="hover:text-white transition-colors">Member Login</a></li>
               </ul>

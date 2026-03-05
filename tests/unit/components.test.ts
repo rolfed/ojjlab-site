@@ -32,6 +32,7 @@ import '@/components/layout/OJJSiteFooter'
 import '@/components/modules/OJJMarquee'
 import '@/components/modules/OJJStatsBar'
 import '@/components/modules/OJJTestimonial'
+import '@/components/modules/OJJReviewCard'
 import '@/components/modules/OJJTrialForm'
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -272,6 +273,78 @@ describe('ojj-testimonial', () => {
   it('renders the author name', () => {
     el = mount('ojj-testimonial', { quote: 'Test', author: 'Sam Lee' })
     expect(el.shadowRoot?.textContent).toContain('Sam Lee')
+  })
+})
+
+// ── ojj-review-card ───────────────────────────────────────────────────────
+
+describe('ojj-review-card', () => {
+  let el: HTMLElement
+
+  afterEach(() => unmount(el))
+
+  it('uses Shadow DOM', () => {
+    el = mount('ojj-review-card', { author: 'Jane Doe', rating: '5', text: 'Great gym!' })
+    expect(el.shadowRoot).toBeTruthy()
+  })
+
+  it('renders 5 filled stars for rating="5"', () => {
+    el = mount('ojj-review-card', { author: 'Jane Doe', rating: '5', text: 'Great!' })
+    const stars = el.shadowRoot?.querySelectorAll('.star.filled')
+    expect(stars?.length).toBe(5)
+  })
+
+  it('renders correct filled star count for rating="3"', () => {
+    el = mount('ojj-review-card', { author: 'Jane Doe', rating: '3', text: 'Okay.' })
+    const filled = el.shadowRoot?.querySelectorAll('.star.filled')
+    const empty = el.shadowRoot?.querySelectorAll('.star:not(.filled)')
+    expect(filled?.length).toBe(3)
+    expect(empty?.length).toBe(2)
+  })
+
+  it('renders the review text', () => {
+    el = mount('ojj-review-card', { author: 'Jane Doe', text: 'Absolutely fantastic!' })
+    expect(el.shadowRoot?.textContent).toContain('Absolutely fantastic!')
+  })
+
+  it('renders the author name', () => {
+    el = mount('ojj-review-card', { author: 'John Smith', text: 'Great.' })
+    expect(el.shadowRoot?.textContent).toContain('John Smith')
+  })
+
+  it('renders the date', () => {
+    el = mount('ojj-review-card', { author: 'Jane', text: 'Good.', date: '3 months ago' })
+    expect(el.shadowRoot?.textContent).toContain('3 months ago')
+  })
+
+  it('shows Google badge', () => {
+    el = mount('ojj-review-card', { author: 'Jane', text: 'Good.' })
+    expect(el.shadowRoot?.textContent).toContain('Google')
+  })
+
+  it('shows read-more link when truncated attribute is present', () => {
+    el = mount('ojj-review-card', { author: 'Jane', text: 'Good.' })
+    el.setAttribute('truncated', '')
+    const link = el.shadowRoot?.querySelector('.read-more')
+    expect(link).toBeTruthy()
+  })
+
+  it('hides read-more link when truncated attribute is absent', () => {
+    el = mount('ojj-review-card', { author: 'Jane', text: 'Good.' })
+    const link = el.shadowRoot?.querySelector('.read-more')
+    expect(link).toBeFalsy()
+  })
+
+  it('renders nothing in blockquote when text is empty', () => {
+    el = mount('ojj-review-card', { author: 'Jane' })
+    const blockquote = el.shadowRoot?.querySelector('blockquote')
+    expect(blockquote).toBeFalsy()
+  })
+
+  it('star rating aria-label reflects the rating value', () => {
+    el = mount('ojj-review-card', { author: 'Jane', rating: '4', text: 'Good.' })
+    const starsEl = el.shadowRoot?.querySelector('.stars')
+    expect(starsEl?.getAttribute('aria-label')).toBe('4 out of 5 stars')
   })
 })
 
