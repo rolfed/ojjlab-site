@@ -27,42 +27,66 @@ export class OJJTestimonial extends BaseElement {
 
     this._shadow.innerHTML = `
       <style>
-        :host { display: block; height: 100%; }
+        /*
+         * :host is a grid item — CSS Grid stretches it to the row height via
+         * align-self: stretch (default). No explicit height needed here; the
+         * grid algorithm owns the block size.
+         */
+        :host {
+          display: block;
+        }
+
+        /*
+         * height: 100% resolves correctly because :host has a definite block
+         * size established by the grid layout algorithm. flex-direction: column
+         * lets the quote grow to fill available space, pinning the author to
+         * the bottom of every card regardless of quote length.
+         */
         .card {
-          background: #1a1a2e;
-          border: 1px solid #404040;
-          border-radius: 0.75rem;
-          padding: 1.75rem;
           height: 100%;
           display: flex;
           flex-direction: column;
           gap: 1rem;
+          padding: 1.75rem;
+          background: #1a1a2e;
+          border: 1px solid #404040;
+          border-radius: 0.75rem;
+          box-sizing: border-box;
         }
+
         .quote-mark {
           font-size: 4rem;
           color: #e63946;
           font-weight: 900;
           line-height: 0.7;
-          margin-bottom: 0.25rem;
+          user-select: none;
         }
+
+        blockquote {
+          flex: 1;
+          margin: 0;
+        }
+
         .quote {
           font-size: 0.95rem;
           color: #d4d4d4;
           line-height: 1.7;
-          flex: 1;
           font-style: italic;
           margin: 0;
         }
+
         .author {
           display: flex;
           flex-direction: column;
           gap: 0.125rem;
         }
+
         .author-name {
           font-weight: 700;
           color: white;
           font-size: 0.9rem;
         }
+
         .author-belt {
           font-size: 0.8rem;
           color: #737373;
@@ -70,6 +94,7 @@ export class OJJTestimonial extends BaseElement {
           letter-spacing: 0.05em;
         }
       </style>
+
       <figure class="card">
         <div class="quote-mark" aria-hidden="true">"</div>
         <blockquote>
