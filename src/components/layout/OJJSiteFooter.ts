@@ -18,11 +18,14 @@ export class OJJSiteFooter extends BaseElement {
 
             <!-- Brand -->
             <div>
-              <a
-                href="/"
-                class="inline-flex items-center gap-1 text-white font-bold text-xl mb-3 hover:text-brand-gold transition-colors"
-              >
-                <span class="text-brand-accent font-black">OJJ</span> Lab
+              <a href="/" class="inline-flex mb-4" aria-label="Oregon Jiu Jitsu Lab — home">
+                <img
+                  src="/images/ojjlab-logo.png"
+                  alt="Oregon Jiu Jitsu Lab"
+                  width="192"
+                  height="60"
+                  class="h-10 w-auto"
+                >
               </a>
               <p class="text-sm leading-relaxed">
                 Brazilian Jiu Jitsu training for adults and youth in Oregon.

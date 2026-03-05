@@ -30,11 +30,16 @@ export class OJJSiteHeader extends BaseElement {
           <!-- Logo -->
           <a
             href="/"
-            class="flex items-center gap-2 text-white font-bold text-xl hover:text-brand-gold transition-colors"
+            class="flex items-center"
             aria-label="Oregon Jiu Jitsu Lab — home"
           >
-            <span class="text-brand-accent font-black">OJJ</span>
-            <span class="hidden sm:inline">Lab</span>
+            <img
+              src="/images/ojjlab-logo.png"
+              alt="Oregon Jiu Jitsu Lab"
+              width="192"
+              height="60"
+              class="h-8 w-auto"
+            >
           </a>
 
           <!-- Nav + CTA -->
