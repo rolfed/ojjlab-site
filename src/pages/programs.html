@@ -16,20 +16,10 @@
     <meta property="og:type" content="website" />
     <link rel="stylesheet" href="/src/styles/main.css" />
   </head>
-  <body>
+  <body class="bg-brand-primary text-neutral-100">
     <a class="skip-link" href="#main-content">Skip to main content</a>
 
-    <header role="banner">
-      <!-- ojj-site-header (Phase 1) -->
-      <nav aria-label="Main">
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
-        <a href="/schedule/">Schedule</a>
-        <a href="/programs/" aria-current="page">Programs</a>
-        <a href="/shop/">Shop</a>
-        <a href="/login/">Login</a>
-      </nav>
-    </header>
+    <ojj-site-header current-page="/programs/" data-turbo-permanent id="site-header"></ojj-site-header>
 
     <main id="main-content" tabindex="-1">
       <h1>Programs</h1>
@@ -52,13 +42,9 @@
       <a href="/schedule/">View Schedule</a>
     </main>
 
-    <footer role="contentinfo">
-      <p>&copy; <span id="year"></span> Oregon Jiu Jitsu Lab. All rights reserved.</p>
-    </footer>
+    <ojj-site-footer></ojj-site-footer>
 
-    <script type="module">
-      document.getElementById('year').textContent = new Date().getFullYear()
-    </script>
-    <script type="module" src="/src/components/index.ts"></script>
+    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/pages/programs.ts"></script>
   </body>
 </html>

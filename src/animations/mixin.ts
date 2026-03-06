@@ -14,8 +14,12 @@ import {
   marquee,
   parallax,
   pinHorizontal,
+  pinnedReveal as pinnedRevealExecutor,
+  programsReveal as programsRevealExecutor,
   scrollReveal,
   type AnimationOptions,
+  type PinnedRevealConfig,
+  type ProgramsRevealConfig,
 } from './animate'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,7 +36,7 @@ export function AnimatableMixin<TBase extends BaseElementConstructor>(Base: TBas
 
     /** Register a tween for cleanup. Null-safe — pass the return value of any executor. */
     protected trackTween(tween: gsap.core.Tween | null): gsap.core.Tween | null {
-      if (tween) this._tweens.push(tween)
+      if (tween) { this._tweens.push(tween) }
       return tween
     }
 
@@ -45,7 +49,7 @@ export function AnimatableMixin<TBase extends BaseElementConstructor>(Base: TBas
       tween: gsap.core.Tween | null,
       beforeCount: number
     ): gsap.core.Tween | null {
-      if (!tween) return null
+      if (!tween) { return null }
       this._tweens.push(tween)
       // Any ScrollTriggers created after beforeCount belong to this tween
       const all = ScrollTrigger.getAll()
@@ -87,6 +91,20 @@ export function AnimatableMixin<TBase extends BaseElementConstructor>(Base: TBas
       return this.trackScrollingTween(pinHorizontal(container, track, opts), before)
     }
 
+    protected pinnedReveal(config: PinnedRevealConfig): gsap.core.Timeline | null {
+      const tl = pinnedRevealExecutor(config)
+      // Track the Timeline (not just the ScrollTrigger) so that kill() on
+      // disconnect also kills the timeline's child tweens.
+      if (tl) { this.trackTween(tl as unknown as gsap.core.Tween) }
+      return tl
+    }
+
+    protected programsReveal(config: ProgramsRevealConfig): gsap.core.Timeline | null {
+      const tl = programsRevealExecutor(config)
+      if (tl) { this.trackTween(tl as unknown as gsap.core.Tween) }
+      return tl
+    }
+
     protected marquee(track: Element | null, opts?: AnimationOptions): gsap.core.Tween | null {
       return this.trackTween(marquee(track, opts))
     }
@@ -104,7 +122,7 @@ export function AnimatableMixin<TBase extends BaseElementConstructor>(Base: TBas
     protected override cleanup(): void {
       // Kill everything registered (tweens + any ScrollTriggers stored as tweens)
       this._tweens.forEach((t) => {
-        if (t && typeof t.kill === 'function') t.kill()
+        if (t && typeof t.kill === 'function') { t.kill() }
       })
       this._tweens = []
 

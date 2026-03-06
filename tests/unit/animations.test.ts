@@ -7,11 +7,20 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 
 // ── GSAP mock ──────────────────────────────────────────────────────────────
 
+const mockScrollTrigger = { kill: vi.fn() }
+
+const mockTimeline = {
+  kill: vi.fn(),
+  to: vi.fn().mockReturnThis(),
+  scrollTrigger: mockScrollTrigger,
+}
+
 const mockTween = {
   kill: vi.fn(),
   vars: { scrollTrigger: {} },
   pause: vi.fn(),
   play: vi.fn(),
+  scrollTrigger: mockScrollTrigger,
 }
 
 vi.mock('gsap', () => ({
@@ -20,8 +29,11 @@ vi.mock('gsap', () => ({
     config: vi.fn(),
     fromTo: vi.fn(() => mockTween),
     to: vi.fn(() => mockTween),
+    set: vi.fn(),
+    timeline: vi.fn(() => mockTimeline),
     utils: {
       unitize: vi.fn((fn: (x: number) => number) => fn),
+      clamp: vi.fn((min: number, max: number, val: number) => Math.min(max, Math.max(min, val))),
     },
   },
 }))
@@ -43,6 +55,8 @@ import {
   heroEntrance,
   parallax,
   pinHorizontal,
+  pinnedReveal,
+  programsReveal,
   marquee,
   counter,
   isMobile,
@@ -228,6 +242,105 @@ describe('counter()', () => {
     expect((toArgs?.[0] as { value: number }).value).toBe(0)
     // Second arg includes endValue
     expect((toArgs?.[1] as gsap.TweenVars)?.value).toBe(42)
+  })
+})
+
+describe('pinnedReveal()', () => {
+  afterEach(() => { vi.clearAllMocks() })
+
+  it('returns null on mobile', () => {
+    window.matchMedia = vi.fn().mockReturnValue({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })
+    const result = pinnedReveal({ trigger: makeEl(), heading: makeEl(), track: makeEl() })
+    expect(result).toBeNull()
+  })
+
+  it('returns null when data-reduce-motion is set on <html>', () => {
+    document.documentElement.setAttribute('data-reduce-motion', '')
+    const result = pinnedReveal({ trigger: makeEl(), heading: makeEl(), track: makeEl() })
+    document.documentElement.removeAttribute('data-reduce-motion')
+    expect(result).toBeNull()
+  })
+
+  it('calls gsap.timeline on desktop', () => {
+    window.matchMedia = vi.fn().mockReturnValue({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })
+    pinnedReveal({ trigger: makeEl(), heading: makeEl(), track: makeEl() })
+    expect(gsap.timeline).toHaveBeenCalled()
+  })
+
+  it('returns the timeline (not the ScrollTrigger)', () => {
+    window.matchMedia = vi.fn().mockReturnValue({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })
+    const result = pinnedReveal({ trigger: makeEl(), heading: makeEl(), track: makeEl() })
+    expect(result).toBe(mockTimeline)
+  })
+
+  it('works when sub is null', () => {
+    window.matchMedia = vi.fn().mockReturnValue({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })
+    const result = pinnedReveal({ trigger: makeEl(), heading: makeEl(), track: makeEl(), sub: null })
+    expect(result).toBe(mockTimeline)
+  })
+
+  it('calls gsap.set with clearProps on heading and sub when data-reduce-motion is set', () => {
+    const heading = makeEl()
+    const sub = makeEl()
+    document.documentElement.setAttribute('data-reduce-motion', '')
+    pinnedReveal({ trigger: makeEl(), heading, sub, track: makeEl() })
+    document.documentElement.removeAttribute('data-reduce-motion')
+    expect(gsap.set).toHaveBeenCalledWith(heading, { clearProps: 'all' })
+    expect(gsap.set).toHaveBeenCalledWith(sub, { clearProps: 'all' })
+  })
+
+  it('passes a lazy function for track x translation', () => {
+    window.matchMedia = vi.fn().mockReturnValue({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })
+    pinnedReveal({ trigger: makeEl(), heading: makeEl(), track: makeEl(), sub: null })
+    const calls = vi.mocked(mockTimeline.to).mock.calls
+    const hasLazyX = calls.some((call) => typeof (call[1] as gsap.TweenVars).x === 'function')
+    expect(hasLazyX).toBe(true)
+  })
+})
+
+describe('programsReveal()', () => {
+  afterEach(() => { vi.clearAllMocks() })
+
+  function makeConfig() {
+    return {
+      trigger: makeEl(),
+      headingWrap: makeEl(),
+      track: makeEl(),
+      cards: [makeEl(), makeEl(), makeEl()],
+    }
+  }
+
+  it('returns null on mobile', () => {
+    window.matchMedia = vi.fn().mockReturnValue({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })
+    const result = programsReveal(makeConfig())
+    expect(result).toBeNull()
+  })
+
+  it('returns null when data-reduce-motion is set on <html>', () => {
+    document.documentElement.setAttribute('data-reduce-motion', '')
+    const result = programsReveal(makeConfig())
+    document.documentElement.removeAttribute('data-reduce-motion')
+    expect(result).toBeNull()
+  })
+
+  it('calls gsap.timeline on desktop', () => {
+    window.matchMedia = vi.fn().mockReturnValue({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })
+    programsReveal(makeConfig())
+    expect(gsap.timeline).toHaveBeenCalled()
+  })
+
+  it('returns the timeline (not null)', () => {
+    window.matchMedia = vi.fn().mockReturnValue({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })
+    const result = programsReveal(makeConfig())
+    expect(result).toBe(mockTimeline)
+  })
+
+  it('calls gsap.set with clearProps on headingWrap when data-reduce-motion is set', () => {
+    const headingWrap = makeEl()
+    document.documentElement.setAttribute('data-reduce-motion', '')
+    programsReveal({ trigger: makeEl(), headingWrap, track: makeEl(), cards: [makeEl()] })
+    document.documentElement.removeAttribute('data-reduce-motion')
+    expect(gsap.set).toHaveBeenCalledWith(headingWrap, { clearProps: 'all' })
   })
 })
 

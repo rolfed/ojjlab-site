@@ -14,13 +14,14 @@
       content="Oregon Jiu Jitsu Lab offers Brazilian Jiu Jitsu training for adults and youth in Oregon. Book a free trial class today."
     />
     <meta property="og:type" content="website" />
+    <meta name="ojj:header-transparent" content="true" />
     <link rel="stylesheet" href="/src/styles/main.css" />
   </head>
   <body class="bg-brand-primary text-neutral-100">
     <a class="skip-link" href="#main-content">Skip to main content</a>
 
     <!-- Site Header -->
-    <ojj-site-header current-page="/" transparent></ojj-site-header>
+    <ojj-site-header current-page="/" transparent data-turbo-permanent id="site-header"></ojj-site-header>
 
     <main id="main-content" tabindex="-1">
 
@@ -217,9 +218,7 @@
               <img
                 src="/images/ojjlab-logo.png"
                 alt="Oregon Jiu Jitsu Lab"
-                width="192"
-                height="60"
-                class="h-12 w-auto"
+                class="h-8 w-auto object-contain self-start"
               >
 
               <div>
@@ -296,27 +295,7 @@
     <!-- Shared entry: registers GSAP plugins + all components -->
     <script type="module" src="/src/main.ts"></script>
 
-    <!-- Page-level scroll animations (Why OJJ, Instructors, Testimonials, Trial CTA) -->
-    <script type="module">
-      import { scrollReveal } from '/src/animations/animate.ts'
-
-      // Why OJJ section
-      const whyHeading = document.querySelector('[data-why-heading]')
-      const whyItems = document.querySelectorAll('[data-why-list] li')
-      if (whyHeading) { scrollReveal(whyHeading, 'fadeUp'); }
-      if (whyItems.length) { scrollReveal(whyItems, 'stagger'); }
-
-      // Reviews
-      const reviews = document.querySelectorAll('[data-reviews-grid] ojj-review-card')
-      if (reviews.length) scrollReveal(reviews, 'stagger')
-
-      // Trial CTA
-      const trialHeading = document.querySelector('[data-trial-heading]')
-      const trialSub = document.querySelector('[data-trial-sub]')
-      const trialForm = document.querySelector('[data-trial-form]')
-      if (trialHeading) { scrollReveal(trialHeading, 'fadeUp'); }
-      if (trialSub) { scrollReveal(trialSub, 'fadeUp', { delay: 0.1 }); }
-      if (trialForm) { scrollReveal(trialForm, 'fadeUp', { delay: 0.2 }); }
-    </script>
+    <!-- Page-level scroll animations (Why OJJ, Reviews, Trial CTA) -->
+    <script type="module" src="/src/pages/home.ts"></script>
   </body>
 </html>

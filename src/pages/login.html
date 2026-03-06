@@ -16,20 +16,10 @@
     <meta property="og:type" content="website" />
     <link rel="stylesheet" href="/src/styles/main.css" />
   </head>
-  <body>
+  <body class="bg-brand-primary text-neutral-100">
     <a class="skip-link" href="#main-content">Skip to main content</a>
 
-    <header role="banner">
-      <!-- ojj-site-header (Phase 1) -->
-      <nav aria-label="Main">
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
-        <a href="/schedule/">Schedule</a>
-        <a href="/programs/">Programs</a>
-        <a href="/shop/">Shop</a>
-        <a href="/login/" aria-current="page">Login</a>
-      </nav>
-    </header>
+    <ojj-site-header current-page="/login/" data-turbo-permanent id="site-header"></ojj-site-header>
 
     <main id="main-content" tabindex="-1">
       <section aria-labelledby="login-heading">
@@ -41,6 +31,7 @@
           rel="noopener noreferrer"
           target="_blank"
           aria-describedby="login-external-notice"
+          data-turbo="false"
         >
           Go to Member Portal
         </a>
@@ -50,19 +41,9 @@
       </section>
     </main>
 
-    <footer role="contentinfo">
-      <p>&copy; <span id="year"></span> Oregon Jiu Jitsu Lab. All rights reserved.</p>
-    </footer>
+    <ojj-site-footer></ojj-site-footer>
 
-    <script type="module">
-      document.getElementById('year').textContent = new Date().getFullYear()
-      // GymDesk login URL is injected at build time via environment variable.
-      // In development, the link renders as a placeholder (#).
-      const loginUrl = import.meta.env.VITE_GYMDESK_LOGIN_URL
-      if (loginUrl) {
-        document.getElementById('gymdesk-login-link').href = loginUrl
-      }
-    </script>
-    <script type="module" src="/src/components/index.ts"></script>
+    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/pages/login.ts"></script>
   </body>
 </html>
