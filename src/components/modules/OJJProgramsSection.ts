@@ -295,10 +295,10 @@ export class OJJProgramsSection extends AnimatableMixin(BaseElement) {
     // Active card's DOM index = active (real index) + CLONES_PER_SIDE prepended clones
     const activeDOMIndex = active + CLONES_PER_SIDE
     Array.from(track.children).forEach((child, domIndex) => {
-      const dist = Math.abs(domIndex - activeDOMIndex)
-      const scale   = dist === 0 ? 1.0 : dist === 1 ? 0.85 : dist === 2 ? 0.70 : 0.60
-      const opacity = dist === 0 ? 1.0 : dist === 1 ? 0.60 : dist === 2 ? 0.30 : 0.00
-      gsap.to(child, { scale, opacity, duration: 0.35, ease: 'power2.out' })
+      const dist    = Math.abs(domIndex - activeDOMIndex)
+      const scale   = dist === 0 ? 1.0  : dist === 1 ? 0.85 : dist === 2 ? 0.70 : 0.60
+      const opacity = dist === 0 ? 1.0  : dist === 1 ? 0.60 : dist === 2 ? 0.30 : 0.00
+      gsap.to(child, { scale, opacity, filter: 'blur(0px)', duration: 0.35, ease: 'power2.out' })
     })
   }
 
@@ -360,16 +360,25 @@ export class OJJProgramsSection extends AnimatableMixin(BaseElement) {
       }
     })
 
-    const tl = gsap.timeline({ onComplete, defaults: { ease: 'elastic.out(1.4, 0.35)', duration: 1.4 } })
+    const tl = gsap.timeline({ onComplete, defaults: { ease: 'power3.out', duration: 0.7 } })
 
     const center = children[activeDOMIndex]
-    if (center) { tl.to(center, { scale: 1.0, opacity: 1.0 }) }
+    if (center) {
+      gsap.set(center, { filter: 'blur(12px)', scale: 0.94, opacity: 0 })
+      tl.to(center, { filter: 'blur(0px)', scale: 1.0, opacity: 1.0 })
+    }
 
     const adjacent = children.filter((_, i) => Math.abs(i - activeDOMIndex) === 1)
-    if (adjacent.length) { tl.to(adjacent, { scale: 0.85, opacity: 0.60 }, 0.2) }
+    if (adjacent.length) {
+      gsap.set(adjacent, { filter: 'blur(12px)', scale: 0.80, opacity: 0 })
+      tl.to(adjacent, { filter: 'blur(0px)', scale: 0.85, opacity: 0.60 }, 0.15)
+    }
 
     const far = children.filter((_, i) => Math.abs(i - activeDOMIndex) === 2)
-    if (far.length) { tl.to(far, { scale: 0.70, opacity: 0.30 }, 0.4) }
+    if (far.length) {
+      gsap.set(far, { filter: 'blur(12px)', scale: 0.65, opacity: 0 })
+      tl.to(far, { filter: 'blur(0px)', scale: 0.70, opacity: 0.30 }, 0.3)
+    }
   }
 
   private initAutoRotate(viewport: HTMLElement): void {
