@@ -6,18 +6,17 @@
     <title>Shop — Oregon Jiu Jitsu Lab</title>
     <meta
       name="description"
-      content="Oregon Jiu Jitsu Lab gear, apparel, and training equipment."
+      content="Official OJJ Lab apparel and training gear. Rashguards, shirts, shorts, and equipment for BJJ and kickboxing training."
     />
     <meta property="og:title" content="Shop — Oregon Jiu Jitsu Lab" />
     <meta
       property="og:description"
-      content="Oregon Jiu Jitsu Lab gear, apparel, and training equipment."
+      content="Official OJJ Lab apparel and training gear. Rashguards, shirts, shorts, and equipment for BJJ and kickboxing training."
     />
     <meta property="og:type" content="website" />
     <link rel="stylesheet" href="/src/styles/main.css" />
   </head>
   <body class="bg-brand-primary text-neutral-100">
-    <!-- Fixed elements — OUTSIDE smooth-wrapper (containing-block safety) -->
     <a class="skip-link" href="#main-content">Skip to main content</a>
     <ojj-site-header current-page="/shop/" data-turbo-permanent id="site-header"></ojj-site-header>
     <ojj-scroll-progress aria-hidden="true"></ojj-scroll-progress>
@@ -25,9 +24,178 @@
     <div id="smooth-wrapper">
       <div id="smooth-content">
         <main id="main-content" tabindex="-1">
-          <h1>Shop</h1>
-          <p>OJJ Lab gear and apparel coming soon.</p>
-          <a href="/">Back to Home</a>
+
+          <!-- Page Header -->
+          <section class="bg-neutral-950 pt-32 pb-16">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <h1 class="font-heading text-4xl sm:text-5xl font-black text-white mb-4">
+                Gear Up
+              </h1>
+              <p class="text-neutral-400 text-lg max-w-xl mx-auto">
+                Official OJJ Lab apparel and training gear. Represent the gym on and off the mat.
+              </p>
+            </div>
+          </section>
+
+          <!-- Apparel -->
+          <section aria-labelledby="shop-apparel-heading" class="bg-brand-primary py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 id="shop-apparel-heading" class="font-heading text-3xl sm:text-4xl font-black text-white mb-4">
+                OJJ Lab Apparel
+              </h2>
+              <p class="text-neutral-400 mb-12 max-w-2xl">
+                Officially branded gear designed for training and everyday wear. All apparel carries the OJJ Lab mark.
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Rashguards -->
+                <div class="rounded-2xl bg-neutral-900 border border-neutral-800 p-6">
+                  <div class="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center mb-4" aria-hidden="true">
+                    <span class="text-neutral-400 text-lg font-black">R</span>
+                  </div>
+                  <h3 class="text-white font-bold mb-2">Rashguards</h3>
+                  <p class="text-neutral-400 text-sm leading-relaxed">
+                    Compression-fit, durable fabric designed for grappling. Short and long sleeve options available.
+                  </p>
+                </div>
+                <!-- T-Shirts -->
+                <div class="rounded-2xl bg-neutral-900 border border-neutral-800 p-6">
+                  <div class="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center mb-4" aria-hidden="true">
+                    <span class="text-neutral-400 text-lg font-black">T</span>
+                  </div>
+                  <h3 class="text-white font-bold mb-2">T-Shirts</h3>
+                  <p class="text-neutral-400 text-sm leading-relaxed">
+                    Everyday wear with the OJJ Lab logo. Comfortable fit, multiple colorways.
+                  </p>
+                </div>
+                <!-- Hoodies -->
+                <div class="rounded-2xl bg-neutral-900 border border-neutral-800 p-6">
+                  <div class="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center mb-4" aria-hidden="true">
+                    <span class="text-neutral-400 text-lg font-black">H</span>
+                  </div>
+                  <h3 class="text-white font-bold mb-2">Hoodies &amp; Sweatshirts</h3>
+                  <p class="text-neutral-400 text-sm leading-relaxed">
+                    Warm up before class or represent on the way out. Heavy-weight fleece, unisex sizing.
+                  </p>
+                </div>
+                <!-- Shorts -->
+                <div class="rounded-2xl bg-neutral-900 border border-neutral-800 p-6">
+                  <div class="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center mb-4" aria-hidden="true">
+                    <span class="text-neutral-400 text-lg font-black">S</span>
+                  </div>
+                  <h3 class="text-white font-bold mb-2">Shorts &amp; Spats</h3>
+                  <p class="text-neutral-400 text-sm leading-relaxed">
+                    No-gi training bottoms built to move with you. Minimal seams, reinforced stitching.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Training Gear -->
+          <section aria-labelledby="shop-gear-heading" class="bg-neutral-950 py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 id="shop-gear-heading" class="font-heading text-3xl sm:text-4xl font-black text-white mb-4">
+                Training Gear
+              </h2>
+              <p class="text-neutral-400 mb-12 max-w-2xl">
+                Equipment for safe, effective training. Ask a coach before buying — we'll point you to what you actually need.
+              </p>
+              <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
+                <li class="flex gap-3 p-5 rounded-xl bg-neutral-900 border border-neutral-800">
+                  <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                  <div>
+                    <strong class="text-white block mb-0.5">Mouthguards</strong>
+                    <span class="text-neutral-400 text-sm">Protective gear for sparring rounds.</span>
+                  </div>
+                </li>
+                <li class="flex gap-3 p-5 rounded-xl bg-neutral-900 border border-neutral-800">
+                  <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                  <div>
+                    <strong class="text-white block mb-0.5">Rashguard bundles</strong>
+                    <span class="text-neutral-400 text-sm">Starter kits for new students — everything you need to begin.</span>
+                  </div>
+                </li>
+                <li class="flex gap-3 p-5 rounded-xl bg-neutral-900 border border-neutral-800">
+                  <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                  <div>
+                    <strong class="text-white block mb-0.5">Ear guards</strong>
+                    <span class="text-neutral-400 text-sm">For students training frequently who want to protect their ears.</span>
+                  </div>
+                </li>
+                <li class="flex gap-3 p-5 rounded-xl bg-neutral-900 border border-neutral-800">
+                  <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                  <div>
+                    <strong class="text-white block mb-0.5">OJJ Lab gear bags</strong>
+                    <span class="text-neutral-400 text-sm">Carry everything you need to class.</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Ordering Info -->
+          <section aria-labelledby="shop-info-heading" class="bg-brand-primary py-16">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                  <h2 id="shop-info-heading" class="font-heading text-2xl font-black text-white mb-6">
+                    Sizing &amp; Orders
+                  </h2>
+                  <ul class="space-y-3 text-neutral-400">
+                    <li class="flex gap-2">
+                      <span class="text-brand-accent font-bold flex-shrink-0">—</span>
+                      All apparel is true to size unless noted in the product description
+                    </li>
+                    <li class="flex gap-2">
+                      <span class="text-brand-accent font-bold flex-shrink-0">—</span>
+                      Orders typically ship within 3–5 business days
+                    </li>
+                    <li class="flex gap-2">
+                      <span class="text-brand-accent font-bold flex-shrink-0">—</span>
+                      In-gym pickup available — select at checkout
+                    </li>
+                    <li class="flex gap-2">
+                      <span class="text-brand-accent font-bold flex-shrink-0">—</span>
+                      Questions about sizing? Email
+                      <a href="mailto:dan@ojjlab.com" class="text-white hover:text-neutral-300 transition-colors">dan@ojjlab.com</a>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h2 class="font-heading text-2xl font-black text-white mb-4">
+                    New to the Gym?
+                  </h2>
+                  <p class="text-neutral-400 mb-6">
+                    If you're just starting out, ask a coach what gear you actually need before buying anything. We'll make sure you get the right fit without spending money on things you don't need yet.
+                  </p>
+                  <a
+                    href="/contact/"
+                    class="inline-flex items-center gap-2 text-sm font-semibold text-neutral-300 hover:text-white transition-colors"
+                  >
+                    Talk to a coach first
+                    <ojj-icon name="arrow-right" size="16" aria-hidden="true"></ojj-icon>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Products placeholder / coming soon note -->
+          <section class="bg-neutral-950 py-16">
+            <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <p class="text-neutral-500 text-sm mb-4">
+                Online ordering coming soon. In the meantime, gear is available for purchase at the gym.
+              </p>
+              <a
+                href="/contact/"
+                class="inline-flex items-center gap-2 px-6 py-3 border border-neutral-700 text-neutral-400 font-semibold rounded-lg hover:border-neutral-500 hover:text-neutral-200 transition-colors text-sm"
+              >
+                Ask about availability
+                <ojj-icon name="arrow-right" size="16" aria-hidden="true"></ojj-icon>
+              </a>
+            </div>
+          </section>
+
         </main>
 
         <ojj-site-footer></ojj-site-footer>

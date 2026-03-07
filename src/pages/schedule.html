@@ -6,18 +6,17 @@
     <title>Class Schedule — Oregon Jiu Jitsu Lab</title>
     <meta
       name="description"
-      content="View the full class schedule for Oregon Jiu Jitsu Lab. Adult BJJ, youth programs, and open mat times."
+      content="View the full class schedule for Oregon Jiu Jitsu Lab — adult BJJ, youth programs, kickboxing, and open mat times in Hillsboro, Oregon."
     />
     <meta property="og:title" content="Class Schedule — Oregon Jiu Jitsu Lab" />
     <meta
       property="og:description"
-      content="View the full class schedule for Oregon Jiu Jitsu Lab. Adult BJJ, youth programs, and open mat times."
+      content="View the full class schedule for Oregon Jiu Jitsu Lab — adult BJJ, youth programs, kickboxing, and open mat times in Hillsboro, Oregon."
     />
     <meta property="og:type" content="website" />
     <link rel="stylesheet" href="/src/styles/main.css" />
   </head>
   <body class="bg-brand-primary text-neutral-100">
-    <!-- Fixed elements — OUTSIDE smooth-wrapper (containing-block safety) -->
     <a class="skip-link" href="#main-content">Skip to main content</a>
     <ojj-site-header current-page="/schedule/" data-turbo-permanent id="site-header"></ojj-site-header>
     <ojj-scroll-progress aria-hidden="true"></ojj-scroll-progress>
@@ -25,9 +24,174 @@
     <div id="smooth-wrapper">
       <div id="smooth-content">
         <main id="main-content" tabindex="-1">
-          <h1>Class Schedule</h1>
-          <p>Live schedule loads below. <a href="/login/">Log in</a> to book classes.</p>
-          <!-- ojj-schedule-embed (Phase 3) -->
+
+          <!-- Page Header -->
+          <section class="bg-neutral-950 pt-32 pb-16">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <h1 class="font-heading text-4xl sm:text-5xl font-black text-white mb-4">
+                Find a Class That Fits
+              </h1>
+              <p class="text-neutral-400 text-lg max-w-2xl mx-auto mb-8">
+                We offer classes for all levels, seven days a week. The live schedule below is updated in real time — sign up directly from this page.
+              </p>
+              <a
+                href="/contact/"
+                class="inline-flex items-center gap-2 text-sm font-semibold text-neutral-300 hover:text-white transition-colors"
+              >
+                Not sure which class to pick? Contact us
+                <ojj-icon name="arrow-right" size="16" aria-hidden="true"></ojj-icon>
+              </a>
+            </div>
+          </section>
+
+          <!-- Program Quick-Reference -->
+          <section aria-labelledby="schedule-guide-heading" class="bg-brand-primary py-16">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 id="schedule-guide-heading" class="font-heading text-2xl font-black text-white mb-8 text-center">
+                Which Class Is Right for You?
+              </h2>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a
+                  href="/programs/#101"
+                  class="flex items-start gap-4 p-5 rounded-xl bg-neutral-900 border border-neutral-800 hover:border-neutral-600 transition-colors group"
+                >
+                  <span class="flex-shrink-0 px-3 py-1 bg-brand-accent text-white text-xs font-bold rounded-full uppercase tracking-wider">New to BJJ</span>
+                  <div>
+                    <strong class="text-white group-hover:text-neutral-200 block mb-0.5">Jiu Jitsu 101</strong>
+                    <span class="text-neutral-500 text-sm">Adult beginners with no experience</span>
+                  </div>
+                </a>
+                <a
+                  href="/programs/#adult"
+                  class="flex items-start gap-4 p-5 rounded-xl bg-neutral-900 border border-neutral-800 hover:border-neutral-600 transition-colors group"
+                >
+                  <span class="flex-shrink-0 px-3 py-1 bg-neutral-700 text-neutral-300 text-xs font-bold rounded-full uppercase tracking-wider">Adults</span>
+                  <div>
+                    <strong class="text-white group-hover:text-neutral-200 block mb-0.5">Adult Jiu Jitsu</strong>
+                    <span class="text-neutral-500 text-sm">All levels, core BJJ program</span>
+                  </div>
+                </a>
+                <a
+                  href="/programs/#youth-little"
+                  class="flex items-start gap-4 p-5 rounded-xl bg-neutral-900 border border-neutral-800 hover:border-neutral-600 transition-colors group"
+                >
+                  <span class="flex-shrink-0 px-3 py-1 bg-neutral-700 text-neutral-300 text-xs font-bold rounded-full uppercase tracking-wider">Ages 5–10</span>
+                  <div>
+                    <strong class="text-white group-hover:text-neutral-200 block mb-0.5">Little Grapplers</strong>
+                    <span class="text-neutral-500 text-sm">Kids BJJ foundations</span>
+                  </div>
+                </a>
+                <a
+                  href="/programs/#youth-juniors"
+                  class="flex items-start gap-4 p-5 rounded-xl bg-neutral-900 border border-neutral-800 hover:border-neutral-600 transition-colors group"
+                >
+                  <span class="flex-shrink-0 px-3 py-1 bg-neutral-700 text-neutral-300 text-xs font-bold rounded-full uppercase tracking-wider">Ages 10–15</span>
+                  <div>
+                    <strong class="text-white group-hover:text-neutral-200 block mb-0.5">Youth BJJ</strong>
+                    <span class="text-neutral-500 text-sm">Teen fundamentals and technique</span>
+                  </div>
+                </a>
+                <a
+                  href="/programs/#competition"
+                  class="flex items-start gap-4 p-5 rounded-xl bg-neutral-900 border border-neutral-800 hover:border-neutral-600 transition-colors group"
+                >
+                  <span class="flex-shrink-0 px-3 py-1 bg-neutral-700 text-neutral-300 text-xs font-bold rounded-full uppercase tracking-wider">Intermediate+</span>
+                  <div>
+                    <strong class="text-white group-hover:text-neutral-200 block mb-0.5">Competition Team</strong>
+                    <span class="text-neutral-500 text-sm">Advanced training and tournament prep</span>
+                  </div>
+                </a>
+                <a
+                  href="/programs/#kickboxing"
+                  class="flex items-start gap-4 p-5 rounded-xl bg-neutral-900 border border-neutral-800 hover:border-neutral-600 transition-colors group"
+                >
+                  <span class="flex-shrink-0 px-3 py-1 bg-neutral-700 text-neutral-300 text-xs font-bold rounded-full uppercase tracking-wider">All Levels</span>
+                  <div>
+                    <strong class="text-white group-hover:text-neutral-200 block mb-0.5">Kickboxing</strong>
+                    <span class="text-neutral-500 text-sm">Stand-up striking, all welcome</span>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </section>
+
+          <!-- Live Schedule Embed -->
+          <section aria-labelledby="schedule-embed-heading" class="bg-neutral-950 py-16">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 id="schedule-embed-heading" class="sr-only">Live Class Schedule</h2>
+              <!-- Gymdesk schedule widget -->
+              <!-- ojj-schedule-embed (Phase 3) -->
+              <div class="rounded-2xl overflow-hidden bg-neutral-900 border border-neutral-800 min-h-96 flex items-center justify-center" aria-label="Class schedule loading">
+                <p class="text-neutral-500 text-sm">Schedule loading…</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Before Your First Class -->
+          <section aria-labelledby="schedule-prep-heading" class="bg-brand-primary py-16">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 id="schedule-prep-heading" class="font-heading text-2xl sm:text-3xl font-black text-white mb-8 text-center">
+                Before Your First Class
+              </h2>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="flex gap-3">
+                  <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                  <div>
+                    <strong class="text-white block mb-0.5">Wear comfortable workout clothes</strong>
+                    <span class="text-neutral-400 text-sm">No shoes on the mat. Athletic shorts and a t-shirt work fine for your first visit.</span>
+                  </div>
+                </div>
+                <div class="flex gap-3">
+                  <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                  <div>
+                    <strong class="text-white block mb-0.5">Arrive 10 minutes early</strong>
+                    <span class="text-neutral-400 text-sm">Introduces yourself to the coach before class starts — it makes a difference.</span>
+                  </div>
+                </div>
+                <div class="flex gap-3">
+                  <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                  <div>
+                    <strong class="text-white block mb-0.5">Bring water</strong>
+                    <span class="text-neutral-400 text-sm">Classes are 60 minutes and move at a steady pace.</span>
+                  </div>
+                </div>
+                <div class="flex gap-3">
+                  <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                  <div>
+                    <strong class="text-white block mb-0.5">Skip the heavy meal</strong>
+                    <span class="text-neutral-400 text-sm">Don't eat a large meal within 90 minutes of class.</span>
+                  </div>
+                </div>
+              </div>
+              <p class="text-center text-neutral-500 text-sm mt-8">
+                You don't need a gi (uniform) for your first visit. We'll let you know what to get after your trial class.
+              </p>
+            </div>
+          </section>
+
+          <!-- Questions CTA -->
+          <section class="bg-neutral-950 py-16">
+            <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <h2 class="font-heading text-2xl font-black text-white mb-3">
+                Questions About the Schedule?
+              </h2>
+              <p class="text-neutral-400 mb-8">
+                Call or text us at
+                <a href="tel:+15033088455" class="text-white hover:text-neutral-300 transition-colors font-semibold">(503) 308-8455</a>
+                or email
+                <a href="mailto:dan@ojjlab.com" class="text-white hover:text-neutral-300 transition-colors font-semibold">dan@ojjlab.com</a>.
+                We respond quickly and are happy to help you find the right class.
+              </p>
+              <a
+                href="/contact/"
+                class="inline-flex items-center gap-2 px-6 py-3 border border-neutral-600 text-neutral-300 font-semibold rounded-lg hover:border-white hover:text-white transition-colors"
+              >
+                Contact Us
+                <ojj-icon name="arrow-right" size="16" aria-hidden="true"></ojj-icon>
+              </a>
+            </div>
+          </section>
+
         </main>
 
         <ojj-site-footer></ojj-site-footer>

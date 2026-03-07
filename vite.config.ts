@@ -19,6 +19,7 @@ function mpaDevRewrite(): Plugin {
     '/shop/':     '/src/pages/shop.html',
     '/login/':    '/src/pages/login.html',
     '/reviews/':  '/src/pages/reviews.html',
+    '/contact/':  '/src/pages/contact.html',
   }
   return {
     name: 'mpa-dev-rewrite',
@@ -50,6 +51,7 @@ function mpaBuildRewrite(): Plugin {
     ['src/pages/shop.html',     'shop/index.html'],
     ['src/pages/login.html',    'login/index.html'],
     ['src/pages/reviews.html',  'reviews/index.html'],
+    ['src/pages/contact.html',  'contact/index.html'],
     ['src/pages/404.html',      '404.html'],
   ]
   return {
@@ -85,6 +87,7 @@ export default defineConfig({
         'shop/index':     `${root}/src/pages/shop.html`,
         'login/index':    `${root}/src/pages/login.html`,
         'reviews/index':  `${root}/src/pages/reviews.html`,
+        'contact/index':  `${root}/src/pages/contact.html`,
         '404':            `${root}/src/pages/404.html`,
       },
     },

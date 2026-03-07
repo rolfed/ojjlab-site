@@ -6,18 +6,17 @@
     <title>Programs — Oregon Jiu Jitsu Lab</title>
     <meta
       name="description"
-      content="Explore BJJ programs at Oregon Jiu Jitsu Lab: adult Brazilian Jiu Jitsu, youth BJJ, and competition team training."
+      content="BJJ programs for every level at Oregon Jiu Jitsu Lab — Little Grapplers, Youth BJJ, Jiu Jitsu 101, Adult BJJ, Competition Team, and Kickboxing in Hillsboro, Oregon."
     />
     <meta property="og:title" content="Programs — Oregon Jiu Jitsu Lab" />
     <meta
       property="og:description"
-      content="Explore BJJ programs at Oregon Jiu Jitsu Lab: adult Brazilian Jiu Jitsu, youth BJJ, and competition team training."
+      content="BJJ programs for every level at Oregon Jiu Jitsu Lab — Little Grapplers, Youth BJJ, Jiu Jitsu 101, Adult BJJ, Competition Team, and Kickboxing in Hillsboro, Oregon."
     />
     <meta property="og:type" content="website" />
     <link rel="stylesheet" href="/src/styles/main.css" />
   </head>
   <body class="bg-brand-primary text-neutral-100">
-    <!-- Fixed elements — OUTSIDE smooth-wrapper (containing-block safety) -->
     <a class="skip-link" href="#main-content">Skip to main content</a>
     <ojj-site-header current-page="/programs/" data-turbo-permanent id="site-header"></ojj-site-header>
     <ojj-scroll-progress aria-hidden="true"></ojj-scroll-progress>
@@ -25,24 +24,404 @@
     <div id="smooth-wrapper">
       <div id="smooth-content">
         <main id="main-content" tabindex="-1">
-          <h1>Programs</h1>
 
-          <section aria-labelledby="adult-bjj">
-            <h2 id="adult-bjj">Adult Brazilian Jiu Jitsu</h2>
-            <p>All levels welcome. No experience necessary.</p>
+          <!-- Page Header -->
+          <ojj-page-hero
+            headline="A Program for Every Level"
+            subheadline="Whether you're a curious beginner or a competitive athlete, we have a structured program designed for where you are right now."
+            cta-label="Book a Free Trial Class"
+            cta-href="/schedule/"
+          ></ojj-page-hero>
+
+          <!-- Program nav anchors -->
+          <nav aria-label="Jump to program" class="bg-neutral-950 py-6 sticky top-16 z-10 border-b border-neutral-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <ul class="flex flex-wrap gap-x-6 gap-y-2 justify-center text-sm">
+                <li><a href="#youth-little" class="text-neutral-400 hover:text-white transition-colors">Little Grapplers</a></li>
+                <li><a href="#youth-juniors" class="text-neutral-400 hover:text-white transition-colors">Youth BJJ</a></li>
+                <li><a href="#101" class="text-neutral-400 hover:text-white transition-colors">Jiu Jitsu 101</a></li>
+                <li><a href="#adult" class="text-neutral-400 hover:text-white transition-colors">Adult BJJ</a></li>
+                <li><a href="#competition" class="text-neutral-400 hover:text-white transition-colors">Competition Team</a></li>
+                <li><a href="#kickboxing" class="text-neutral-400 hover:text-white transition-colors">Kickboxing</a></li>
+              </ul>
+            </div>
+          </nav>
+
+          <!-- Little Grapplers -->
+          <section id="youth-little" aria-labelledby="prog-little-heading" class="bg-brand-primary py-24 scroll-mt-28">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <div>
+                  <span class="inline-block px-3 py-1 bg-brand-accent text-white text-xs font-bold rounded-full uppercase tracking-wider mb-4">Ages 5–10</span>
+                  <h2 id="prog-little-heading" class="font-heading text-3xl sm:text-4xl font-black text-white mb-4">
+                    Little Grapplers
+                  </h2>
+                  <p class="text-neutral-300 text-lg leading-relaxed mb-4">
+                    Little Grapplers introduces young children to the fundamentals of Jiu Jitsu through structured play, games, and age-appropriate drilling.
+                  </p>
+                  <p class="text-neutral-400 leading-relaxed mb-8">
+                    No prior experience needed. Classes are high-energy, positive, and designed to build confidence alongside technique.
+                  </p>
+                  <a
+                    href="/schedule/"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-white font-semibold rounded-lg hover:opacity-90 transition-opacity"
+                  >
+                    View Schedule
+                    <ojj-icon name="arrow-right" size="16" aria-hidden="true"></ojj-icon>
+                  </a>
+                </div>
+                <ul class="space-y-4">
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Listening and following instruction</strong>
+                      <span class="text-neutral-400 text-sm">Building the habits that make kids better learners on and off the mat.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Body movement &amp; coordination</strong>
+                      <span class="text-neutral-400 text-sm">Motor skills development through age-appropriate BJJ movement patterns.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Core grappling concepts</strong>
+                      <span class="text-neutral-400 text-sm">Positions, escapes, and basic technique taught through games.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Confidence &amp; discipline</strong>
+                      <span class="text-neutral-400 text-sm">A safe, encouraging environment where kids learn that hard work pays off.</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </section>
 
-          <section aria-labelledby="youth-bjj">
-            <h2 id="youth-bjj">Youth BJJ</h2>
-            <p>Structured curriculum for children and teenagers.</p>
+          <!-- Youth BJJ -->
+          <section id="youth-juniors" aria-labelledby="prog-youth-heading" class="bg-neutral-950 py-24 scroll-mt-28">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <div>
+                  <span class="inline-block px-3 py-1 bg-neutral-700 text-neutral-300 text-xs font-bold rounded-full uppercase tracking-wider mb-4">Ages 10–15</span>
+                  <h2 id="prog-youth-heading" class="font-heading text-3xl sm:text-4xl font-black text-white mb-4">
+                    Youth BJJ
+                  </h2>
+                  <p class="text-neutral-300 text-lg leading-relaxed mb-4">
+                    Youth BJJ teaches real Jiu Jitsu fundamentals to tweens and teenagers in a focused, structured environment.
+                  </p>
+                  <p class="text-neutral-400 leading-relaxed mb-8">
+                    This program builds the technical foundation students will use for the rest of their BJJ journey — whether they compete or just train for fitness and self-defense.
+                  </p>
+                  <a
+                    href="/schedule/"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-white font-semibold rounded-lg hover:opacity-90 transition-opacity"
+                  >
+                    View Schedule
+                    <ojj-icon name="arrow-right" size="16" aria-hidden="true"></ojj-icon>
+                  </a>
+                </div>
+                <ul class="space-y-4">
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Takedowns &amp; defensive wrestling</strong>
+                      <span class="text-neutral-400 text-sm">How to control opponents from a standing position.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Guard positions &amp; escapes</strong>
+                      <span class="text-neutral-400 text-sm">The core groundwork positions of BJJ — both attacking and defending.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Basic submissions &amp; counters</strong>
+                      <span class="text-neutral-400 text-sm">Learning how to finish and how to defend.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Safe, supervised sparring</strong>
+                      <span class="text-neutral-400 text-sm">Controlled live practice that builds real skill and mental toughness.</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </section>
 
-          <section aria-labelledby="competition-team">
-            <h2 id="competition-team">Competition Team</h2>
-            <p>Advanced training for competitors.</p>
+          <!-- Jiu Jitsu 101 -->
+          <section id="101" aria-labelledby="prog-101-heading" class="bg-brand-primary py-24 scroll-mt-28">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <div>
+                  <span class="inline-block px-3 py-1 bg-brand-accent text-white text-xs font-bold rounded-full uppercase tracking-wider mb-4">Beginners</span>
+                  <h2 id="prog-101-heading" class="font-heading text-3xl sm:text-4xl font-black text-white mb-4">
+                    Jiu Jitsu 101
+                  </h2>
+                  <p class="text-neutral-300 text-lg leading-relaxed mb-4">
+                    New to BJJ? Start here.
+                  </p>
+                  <p class="text-neutral-300 leading-relaxed mb-4">
+                    Jiu Jitsu 101 is designed specifically for adults with little or no experience. You'll learn the essential positions, movements, and techniques in a low-pressure environment where questions are always welcome.
+                  </p>
+                  <p class="text-neutral-400 leading-relaxed mb-8">
+                    Most of our long-term members started in this class. No fitness level required.
+                  </p>
+                  <a
+                    href="/schedule/"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-white font-semibold rounded-lg hover:opacity-90 transition-opacity"
+                  >
+                    Try a Free Class
+                    <ojj-icon name="arrow-right" size="16" aria-hidden="true"></ojj-icon>
+                  </a>
+                </div>
+                <ul class="space-y-4">
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Slower pace, more explanation</strong>
+                      <span class="text-neutral-400 text-sm">Coaches break down the "why" behind every technique, not just the steps.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Patient, experienced training partners</strong>
+                      <span class="text-neutral-400 text-sm">You'll drill with people who remember being new — and who want to help.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Core positions covered first</strong>
+                      <span class="text-neutral-400 text-sm">Mount, guard, side control, back — the map of BJJ made simple.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">No fitness level required</strong>
+                      <span class="text-neutral-400 text-sm">BJJ will get you fit. You don't need to be fit to start.</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </section>
 
-          <a href="/schedule/">View Schedule</a>
+          <!-- Adult Jiu Jitsu -->
+          <section id="adult" aria-labelledby="prog-adult-heading" class="bg-neutral-950 py-24 scroll-mt-28">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <div>
+                  <span class="inline-block px-3 py-1 bg-neutral-700 text-neutral-300 text-xs font-bold rounded-full uppercase tracking-wider mb-4">All Adult Levels</span>
+                  <h2 id="prog-adult-heading" class="font-heading text-3xl sm:text-4xl font-black text-white mb-4">
+                    Adult Jiu Jitsu
+                  </h2>
+                  <p class="text-neutral-300 text-lg leading-relaxed mb-4">
+                    Adult Jiu Jitsu is our flagship program — a structured curriculum for adults at any stage of their BJJ journey.
+                  </p>
+                  <p class="text-neutral-400 leading-relaxed mb-8">
+                    Beginners are always welcome alongside intermediate and advanced students. The curriculum is structured so all levels train together productively in every class.
+                  </p>
+                  <a
+                    href="/schedule/"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-white font-semibold rounded-lg hover:opacity-90 transition-opacity"
+                  >
+                    View Schedule
+                    <ojj-icon name="arrow-right" size="16" aria-hidden="true"></ojj-icon>
+                  </a>
+                </div>
+                <ul class="space-y-4">
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Focused warm-up &amp; movement drills</strong>
+                      <span class="text-neutral-400 text-sm">Every class opens with movement patterns that reinforce technique.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Technique instruction &amp; partner drilling</strong>
+                      <span class="text-neutral-400 text-sm">Each class covers 1–2 techniques in depth with supervised partner practice.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Controlled live training</strong>
+                      <span class="text-neutral-400 text-sm">Sparring rounds where you test what you've learned against real resistance.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Clear belt progression</strong>
+                      <span class="text-neutral-400 text-sm">Structured curriculum tied to belt levels so you always know what to develop next.</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Competition Team -->
+          <section id="competition" aria-labelledby="prog-comp-heading" class="bg-brand-primary py-24 scroll-mt-28">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <div>
+                  <span class="inline-block px-3 py-1 bg-neutral-700 text-neutral-300 text-xs font-bold rounded-full uppercase tracking-wider mb-4">Intermediate — Advanced</span>
+                  <h2 id="prog-comp-heading" class="font-heading text-3xl sm:text-4xl font-black text-white mb-4">
+                    Competition Team
+                  </h2>
+                  <p class="text-neutral-300 text-lg leading-relaxed mb-4">
+                    The Competition Team is for athletes who want to test their Jiu Jitsu under pressure.
+                  </p>
+                  <p class="text-neutral-400 leading-relaxed mb-4">
+                    Training is more intense, more focused, and built around preparing you to perform on the tournament mat. If you want to compete — this is where you prepare.
+                  </p>
+                  <p class="text-neutral-500 text-sm mb-8">
+                    You should have foundational BJJ before joining this program. Ask a coach if you're unsure whether you're ready.
+                  </p>
+                  <a
+                    href="/contact/"
+                    class="inline-flex items-center gap-2 px-6 py-3 border border-neutral-600 text-neutral-300 font-semibold rounded-lg hover:border-white hover:text-white transition-colors"
+                  >
+                    Talk to a Coach
+                    <ojj-icon name="arrow-right" size="16" aria-hidden="true"></ojj-icon>
+                  </a>
+                </div>
+                <ul class="space-y-4">
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Advanced technique for competition</strong>
+                      <span class="text-neutral-400 text-sm">Guard retention, passing chains, leg locks, and tournament-specific setups.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Tournament strategy &amp; game planning</strong>
+                      <span class="text-neutral-400 text-sm">How to approach a bracket, manage time, and play to your strengths.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Higher-intensity sparring</strong>
+                      <span class="text-neutral-400 text-sm">Timed rounds at competition pace — conditioning your body and your mind.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Event preparation</strong>
+                      <span class="text-neutral-400 text-sm">Support for local and regional IBJJF and NAGA competitions.</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Kickboxing -->
+          <section id="kickboxing" aria-labelledby="prog-kickboxing-heading" class="bg-neutral-950 py-24 scroll-mt-28">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <div>
+                  <span class="inline-block px-3 py-1 bg-neutral-700 text-neutral-300 text-xs font-bold rounded-full uppercase tracking-wider mb-4">All Adult Levels</span>
+                  <h2 id="prog-kickboxing-heading" class="font-heading text-3xl sm:text-4xl font-black text-white mb-4">
+                    Kickboxing
+                  </h2>
+                  <p class="text-neutral-300 text-lg leading-relaxed mb-4">
+                    Our Kickboxing program teaches practical stand-up striking in a high-energy, structured class.
+                  </p>
+                  <p class="text-neutral-400 leading-relaxed mb-8">
+                    No prior striking experience needed. A great standalone program or a complement to BJJ training — stand-up and ground game together make a complete fighter.
+                  </p>
+                  <a
+                    href="/schedule/"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-white font-semibold rounded-lg hover:opacity-90 transition-opacity"
+                  >
+                    View Schedule
+                    <ojj-icon name="arrow-right" size="16" aria-hidden="true"></ojj-icon>
+                  </a>
+                </div>
+                <ul class="space-y-4">
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Punching &amp; kicking fundamentals</strong>
+                      <span class="text-neutral-400 text-sm">Jab, cross, hook, kick — clean technique built from the ground up.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Defensive footwork &amp; head movement</strong>
+                      <span class="text-neutral-400 text-sm">How to not get hit — the half of striking most people ignore.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Knees &amp; elbows (Muay Thai influence)</strong>
+                      <span class="text-neutral-400 text-sm">Close-range tools that make the striking game complete.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Cardio, coordination &amp; functional fitness</strong>
+                      <span class="text-neutral-400 text-sm">One of the most effective ways to build real conditioning.</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Not Sure CTA -->
+          <section aria-labelledby="prog-cta-heading" class="bg-brand-primary py-24">
+            <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <h2 id="prog-cta-heading" class="font-heading text-3xl sm:text-4xl font-black text-white mb-4">
+                Not Sure Where to Start?
+              </h2>
+              <p class="text-neutral-400 text-lg mb-10">
+                Talk to a coach. We'll ask you a few questions and point you to the right program for your goals and experience level. Your first class is always free.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="/schedule/"
+                  class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-brand-accent text-white font-semibold rounded-lg hover:opacity-90 transition-opacity"
+                >
+                  Book a Free Trial
+                  <ojj-icon name="arrow-right" size="20" aria-hidden="true"></ojj-icon>
+                </a>
+                <a
+                  href="/contact/"
+                  class="inline-flex items-center justify-center gap-2 px-8 py-4 border border-neutral-600 text-neutral-300 font-semibold rounded-lg hover:border-white hover:text-white transition-colors"
+                >
+                  Contact Us
+                </a>
+              </div>
+            </div>
+          </section>
+
         </main>
 
         <ojj-site-footer></ojj-site-footer>

@@ -6,18 +6,17 @@
     <title>About — Oregon Jiu Jitsu Lab</title>
     <meta
       name="description"
-      content="Learn about Oregon Jiu Jitsu Lab's instructors, lineage, and training philosophy."
+      content="Learn about Oregon Jiu Jitsu Lab — our coaches, training philosophy, and what to expect on your first visit to our Hillsboro BJJ gym."
     />
     <meta property="og:title" content="About — Oregon Jiu Jitsu Lab" />
     <meta
       property="og:description"
-      content="Learn about Oregon Jiu Jitsu Lab's instructors, lineage, and training philosophy."
+      content="Learn about Oregon Jiu Jitsu Lab — our coaches, training philosophy, and what to expect on your first visit to our Hillsboro BJJ gym."
     />
     <meta property="og:type" content="website" />
     <link rel="stylesheet" href="/src/styles/main.css" />
   </head>
   <body class="bg-brand-primary text-neutral-100">
-    <!-- Fixed elements — OUTSIDE smooth-wrapper (containing-block safety) -->
     <a class="skip-link" href="#main-content">Skip to main content</a>
     <ojj-site-header current-page="/about/" data-turbo-permanent id="site-header"></ojj-site-header>
     <ojj-scroll-progress aria-hidden="true"></ojj-scroll-progress>
@@ -25,9 +24,186 @@
     <div id="smooth-wrapper">
       <div id="smooth-content">
         <main id="main-content" tabindex="-1">
-          <h1>About Oregon Jiu Jitsu Lab</h1>
-          <p>Our instructors, lineage, and training philosophy.</p>
-          <a href="/schedule/">View Schedule</a>
+
+          <!-- Hero -->
+          <ojj-page-hero
+            headline="Real Jiu Jitsu. Real Community."
+            subheadline="Oregon Jiu Jitsu Lab is a Brazilian Jiu Jitsu gym in Hillsboro, Oregon. We train adults, youth, and competitors — from first-timers to seasoned grapplers."
+            cta-label="Try a Free Class"
+            cta-href="/schedule/"
+          ></ojj-page-hero>
+
+          <!-- Who We Are -->
+          <section aria-labelledby="about-who-heading" class="bg-neutral-950 py-24">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 id="about-who-heading" class="font-heading text-3xl sm:text-4xl font-black text-white mb-6">
+                Who We Are
+              </h2>
+              <p class="text-neutral-300 text-lg leading-relaxed mb-4">
+                OJJ Lab was built on one idea: good technique, taught well, changes people.
+              </p>
+              <p class="text-neutral-300 text-lg leading-relaxed mb-4">
+                We're not a fitness class or a hobbyist club. We're a serious training environment that happens to be welcoming to beginners. You don't need experience to start — just a willingness to show up and learn.
+              </p>
+              <p class="text-neutral-300 text-lg leading-relaxed">
+                Our gym is in Hillsboro, Oregon and serves students from across the Portland metro area.
+              </p>
+            </div>
+          </section>
+
+          <!-- What We Teach -->
+          <section aria-labelledby="about-teach-heading" class="bg-brand-primary py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <div>
+                  <h2 id="about-teach-heading" class="font-heading text-3xl sm:text-4xl font-black text-white mb-6">
+                    What We Teach
+                  </h2>
+                  <p class="text-neutral-300 text-lg leading-relaxed mb-4">
+                    Brazilian Jiu Jitsu is a ground-based martial art that uses leverage and technique over size and strength. It's practical, deeply technical, and one of the most effective self-defense systems in the world.
+                  </p>
+                  <p class="text-neutral-300 leading-relaxed">
+                    At OJJ Lab, we cover all core areas of the game — from standing to the ground.
+                  </p>
+                </div>
+                <ul class="space-y-5 mt-2">
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Fundamental positions &amp; movements</strong>
+                      <span class="text-neutral-400 text-sm">The building blocks every student needs before anything else.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Takedowns &amp; wrestling</strong>
+                      <span class="text-neutral-400 text-sm">How to close distance, control the clinch, and get the fight to the ground.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Guard passing &amp; submissions</strong>
+                      <span class="text-neutral-400 text-sm">The core technical elements of BJJ — both offense and defense.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Live training (sparring)</strong>
+                      <span class="text-neutral-400 text-sm">Controlled, supervised practice against resisting partners — the proof of the work.</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Our Approach -->
+          <section aria-labelledby="about-approach-heading" class="bg-neutral-950 py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <div>
+                  <h2 id="about-approach-heading" class="font-heading text-3xl sm:text-4xl font-black text-white mb-6">
+                    Our Approach
+                  </h2>
+                  <p class="text-neutral-300 text-lg leading-relaxed mb-4">
+                    We follow a structured curriculum so your progress is never random. There's a clear path — and every class moves you forward along it.
+                  </p>
+                  <p class="text-neutral-300 leading-relaxed">
+                    New students aren't thrown in the deep end. Classes are designed so all levels train together productively, with coaches giving individual feedback throughout.
+                  </p>
+                </div>
+                <ul class="space-y-5 mt-2">
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Structured curriculum</strong>
+                      <span class="text-neutral-400 text-sm">A clear path from white belt to black belt — no guesswork about what to learn next.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">Individual coaching</strong>
+                      <span class="text-neutral-400 text-sm">Coaches correct technique personally, not just at the front of the room.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">All levels train together</strong>
+                      <span class="text-neutral-400 text-sm">Beginners learn from experienced partners. Advanced students sharpen their teaching.</span>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center text-white text-xs font-bold" aria-hidden="true">✓</span>
+                    <div>
+                      <strong class="text-white block mb-0.5">No ego culture</strong>
+                      <span class="text-neutral-400 text-sm">Everyone here is to help each other improve. That standard is enforced.</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Instructors -->
+          <ojj-instructors-section class="block"></ojj-instructors-section>
+
+          <!-- Your First Class -->
+          <section aria-labelledby="about-firstclass-heading" class="bg-brand-primary py-24">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 id="about-firstclass-heading" class="font-heading text-3xl sm:text-4xl font-black text-white mb-4 text-center">
+                What to Expect Your First Class
+              </h2>
+              <p class="text-neutral-400 text-lg text-center mb-12">
+                Walking into a BJJ gym for the first time can feel intimidating. We've heard that from almost every member we have now.
+              </p>
+              <ol class="space-y-8">
+                <li class="flex gap-6">
+                  <span class="flex-shrink-0 w-10 h-10 rounded-full bg-brand-accent flex items-center justify-center text-white font-black text-lg" aria-hidden="true">1</span>
+                  <div>
+                    <strong class="text-white text-lg block mb-1">Arrive 10 minutes early</strong>
+                    <p class="text-neutral-400">Introduce yourself at the front desk. We'll walk you around and answer questions before class starts.</p>
+                  </div>
+                </li>
+                <li class="flex gap-6">
+                  <span class="flex-shrink-0 w-10 h-10 rounded-full bg-brand-accent flex items-center justify-center text-white font-black text-lg" aria-hidden="true">2</span>
+                  <div>
+                    <strong class="text-white text-lg block mb-1">Join the warm-up</strong>
+                    <p class="text-neutral-400">All classes start with movement drills. Follow along at your own pace — no one is watching to judge.</p>
+                  </div>
+                </li>
+                <li class="flex gap-6">
+                  <span class="flex-shrink-0 w-10 h-10 rounded-full bg-brand-accent flex items-center justify-center text-white font-black text-lg" aria-hidden="true">3</span>
+                  <div>
+                    <strong class="text-white text-lg block mb-1">Learn the day's technique</strong>
+                    <p class="text-neutral-400">The coach demonstrates and breaks down the technique. Then you practice with a partner at a controlled pace.</p>
+                  </div>
+                </li>
+                <li class="flex gap-6">
+                  <span class="flex-shrink-0 w-10 h-10 rounded-full bg-brand-accent flex items-center justify-center text-white font-black text-lg" aria-hidden="true">4</span>
+                  <div>
+                    <strong class="text-white text-lg block mb-1">No pressure to spar on day one</strong>
+                    <p class="text-neutral-400">Live training at the end of class is optional for new students. We'll let you know when you're ready.</p>
+                  </div>
+                </li>
+              </ol>
+              <div class="mt-14 text-center">
+                <p class="text-neutral-400 mb-6">Your first class is free. No contract, no commitment.</p>
+                <a
+                  href="/schedule/"
+                  class="inline-flex items-center gap-2 px-8 py-4 bg-brand-accent text-white font-semibold rounded-lg hover:opacity-90 transition-opacity text-base"
+                >
+                  Book Your Free Class
+                  <ojj-icon name="arrow-right" size="20" aria-hidden="true"></ojj-icon>
+                </a>
+              </div>
+            </div>
+          </section>
+
         </main>
 
         <ojj-site-footer></ojj-site-footer>
