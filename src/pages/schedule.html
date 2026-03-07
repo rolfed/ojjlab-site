@@ -17,17 +17,22 @@
     <link rel="stylesheet" href="/src/styles/main.css" />
   </head>
   <body class="bg-brand-primary text-neutral-100">
+    <!-- Fixed elements — OUTSIDE smooth-wrapper (containing-block safety) -->
     <a class="skip-link" href="#main-content">Skip to main content</a>
-
     <ojj-site-header current-page="/schedule/" data-turbo-permanent id="site-header"></ojj-site-header>
+    <ojj-scroll-progress aria-hidden="true"></ojj-scroll-progress>
 
-    <main id="main-content" tabindex="-1">
-      <h1>Class Schedule</h1>
-      <p>Live schedule loads below. <a href="/login/">Log in</a> to book classes.</p>
-      <!-- ojj-schedule-embed (Phase 3) -->
-    </main>
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        <main id="main-content" tabindex="-1">
+          <h1>Class Schedule</h1>
+          <p>Live schedule loads below. <a href="/login/">Log in</a> to book classes.</p>
+          <!-- ojj-schedule-embed (Phase 3) -->
+        </main>
 
-    <ojj-site-footer></ojj-site-footer>
+        <ojj-site-footer></ojj-site-footer>
+      </div>
+    </div>
 
     <script type="module" src="/src/main.ts"></script>
     <script type="module" src="/src/pages/schedule.ts"></script>

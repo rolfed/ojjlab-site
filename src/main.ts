@@ -2,32 +2,35 @@
  * src/main.ts — shared entry point for all pages.
  *
  * Load order:
- * 1. gsap.registerPlugin(ScrollTrigger) fires at animate.ts module level
+ * 1. gsap.registerPlugin(ScrollTrigger, ScrollSmoother) fires at animate.ts module level
  * 2. All Web Components are registered via customElements.define
- * 3. initAnimations() configures reducedMotion — called exactly ONCE
+ * 3. initAnimations() configures reducedMotion + creates ScrollSmoother — called exactly ONCE
  * 4. @hotwired/turbo activates Drive (intercepts link clicks, swaps <body>)
  * 5. Turbo lifecycle hooks wire GSAP cleanup and persistent header sync
  */
 
-import { initAnimations } from '@/animations/animate'
+import { initAnimations, createSmoother } from '@/animations/animate'
 import '@/components/index'
 import '@hotwired/turbo'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
 import { hasConsent, animationsAllowed, applyMotionPreference } from '@/components/modules/OJJConsentBanner'
 
-// Called exactly once — attaches visibilitychange cleanup listener
+// Called exactly once — registers plugins, configures reducedMotion, creates smoother
 initAnimations()
 
-// Kill all page-level ScrollTriggers before Turbo swaps the body.
+// Kill smoother and all ScrollTriggers before Turbo swaps the body.
 // Component-level tweens are killed automatically in AnimatableMixin.cleanup()
 // when disconnectedCallback fires as old body elements are removed.
 document.addEventListener('turbo:before-render', () => {
+  ScrollSmoother.get()?.kill()
   ScrollTrigger.getAll().forEach((st) => st.kill())
 })
 
-// After each body swap: recalculate scroll positions and sync the
-// persistent header's attributes to match the new page.
+// After each body swap: recreate smoother, recalculate scroll positions,
+// and sync the persistent header's attributes to match the new page.
 document.addEventListener('turbo:render', () => {
+  createSmoother()
   ScrollTrigger.refresh()
 
   const header = document.querySelector('ojj-site-header')
@@ -65,4 +68,3 @@ document.addEventListener('turbo:load', () => {
     }
   }
 })
-

@@ -17,243 +17,248 @@
     <link rel="stylesheet" href="/src/styles/main.css" />
   </head>
   <body class="bg-brand-primary text-neutral-100">
+    <!-- Fixed elements — OUTSIDE smooth-wrapper (containing-block safety) -->
     <a class="skip-link" href="#main-content">Skip to main content</a>
-
     <ojj-site-header current-page="/reviews/" data-turbo-permanent id="site-header"></ojj-site-header>
+    <ojj-scroll-progress aria-hidden="true"></ojj-scroll-progress>
 
-    <main id="main-content" tabindex="-1">
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        <main id="main-content" tabindex="-1">
 
-      <!-- Page header -->
-      <section class="bg-neutral-950 pt-32 pb-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p class="text-brand-accent text-sm font-semibold uppercase tracking-widest mb-4">
-            ★★★★★ &nbsp;Google Reviews
-          </p>
-          <h1 class="font-heading text-4xl sm:text-5xl font-black text-white mb-4">
-            What Our Members Say
-          </h1>
-          <p class="text-neutral-400 text-lg max-w-xl mx-auto">
-            22 verified reviews from members of the Oregon Jiu Jitsu Lab community.
-          </p>
-        </div>
-      </section>
+          <!-- Page header -->
+          <section class="bg-neutral-950 pt-32 pb-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <p class="text-brand-accent text-sm font-semibold uppercase tracking-widest mb-4">
+                ★★★★★ &nbsp;Google Reviews
+              </p>
+              <h1 class="font-heading text-4xl sm:text-5xl font-black text-white mb-4">
+                What Our Members Say
+              </h1>
+              <p class="text-neutral-400 text-lg max-w-xl mx-auto">
+                22 verified reviews from members of the Oregon Jiu Jitsu Lab community.
+              </p>
+            </div>
+          </section>
 
-      <!-- Reviews grid — sorted 5-star first, most recent first -->
-      <section
-        aria-label="Member reviews"
-        class="bg-neutral-950 pb-24"
-      >
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            <ojj-review-card
-              author="Luis Sierra"
-              rating="5"
-              date="3 months ago"
-              text="Been here for close to 2 years. First review I write for any gym. I really like the warm ups, move breakdowns and how much time we actually get to roll. Adam and Dan have a great environment any bjj athlete."
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Nova &amp; Kyle Gregory"
-              rating="5"
-              date="4 months ago"
-              text="One of the best gyms I have been a member of! I have been a member of multiple gyms in three different states and this has been the best yet. Coach Adam and Dan both spend a ton of time with students one on one, and have very structured lesson plans."
-              truncated
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Zachary Funderburk"
-              rating="5"
-              date="4 months ago"
-              text="I&apos;ve been going to this gym since January, and it&apos;s been an amazing experience for both me and my kids (8 and 4). The instructors are top notch — patient, professional, and always put safety first. My son has special needs, and they&apos;ve been incredibly accommodating."
-              truncated
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Preston S."
-              rating="5"
-              date="4 months ago"
-              text="I&apos;ve had the pleasure of training at Oregon Jiu Jitsu Lab for a few weeks now, and one of the standout aspects of this gym is its inclusivity. It welcomes people of all ages, genders, fitness levels, and backgrounds. From the moment I walked in, I felt at home."
-              truncated
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Dustin Caley"
-              rating="5"
-              date="5 months ago"
-              text="Oregon Jiu Jitsu Lab is an amazing gym! The atmosphere and people made me feel like family from day one. Both coach Adam and Dan break down class details into easily consumed concepts that are great for any level practitioner!"
-              truncated
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Thy Ha"
-              rating="5"
-              date="5 months ago"
-              text="I wish all teenage girls would give Jiu Jitsu a try. It&apos;s a great way to build confidence. My two daughters have joined three other dojos over the years and we&apos;ve liked all of them. But my daughters have truly found their home at Oregon Jiu Jitsu Lab."
-              truncated
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Phong Nguyen"
-              rating="5"
-              date="5 months ago"
-              text="This is more than a dojo, my teenage girls feel at home here. Adam and Dan have done a good job creating a community that welcomes all skill levels. It has been a wonderful place to build skills and confidence."
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Maya Lindskog"
-              rating="5"
-              date="5 months ago"
-              text="Everyone here is so welcoming and supportive. I&apos;ve been going to OJJL for a few weeks now and they&apos;ve all been super encouraging and helpful. Great energy and vibes with great coaches/trainers who communicate clearly and are patient."
-              truncated
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Cobe Yoshino"
-              rating="5"
-              date="5 months ago"
-              text="Amazing gym, instructors, and students. Everyone is incredibly welcoming and generous with their time. Highly recommend."
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Mackenzie Loeks"
-              rating="5"
-              date="5 months ago"
-              text="I walked into OJJ Lab as one of the only women, all by myself, and was immediately welcomed in. I felt safe right away, which says so much about the atmosphere here. The adults&apos; classes are laid back and fun, with plenty of laughs and good technique."
-              truncated
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Steven Vournazos"
-              rating="5"
-              date="6 months ago"
-              text="Came to Oregon for work and couldn&apos;t be happier with the quality of training at Oregon Jiu Jitsu Lab. Unbelievably supportive and hospitable coaches and upper belts, live positional drilling, and fun live rolls. Stellar community — highly recommend if you&apos;re in the area!"
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Vince Hcrc"
-              rating="5"
-              date="7 months ago"
-              text="These guys are great, a family friendly environment and an awesome incubator for my kids and their journey through the world of Jiu Jitsu."
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="C. B."
-              rating="5"
-              date="8 months ago"
-              text="Honest and honorable coaches you can trust. Welcoming atmosphere."
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Logan Keppel"
-              rating="5"
-              date="9 months ago"
-              text="A great place to start your BJJ journey with knowledgeable coaches and great people."
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Jaden Dolan"
-              rating="5"
-              date="9 months ago"
-              text="I&apos;ve had an exceptional experience training at Oregon Jiu Jitsu Lab. The environment is welcoming, respectful, and highly focused on both personal growth and technical development. Whether you&apos;re a complete beginner or an experienced practitioner, this is the place to train."
-              truncated
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Holly Takahani"
-              rating="5"
-              date="9 months ago"
-              text="Seriously excellent."
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Zack Bradcovich"
-              rating="5"
-              date="10 months ago"
-              text="Dropped in for open mat, and everyone was super friendly and chill to roll with. Professor Adam and Dan were super great and even offered some advice to improve my game. Much appreciated!"
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Brittney Lee"
-              rating="5"
-              date="a year ago"
-              text="OJJL has been great for our son who is on the younger side of the class age range. There&apos;s something to be said about the coaches and how great they are with children. We appreciate their approach to building confidence."
-              truncated
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Katie Trautman"
-              rating="5"
-              date="a year ago"
-              text="While visiting family I contacted these guys and talked to Daniel about dropping in on a class. Daniel responded quickly and I was able to train a few times! Everyone was extremely welcoming and helpful and the restrooms and mats were very clean."
-              truncated
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Tom Greenwood"
-              rating="5"
-              date="a year ago"
-              text="Readily apparent the instructors are good with kids. They are practiced at recognizing the line between pushing a kid to their potential and time to take a break."
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Noah Murphy"
-              rating="5"
-              date="a year ago"
-              text="Was a little apprehensive to start BJJ at 41 but after one class, I was hooked. It is such a great environment to learn and train in for whatever your goals in Jiu Jitsu are. The coaches are very knowledgeable and amazing teachers. A lot of good times and even better friends have been made here!"
-            ></ojj-review-card>
-
-            <ojj-review-card
-              author="Jesse Elias"
-              rating="5"
-              date="a year ago"
-              text="Came by for an open mat and had a blast! Great facilities, great people and great vibes."
-            ></ojj-review-card>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- CTA -->
-      <section
-        aria-labelledby="reviews-cta-heading"
-        class="bg-brand-primary py-24"
-      >
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2
-            id="reviews-cta-heading"
-            class="font-heading text-3xl sm:text-4xl font-black text-white mb-4"
+          <!-- Reviews grid — sorted 5-star first, most recent first -->
+          <section
+            aria-label="Member reviews"
+            class="bg-neutral-950 pb-24"
           >
-            Ready to Start Your Journey?
-          </h2>
-          <p class="text-neutral-400 text-lg max-w-xl mx-auto mb-10">
-            Join the Oregon Jiu Jitsu Lab community. Your first class is free — no contract, no experience needed.
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="/schedule/"
-              class="inline-flex items-center justify-center gap-2 bg-brand-accent text-white text-sm font-semibold px-6 py-3 rounded-md hover:bg-red-700 transition-colors"
-            >
-              Book a Free Trial
-              <ojj-icon name="arrow-right" size="16" aria-hidden="true"></ojj-icon>
-            </a>
-            <!-- Replace href with your Google Business write-a-review URL -->
-            <a
-              href="https://www.google.com/search?q=oregon+jiu+jitsu+lab"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center justify-center gap-2 border border-neutral-600 text-neutral-300 text-sm font-semibold px-6 py-3 rounded-md hover:border-white hover:text-white transition-colors"
-            >
-              Write a Google Review
-              <ojj-icon name="external" size="16" aria-hidden="true"></ojj-icon>
-            </a>
-          </div>
-        </div>
-      </section>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-    </main>
+                <ojj-review-card
+                  author="Luis Sierra"
+                  rating="5"
+                  date="3 months ago"
+                  text="Been here for close to 2 years. First review I write for any gym. I really like the warm ups, move breakdowns and how much time we actually get to roll. Adam and Dan have a great environment any bjj athlete."
+                ></ojj-review-card>
 
-    <ojj-site-footer></ojj-site-footer>
+                <ojj-review-card
+                  author="Nova &amp; Kyle Gregory"
+                  rating="5"
+                  date="4 months ago"
+                  text="One of the best gyms I have been a member of! I have been a member of multiple gyms in three different states and this has been the best yet. Coach Adam and Dan both spend a ton of time with students one on one, and have very structured lesson plans."
+                  truncated
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Zachary Funderburk"
+                  rating="5"
+                  date="4 months ago"
+                  text="I&apos;ve been going to this gym since January, and it&apos;s been an amazing experience for both me and my kids (8 and 4). The instructors are top notch — patient, professional, and always put safety first. My son has special needs, and they&apos;ve been incredibly accommodating."
+                  truncated
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Preston S."
+                  rating="5"
+                  date="4 months ago"
+                  text="I&apos;ve had the pleasure of training at Oregon Jiu Jitsu Lab for a few weeks now, and one of the standout aspects of this gym is its inclusivity. It welcomes people of all ages, genders, fitness levels, and backgrounds. From the moment I walked in, I felt at home."
+                  truncated
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Dustin Caley"
+                  rating="5"
+                  date="5 months ago"
+                  text="Oregon Jiu Jitsu Lab is an amazing gym! The atmosphere and people made me feel like family from day one. Both coach Adam and Dan break down class details into easily consumed concepts that are great for any level practitioner!"
+                  truncated
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Thy Ha"
+                  rating="5"
+                  date="5 months ago"
+                  text="I wish all teenage girls would give Jiu Jitsu a try. It&apos;s a great way to build confidence. My two daughters have joined three other dojos over the years and we&apos;ve liked all of them. But my daughters have truly found their home at Oregon Jiu Jitsu Lab."
+                  truncated
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Phong Nguyen"
+                  rating="5"
+                  date="5 months ago"
+                  text="This is more than a dojo, my teenage girls feel at home here. Adam and Dan have done a good job creating a community that welcomes all skill levels. It has been a wonderful place to build skills and confidence."
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Maya Lindskog"
+                  rating="5"
+                  date="5 months ago"
+                  text="Everyone here is so welcoming and supportive. I&apos;ve been going to OJJL for a few weeks now and they&apos;ve all been super encouraging and helpful. Great energy and vibes with great coaches/trainers who communicate clearly and are patient."
+                  truncated
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Cobe Yoshino"
+                  rating="5"
+                  date="5 months ago"
+                  text="Amazing gym, instructors, and students. Everyone is incredibly welcoming and generous with their time. Highly recommend."
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Mackenzie Loeks"
+                  rating="5"
+                  date="5 months ago"
+                  text="I walked into OJJ Lab as one of the only women, all by myself, and was immediately welcomed in. I felt safe right away, which says so much about the atmosphere here. The adults&apos; classes are laid back and fun, with plenty of laughs and good technique."
+                  truncated
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Steven Vournazos"
+                  rating="5"
+                  date="6 months ago"
+                  text="Came to Oregon for work and couldn&apos;t be happier with the quality of training at Oregon Jiu Jitsu Lab. Unbelievably supportive and hospitable coaches and upper belts, live positional drilling, and fun live rolls. Stellar community — highly recommend if you&apos;re in the area!"
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Vince Hcrc"
+                  rating="5"
+                  date="7 months ago"
+                  text="These guys are great, a family friendly environment and an awesome incubator for my kids and their journey through the world of Jiu Jitsu."
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="C. B."
+                  rating="5"
+                  date="8 months ago"
+                  text="Honest and honorable coaches you can trust. Welcoming atmosphere."
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Logan Keppel"
+                  rating="5"
+                  date="9 months ago"
+                  text="A great place to start your BJJ journey with knowledgeable coaches and great people."
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Jaden Dolan"
+                  rating="5"
+                  date="9 months ago"
+                  text="I&apos;ve had an exceptional experience training at Oregon Jiu Jitsu Lab. The environment is welcoming, respectful, and highly focused on both personal growth and technical development. Whether you&apos;re a complete beginner or an experienced practitioner, this is the place to train."
+                  truncated
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Holly Takahani"
+                  rating="5"
+                  date="9 months ago"
+                  text="Seriously excellent."
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Zack Bradcovich"
+                  rating="5"
+                  date="10 months ago"
+                  text="Dropped in for open mat, and everyone was super friendly and chill to roll with. Professor Adam and Dan were super great and even offered some advice to improve my game. Much appreciated!"
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Brittney Lee"
+                  rating="5"
+                  date="a year ago"
+                  text="OJJL has been great for our son who is on the younger side of the class age range. There&apos;s something to be said about the coaches and how great they are with children. We appreciate their approach to building confidence."
+                  truncated
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Katie Trautman"
+                  rating="5"
+                  date="a year ago"
+                  text="While visiting family I contacted these guys and talked to Daniel about dropping in on a class. Daniel responded quickly and I was able to train a few times! Everyone was extremely welcoming and helpful and the restrooms and mats were very clean."
+                  truncated
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Tom Greenwood"
+                  rating="5"
+                  date="a year ago"
+                  text="Readily apparent the instructors are good with kids. They are practiced at recognizing the line between pushing a kid to their potential and time to take a break."
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Noah Murphy"
+                  rating="5"
+                  date="a year ago"
+                  text="Was a little apprehensive to start BJJ at 41 but after one class, I was hooked. It is such a great environment to learn and train in for whatever your goals in Jiu Jitsu are. The coaches are very knowledgeable and amazing teachers. A lot of good times and even better friends have been made here!"
+                ></ojj-review-card>
+
+                <ojj-review-card
+                  author="Jesse Elias"
+                  rating="5"
+                  date="a year ago"
+                  text="Came by for an open mat and had a blast! Great facilities, great people and great vibes."
+                ></ojj-review-card>
+
+              </div>
+            </div>
+          </section>
+
+          <!-- CTA -->
+          <section
+            aria-labelledby="reviews-cta-heading"
+            class="bg-brand-primary py-24"
+          >
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <h2
+                id="reviews-cta-heading"
+                class="font-heading text-3xl sm:text-4xl font-black text-white mb-4"
+              >
+                Ready to Start Your Journey?
+              </h2>
+              <p class="text-neutral-400 text-lg max-w-xl mx-auto mb-10">
+                Join the Oregon Jiu Jitsu Lab community. Your first class is free — no contract, no experience needed.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="/schedule/"
+                  class="inline-flex items-center justify-center gap-2 bg-brand-accent text-white text-sm font-semibold px-6 py-3 rounded-md hover:bg-red-700 transition-colors"
+                >
+                  Book a Free Trial
+                  <ojj-icon name="arrow-right" size="16" aria-hidden="true"></ojj-icon>
+                </a>
+                <!-- Replace href with your Google Business write-a-review URL -->
+                <a
+                  href="https://www.google.com/search?q=oregon+jiu+jitsu+lab"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center justify-center gap-2 border border-neutral-600 text-neutral-300 text-sm font-semibold px-6 py-3 rounded-md hover:border-white hover:text-white transition-colors"
+                >
+                  Write a Google Review
+                  <ojj-icon name="external" size="16" aria-hidden="true"></ojj-icon>
+                </a>
+              </div>
+            </div>
+          </section>
+
+        </main>
+
+        <ojj-site-footer></ojj-site-footer>
+      </div>
+    </div>
 
     <script type="module" src="/src/main.ts"></script>
     <script type="module" src="/src/pages/reviews.ts"></script>

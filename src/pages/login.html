@@ -17,31 +17,36 @@
     <link rel="stylesheet" href="/src/styles/main.css" />
   </head>
   <body class="bg-brand-primary text-neutral-100">
+    <!-- Fixed elements — OUTSIDE smooth-wrapper (containing-block safety) -->
     <a class="skip-link" href="#main-content">Skip to main content</a>
-
     <ojj-site-header current-page="/login/" data-turbo-permanent id="site-header"></ojj-site-header>
+    <ojj-scroll-progress aria-hidden="true"></ojj-scroll-progress>
 
-    <main id="main-content" tabindex="-1">
-      <section aria-labelledby="login-heading">
-        <h1 id="login-heading">Member Login</h1>
-        <p>Access your schedule, attendance, and account through our member portal.</p>
-        <a
-          href="#"
-          id="gymdesk-login-link"
-          rel="noopener noreferrer"
-          target="_blank"
-          aria-describedby="login-external-notice"
-          data-turbo="false"
-        >
-          Go to Member Portal
-        </a>
-        <p id="login-external-notice">
-          Opens GymDesk — our member management system. You will be redirected to an external site.
-        </p>
-      </section>
-    </main>
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        <main id="main-content" tabindex="-1">
+          <section aria-labelledby="login-heading">
+            <h1 id="login-heading">Member Login</h1>
+            <p>Access your schedule, attendance, and account through our member portal.</p>
+            <a
+              href="#"
+              id="gymdesk-login-link"
+              rel="noopener noreferrer"
+              target="_blank"
+              aria-describedby="login-external-notice"
+              data-turbo="false"
+            >
+              Go to Member Portal
+            </a>
+            <p id="login-external-notice">
+              Opens GymDesk — our member management system. You will be redirected to an external site.
+            </p>
+          </section>
+        </main>
 
-    <ojj-site-footer></ojj-site-footer>
+        <ojj-site-footer></ojj-site-footer>
+      </div>
+    </div>
 
     <script type="module" src="/src/main.ts"></script>
     <script type="module" src="/src/pages/login.ts"></script>

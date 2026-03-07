@@ -17,32 +17,37 @@
     <link rel="stylesheet" href="/src/styles/main.css" />
   </head>
   <body class="bg-brand-primary text-neutral-100">
+    <!-- Fixed elements — OUTSIDE smooth-wrapper (containing-block safety) -->
     <a class="skip-link" href="#main-content">Skip to main content</a>
-
     <ojj-site-header current-page="/programs/" data-turbo-permanent id="site-header"></ojj-site-header>
+    <ojj-scroll-progress aria-hidden="true"></ojj-scroll-progress>
 
-    <main id="main-content" tabindex="-1">
-      <h1>Programs</h1>
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        <main id="main-content" tabindex="-1">
+          <h1>Programs</h1>
 
-      <section aria-labelledby="adult-bjj">
-        <h2 id="adult-bjj">Adult Brazilian Jiu Jitsu</h2>
-        <p>All levels welcome. No experience necessary.</p>
-      </section>
+          <section aria-labelledby="adult-bjj">
+            <h2 id="adult-bjj">Adult Brazilian Jiu Jitsu</h2>
+            <p>All levels welcome. No experience necessary.</p>
+          </section>
 
-      <section aria-labelledby="youth-bjj">
-        <h2 id="youth-bjj">Youth BJJ</h2>
-        <p>Structured curriculum for children and teenagers.</p>
-      </section>
+          <section aria-labelledby="youth-bjj">
+            <h2 id="youth-bjj">Youth BJJ</h2>
+            <p>Structured curriculum for children and teenagers.</p>
+          </section>
 
-      <section aria-labelledby="competition-team">
-        <h2 id="competition-team">Competition Team</h2>
-        <p>Advanced training for competitors.</p>
-      </section>
+          <section aria-labelledby="competition-team">
+            <h2 id="competition-team">Competition Team</h2>
+            <p>Advanced training for competitors.</p>
+          </section>
 
-      <a href="/schedule/">View Schedule</a>
-    </main>
+          <a href="/schedule/">View Schedule</a>
+        </main>
 
-    <ojj-site-footer></ojj-site-footer>
+        <ojj-site-footer></ojj-site-footer>
+      </div>
+    </div>
 
     <script type="module" src="/src/main.ts"></script>
     <script type="module" src="/src/pages/programs.ts"></script>

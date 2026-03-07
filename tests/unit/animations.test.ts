@@ -12,6 +12,7 @@ const mockScrollTrigger = { kill: vi.fn() }
 const mockTimeline = {
   kill: vi.fn(),
   to: vi.fn().mockReturnThis(),
+  duration: vi.fn(() => 1.0),
   scrollTrigger: mockScrollTrigger,
 }
 
@@ -45,10 +46,18 @@ vi.mock('gsap/ScrollTrigger', () => ({
   },
 }))
 
+vi.mock('gsap/dist/ScrollSmoother', () => ({
+  ScrollSmoother: {
+    get: vi.fn(() => null),
+    create: vi.fn(),
+  },
+}))
+
 // ── Import after mocks ─────────────────────────────────────────────────────
 
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
 import {
   initAnimations,
   scrollReveal,
@@ -56,7 +65,6 @@ import {
   parallax,
   pinHorizontal,
   pinnedReveal,
-  programsReveal,
   marquee,
   counter,
   isMobile,
@@ -73,9 +81,9 @@ function makeEl(): HTMLElement {
 // ── Tests ──────────────────────────────────────────────────────────────────
 
 describe('initAnimations()', () => {
-  it('registers the ScrollTrigger plugin', () => {
+  it('registers the ScrollTrigger and ScrollSmoother plugins', () => {
     initAnimations()
-    expect(gsap.registerPlugin).toHaveBeenCalledWith(ScrollTrigger)
+    expect(gsap.registerPlugin).toHaveBeenCalledWith(ScrollTrigger, ScrollSmoother)
   })
 
   it('sets reducedMotion config', () => {
@@ -295,52 +303,6 @@ describe('pinnedReveal()', () => {
     const calls = vi.mocked(mockTimeline.to).mock.calls
     const hasLazyX = calls.some((call) => typeof (call[1] as gsap.TweenVars).x === 'function')
     expect(hasLazyX).toBe(true)
-  })
-})
-
-describe('programsReveal()', () => {
-  afterEach(() => { vi.clearAllMocks() })
-
-  function makeConfig() {
-    return {
-      trigger: makeEl(),
-      headingWrap: makeEl(),
-      track: makeEl(),
-      cards: [makeEl(), makeEl(), makeEl()],
-    }
-  }
-
-  it('returns null on mobile', () => {
-    window.matchMedia = vi.fn().mockReturnValue({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })
-    const result = programsReveal(makeConfig())
-    expect(result).toBeNull()
-  })
-
-  it('returns null when data-reduce-motion is set on <html>', () => {
-    document.documentElement.setAttribute('data-reduce-motion', '')
-    const result = programsReveal(makeConfig())
-    document.documentElement.removeAttribute('data-reduce-motion')
-    expect(result).toBeNull()
-  })
-
-  it('calls gsap.timeline on desktop', () => {
-    window.matchMedia = vi.fn().mockReturnValue({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })
-    programsReveal(makeConfig())
-    expect(gsap.timeline).toHaveBeenCalled()
-  })
-
-  it('returns the timeline (not null)', () => {
-    window.matchMedia = vi.fn().mockReturnValue({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })
-    const result = programsReveal(makeConfig())
-    expect(result).toBe(mockTimeline)
-  })
-
-  it('calls gsap.set with clearProps on headingWrap when data-reduce-motion is set', () => {
-    const headingWrap = makeEl()
-    document.documentElement.setAttribute('data-reduce-motion', '')
-    programsReveal({ trigger: makeEl(), headingWrap, track: makeEl(), cards: [makeEl()] })
-    document.documentElement.removeAttribute('data-reduce-motion')
-    expect(gsap.set).toHaveBeenCalledWith(headingWrap, { clearProps: 'all' })
   })
 })
 

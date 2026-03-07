@@ -7,11 +7,12 @@
 
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
 import { type AnimationOptions, PRESETS } from './presets'
 
 // Must be at module level — guarantees registration before any connectedCallback fires.
 // (Component modules import mixin.ts → animate.ts, so this evaluates first.)
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
 
 export type { AnimationOptions }
 
@@ -39,6 +40,28 @@ export function initAnimations(): void {
     if (document.visibilityState === 'hidden') {
       ScrollTrigger.getAll().forEach((st) => st.kill())
     }
+  })
+
+  // Create ScrollSmoother for initial page load
+  createSmoother()
+}
+
+/**
+ * Create a ScrollSmoother instance for physics-based scroll lag.
+ * Returns null when reduced-motion is set or #smooth-wrapper is absent.
+ * Safe to call multiple times — always creates a fresh instance.
+ */
+export function createSmoother(): ScrollSmoother | null {
+  if (document.documentElement.hasAttribute('data-reduce-motion')) { return null }
+  if (!document.getElementById('smooth-wrapper')) { return null }
+  return ScrollSmoother.create({
+    wrapper: '#smooth-wrapper',
+    content: '#smooth-content',
+    smooth: 1,
+    effects: false,
+    smoothTouch: 0,
+    normalizeScroll: false,
+    ignoreMobileResize: true,
   })
 }
 
@@ -248,119 +271,6 @@ export function pinnedReveal(config: PinnedRevealConfig): gsap.core.Timeline | n
 
   // Phase 2 (60%): card track scrolls left until last card is fully visible.
   tl.to(track, { x: () => -trackDist(), ease: 'none', duration: 0.6 })
-
-  return tl
-}
-
-export interface ProgramsRevealConfig {
-  trigger: HTMLElement
-  headingWrap: HTMLElement
-  track: HTMLElement
-  cards: HTMLElement[]
-}
-
-/**
- * Cinematic centered-card reveal:
- *   Phase 1 — heading + subtitle fade out (slides up)
- *   Phase 2 — cards reveal, first card perfectly centered in viewport
- *   Phase 3 — carousel: user scrolls through cards; at any moment the center
- *              card is full-size/full-opacity, adjacent cards are scaled down and
- *              faded, cards beyond ±1 are invisible.
- *
- * Returns null on mobile (< 768px) or reduced-motion.
- */
-export function programsReveal(config: ProgramsRevealConfig): gsap.core.Timeline | null {
-  if (isMobile()) { return null }
-
-  const { trigger, headingWrap, track, cards } = config
-  const reducedMotion = document.documentElement.hasAttribute('data-reduce-motion')
-
-  if (reducedMotion) {
-    gsap.set(headingWrap, { clearProps: 'all' })
-    return null
-  }
-
-  // offsetWidth returns the layout width, independent of GSAP scale transforms.
-  // getBoundingClientRect().width would return the visual (scaled) size, causing
-  // the carousel to undershoot and the last card to never reach center.
-  const getCardWidth = (): number => (cards[0] as HTMLElement | undefined)?.offsetWidth ?? 0
-  const getGap = (): number => parseFloat(getComputedStyle(track).gap) || 24
-  const carouselDist = (): number => (cards.length - 1) * (getCardWidth() + getGap())
-  const startX = (): number => window.innerWidth / 2 - getCardWidth() / 2
-
-  // Shared reveal multiplier (0 → 1 during phase 2, stays at 1 during phase 3)
-  const reveal = { progress: 0 }
-
-  // Initial state
-  gsap.set(headingWrap, { opacity: 1, y: 0 })
-  gsap.set(track, { x: startX })
-  gsap.set(cards, { opacity: 0, scale: 0.88 })
-
-  const updateCards = (): void => {
-    const cx = window.innerWidth / 2
-    const cardStep = getCardWidth() + getGap()
-    cards.forEach((card) => {
-      const r = card.getBoundingClientRect()
-      const distInCards = Math.abs(cx - (r.left + r.width / 2)) / cardStep
-      // opacity: center = 1.0, ±1 = 0.5, ≥ 1.5 = 0
-      const distOpacity = gsap.utils.clamp(0, 1, 1.5 - distInCards)
-      // scale: center = 1.05, ±1 = 0.82
-      const scale = gsap.utils.clamp(0.82, 1.05, 1.05 - distInCards * 0.20)
-      gsap.set(card, { opacity: distOpacity * reveal.progress, scale })
-    })
-  }
-
-  // Per-card carousel timing constants.
-  // Each card transition moves over CARD_MOVE_DUR, then holds on the centered
-  // card for CARD_PAUSE_DUR before the next transition begins.
-  // The final card gets a longer pause (CARD_PAUSE_LAST_DUR) to signal completion.
-  const CARD_MOVE_DUR = 0.10
-  const CARD_PAUSE_DUR = 0.06
-  const CARD_PAUSE_LAST_DUR = 0.14  // longer dwell on the final card
-  const N_TRANSITIONS = cards.length - 1
-  // Every card gets a pause (N_TRANSITIONS total): (N_TRANSITIONS - 1) regular + 1 last
-  const N_REGULAR_PAUSES = N_TRANSITIONS - 1
-
-  // Scale the total scroll end to reserve enough pixels for the pause zones.
-  const PAUSE_SCALE =
-    1 + (N_REGULAR_PAUSES * CARD_PAUSE_DUR + CARD_PAUSE_LAST_DUR) / (N_TRANSITIONS * CARD_MOVE_DUR)
-  const PIN_PX = 600
-
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger,
-      start: 'top top',
-      // Extend end by PAUSE_SCALE so each pause zone has comfortable scroll room.
-      end: () => `+=${PIN_PX + carouselDist() * PAUSE_SCALE}`,
-      pin: true,
-      anticipatePin: 1,
-      // scrub: 1.5 — animation catches up to scroll over 1.5 s, giving an organic
-      // spring feel. Best practice: 1–2 s for scrubbed pinned sections.
-      scrub: 1.5,
-      invalidateOnRefresh: true,
-      onUpdate: updateCards,
-    },
-  })
-
-  // Phase 1: heading + subtitle slide up and fade out
-  tl.to(headingWrap, { opacity: 0, y: -48, ease: 'power2.in', duration: 0.20 })
-
-  // Phase 2: reveal multiplier drives card opacity via onUpdate (overlaps phase 1 tail)
-  tl.to(reveal, { progress: 1, ease: 'power2.out', duration: 0.15 }, '-=0.05')
-
-  // Phase 3: per-card carousel with dwell pauses.
-  // ease: 'sine.inOut' — gradual start and end avoids the snap feel that
-  // power2.inOut produces when accelerating out of a held pause position.
-  for (let i = 1; i <= N_TRANSITIONS; i++) {
-    const iCopy = i
-    tl.to(track, {
-      x: () => startX() - iCopy * (getCardWidth() + getGap()),
-      ease: 'sine.inOut',
-      duration: CARD_MOVE_DUR,
-    })
-    // Every card gets a dwell pause; last card holds longer to signal completion.
-    tl.to({}, { duration: i < N_TRANSITIONS ? CARD_PAUSE_DUR : CARD_PAUSE_LAST_DUR })
-  }
 
   return tl
 }

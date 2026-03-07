@@ -15,11 +15,9 @@ import {
   parallax,
   pinHorizontal,
   pinnedReveal as pinnedRevealExecutor,
-  programsReveal as programsRevealExecutor,
   scrollReveal,
   type AnimationOptions,
   type PinnedRevealConfig,
-  type ProgramsRevealConfig,
 } from './animate'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -95,12 +93,6 @@ export function AnimatableMixin<TBase extends BaseElementConstructor>(Base: TBas
       const tl = pinnedRevealExecutor(config)
       // Track the Timeline (not just the ScrollTrigger) so that kill() on
       // disconnect also kills the timeline's child tweens.
-      if (tl) { this.trackTween(tl as unknown as gsap.core.Tween) }
-      return tl
-    }
-
-    protected programsReveal(config: ProgramsRevealConfig): gsap.core.Timeline | null {
-      const tl = programsRevealExecutor(config)
       if (tl) { this.trackTween(tl as unknown as gsap.core.Tween) }
       return tl
     }
