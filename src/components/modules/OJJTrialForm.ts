@@ -2,17 +2,21 @@
  * ojj-trial-form — free trial class request form.
  *
  * Progressive enhancement: renders a standard HTML form.
- * On submit, shows inline success state.
+ * On submit, calls submitFreeTrial() which POSTs to GHL and redirects.
  *
  * Attributes:
- *   action  — form action URL (default: "/api/trial" — placeholder)
+ *   action  — form action URL (default: "/api/trial" — fallback without JS)
  *
  * Events:
- *   ojj:trial-submit — fired on form submit with { name, email, phone? }
- *   ojj:trial-success — fired after successful submission
+ *   ojj:trial-submit — fired on form submit with { firstName, lastName, email, phone? }
  */
 
 import { BaseElement } from '../base/BaseElement'
+import { submitFreeTrial } from '@/service/forms'
+
+const INPUT_CLASS = `w-full bg-neutral-800 border border-neutral-700 text-white placeholder-neutral-500
+  rounded-md px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2
+  focus-visible:ring-brand-accent focus-visible:border-transparent`
 
 export class OJJTrialForm extends BaseElement {
   static observedAttributes = ['action']
@@ -29,24 +33,42 @@ export class OJJTrialForm extends BaseElement {
           data-trial-form
           class="flex flex-col gap-4"
         >
-          <div class="flex flex-col gap-1.5">
-            <label for="trial-name" class="text-sm font-semibold text-neutral-200">
-              Full Name <span class="text-brand-accent" aria-hidden="true">*</span>
-            </label>
-            <input
-              id="trial-name"
-              name="name"
-              type="text"
-              required
-              autocomplete="name"
-              placeholder="Jane Smith"
-              class="w-full bg-neutral-800 border border-neutral-700 text-white placeholder-neutral-500
-                     rounded-md px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2
-                     focus-visible:ring-brand-accent focus-visible:border-transparent"
-            />
-            <p class="text-brand-accent text-xs hidden" role="alert" data-error="name">
-              Please enter your full name.
-            </p>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1.5">
+              <label for="trial-first-name" class="text-sm font-semibold text-neutral-200">
+                First Name <span class="text-brand-accent" aria-hidden="true">*</span>
+              </label>
+              <input
+                id="trial-first-name"
+                name="firstName"
+                type="text"
+                required
+                autocomplete="given-name"
+                placeholder="Jane"
+                class="${INPUT_CLASS}"
+              />
+              <p class="text-brand-accent text-xs hidden" role="alert" data-error="firstName">
+                Please enter your first name.
+              </p>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <label for="trial-last-name" class="text-sm font-semibold text-neutral-200">
+                Last Name <span class="text-brand-accent" aria-hidden="true">*</span>
+              </label>
+              <input
+                id="trial-last-name"
+                name="lastName"
+                type="text"
+                required
+                autocomplete="family-name"
+                placeholder="Smith"
+                class="${INPUT_CLASS}"
+              />
+              <p class="text-brand-accent text-xs hidden" role="alert" data-error="lastName">
+                Please enter your last name.
+              </p>
+            </div>
           </div>
 
           <div class="flex flex-col gap-1.5">
@@ -60,9 +82,7 @@ export class OJJTrialForm extends BaseElement {
               required
               autocomplete="email"
               placeholder="you@example.com"
-              class="w-full bg-neutral-800 border border-neutral-700 text-white placeholder-neutral-500
-                     rounded-md px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2
-                     focus-visible:ring-brand-accent focus-visible:border-transparent"
+              class="${INPUT_CLASS}"
             />
             <p class="text-brand-accent text-xs hidden" role="alert" data-error="email">
               Please enter a valid email address.
@@ -79,9 +99,7 @@ export class OJJTrialForm extends BaseElement {
               type="tel"
               autocomplete="tel"
               placeholder="(503) 555-0100"
-              class="w-full bg-neutral-800 border border-neutral-700 text-white placeholder-neutral-500
-                     rounded-md px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2
-                     focus-visible:ring-brand-accent focus-visible:border-transparent"
+              class="${INPUT_CLASS}"
             />
           </div>
 
@@ -97,7 +115,7 @@ export class OJJTrialForm extends BaseElement {
           </button>
         </form>
 
-        <!-- Success state (hidden until submit) -->
+        <!-- Success state (shown if redirect doesn't fire) -->
         <div
           role="status"
           aria-live="polite"
@@ -108,6 +126,15 @@ export class OJJTrialForm extends BaseElement {
           <h3 class="text-white font-bold text-xl mb-2">You're on the mat!</h3>
           <p class="text-neutral-400">We'll be in touch shortly with your trial class details.</p>
         </div>
+
+        <!-- Error state -->
+        <p
+          class="hidden text-brand-accent text-sm text-center mt-3"
+          role="alert"
+          data-submit-error
+        >
+          Something went wrong — please try again or call us at (503) 308-8455.
+        </p>
       </div>
     `
   }
@@ -120,67 +147,61 @@ export class OJJTrialForm extends BaseElement {
       e.preventDefault()
       if (!this._validate(form)) return
 
-      const data = new FormData(form)
-      const payload = {
-        name: String(data.get('name') ?? ''),
-        email: String(data.get('email') ?? ''),
-        phone: data.get('phone') ? String(data.get('phone')) : undefined,
-      }
+      const formData = new FormData(form)
 
-      this.emit('trial-submit', payload)
+      this.emit('trial-submit', {
+        firstName: String(formData.get('firstName') ?? ''),
+        lastName:  String(formData.get('lastName') ?? ''),
+        email:     String(formData.get('email') ?? ''),
+        phone:     formData.get('phone') ? String(formData.get('phone')) : undefined,
+      })
 
-      // Disable submit while "submitting"
-      const btn = this.querySelector<HTMLButtonElement>('[data-submit-btn]')
-      if (btn) {
-        btn.disabled = true
-        btn.textContent = 'Submitting…'
-      }
+      this._setSubmitting(true)
 
-      // Simulate async — real implementation hooks into fetch/GymDesk redirect
-      setTimeout(() => {
-        this._showSuccess()
-        this.emit('trial-success', payload)
-      }, 800)
+      submitFreeTrial(formData).catch(() => {
+        this._setSubmitting(false)
+        const errorEl = this.querySelector<HTMLElement>('[data-submit-error]')
+        errorEl?.classList.remove('hidden')
+      })
     })
   }
 
   private _validate(form: HTMLFormElement): boolean {
     let valid = true
 
-    const nameInput = form.querySelector<HTMLInputElement>('[name="name"]')
-    const emailInput = form.querySelector<HTMLInputElement>('[name="email"]')
+    const fields: Array<{ name: string; selector: string; check: (el: HTMLInputElement) => boolean }> = [
+      { name: 'firstName', selector: '[name="firstName"]', check: (el) => el.value.trim().length > 0 },
+      { name: 'lastName',  selector: '[name="lastName"]',  check: (el) => el.value.trim().length > 0 },
+      { name: 'email',     selector: '[name="email"]',     check: (el) => el.validity.valid },
+    ]
 
-    const nameError = this.querySelector<HTMLElement>('[data-error="name"]')
-    const emailError = this.querySelector<HTMLElement>('[data-error="email"]')
+    let firstInvalid: HTMLInputElement | null = null
 
-    if (nameInput && !nameInput.value.trim()) {
-      if (nameError) nameError.classList.remove('hidden')
-      nameInput.setAttribute('aria-invalid', 'true')
-      nameInput.focus()
-      valid = false
-    } else {
-      if (nameError) nameError.classList.add('hidden')
-      nameInput?.removeAttribute('aria-invalid')
+    for (const { name, selector, check } of fields) {
+      const input = form.querySelector<HTMLInputElement>(selector)
+      const error = this.querySelector<HTMLElement>(`[data-error="${name}"]`)
+      if (!input) continue
+
+      if (!check(input)) {
+        error?.classList.remove('hidden')
+        input.setAttribute('aria-invalid', 'true')
+        if (!firstInvalid) firstInvalid = input
+        valid = false
+      } else {
+        error?.classList.add('hidden')
+        input.removeAttribute('aria-invalid')
+      }
     }
 
-    if (emailInput && !emailInput.validity.valid) {
-      if (emailError) emailError.classList.remove('hidden')
-      emailInput.setAttribute('aria-invalid', 'true')
-      if (valid) emailInput.focus()
-      valid = false
-    } else {
-      if (emailError) emailError.classList.add('hidden')
-      emailInput?.removeAttribute('aria-invalid')
-    }
-
+    firstInvalid?.focus()
     return valid
   }
 
-  private _showSuccess(): void {
-    const form = this.querySelector<HTMLFormElement>('[data-trial-form]')
-    const success = this.querySelector<HTMLElement>('[data-success]')
-    if (form) form.classList.add('hidden')
-    if (success) success.classList.remove('hidden')
+  private _setSubmitting(submitting: boolean): void {
+    const btn = this.querySelector<HTMLButtonElement>('[data-submit-btn]')
+    if (!btn) return
+    btn.disabled = submitting
+    btn.textContent = submitting ? 'Submitting…' : 'Book My Free Trial'
   }
 }
 

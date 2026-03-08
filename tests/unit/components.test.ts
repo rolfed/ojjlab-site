@@ -2,7 +2,13 @@
  * Unit tests for Web Components.
  * Tests render output, attribute reflection, event emission, and cleanup.
  */
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
+
+vi.mock('@/service/forms', () => ({
+  submitFreeTrial: vi.fn().mockResolvedValue(undefined),
+}))
+
+import { submitFreeTrial } from '@/service/forms'
 
 // Mock GSAP before component imports
 vi.mock('gsap', () => ({
@@ -353,6 +359,7 @@ describe('ojj-review-card', () => {
 describe('ojj-trial-form', () => {
   let el: HTMLElement
 
+  beforeEach(() => vi.clearAllMocks())
   afterEach(() => unmount(el))
 
   it('renders a form element', () => {
@@ -360,51 +367,71 @@ describe('ojj-trial-form', () => {
     expect(el.querySelector('form')).toBeTruthy()
   })
 
-  it('has name, email, and phone fields', () => {
+  it('has firstName, lastName, email, and phone fields', () => {
     el = mount('ojj-trial-form')
-    expect(el.querySelector('[name="name"]')).toBeTruthy()
+    expect(el.querySelector('[name="firstName"]')).toBeTruthy()
+    expect(el.querySelector('[name="lastName"]')).toBeTruthy()
     expect(el.querySelector('[name="email"]')).toBeTruthy()
     expect(el.querySelector('[name="phone"]')).toBeTruthy()
   })
 
-  it('shows name validation error on empty submit', () => {
+  it('shows firstName validation error on empty submit', () => {
     el = mount('ojj-trial-form')
     el.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-    const nameError = el.querySelector('[data-error="name"]')
-    expect(nameError?.classList.contains('hidden')).toBe(false)
+    const firstError = el.querySelector('[data-error="firstName"]')
+    expect(firstError?.classList.contains('hidden')).toBe(false)
   })
 
-  it('emits ojj:trial-submit with form data on valid submit', async () => {
+  it('shows lastName validation error when only firstName is filled', () => {
+    el = mount('ojj-trial-form')
+    el.querySelector<HTMLInputElement>('[name="firstName"]')!.value = 'Jane'
+    el.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    const lastError = el.querySelector('[data-error="lastName"]')
+    expect(lastError?.classList.contains('hidden')).toBe(false)
+  })
+
+  it('emits ojj:trial-submit with firstName, lastName, email on valid submit', () => {
     el = mount('ojj-trial-form')
     const handler = vi.fn()
     el.addEventListener('ojj:trial-submit', handler)
 
-    const nameInput = el.querySelector<HTMLInputElement>('[name="name"]')!
-    const emailInput = el.querySelector<HTMLInputElement>('[name="email"]')!
-    nameInput.value = 'Test User'
-    emailInput.value = 'test@example.com'
+    el.querySelector<HTMLInputElement>('[name="firstName"]')!.value = 'Jane'
+    el.querySelector<HTMLInputElement>('[name="lastName"]')!.value = 'Smith'
+    el.querySelector<HTMLInputElement>('[name="email"]')!.value = 'jane@example.com'
 
     el.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+
     expect(handler).toHaveBeenCalledTimes(1)
-    const detail = handler.mock.calls[0]?.[0].detail
-    expect(detail.name).toBe('Test User')
-    expect(detail.email).toBe('test@example.com')
+    const detail = (handler.mock.calls[0]?.[0] as CustomEvent).detail as Record<string, string>
+    expect(detail['firstName']).toBe('Jane')
+    expect(detail['lastName']).toBe('Smith')
+    expect(detail['email']).toBe('jane@example.com')
   })
 
-  it('shows success state after valid submit', async () => {
-    vi.useFakeTimers()
+  it('calls submitFreeTrial with FormData on valid submit', () => {
     el = mount('ojj-trial-form')
 
-    const nameInput = el.querySelector<HTMLInputElement>('[name="name"]')!
-    const emailInput = el.querySelector<HTMLInputElement>('[name="email"]')!
-    nameInput.value = 'Test User'
-    emailInput.value = 'test@example.com'
+    el.querySelector<HTMLInputElement>('[name="firstName"]')!.value = 'Jane'
+    el.querySelector<HTMLInputElement>('[name="lastName"]')!.value = 'Smith'
+    el.querySelector<HTMLInputElement>('[name="email"]')!.value = 'jane@example.com'
 
     el.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-    vi.advanceTimersByTime(1000)
 
-    const success = el.querySelector('[data-success]')
-    expect(success?.classList.contains('hidden')).toBe(false)
-    vi.useRealTimers()
+    expect(submitFreeTrial).toHaveBeenCalledTimes(1)
+    expect(submitFreeTrial).toHaveBeenCalledWith(expect.any(FormData))
+  })
+
+  it('disables submit button while submitting', () => {
+    el = mount('ojj-trial-form')
+
+    el.querySelector<HTMLInputElement>('[name="firstName"]')!.value = 'Jane'
+    el.querySelector<HTMLInputElement>('[name="lastName"]')!.value = 'Smith'
+    el.querySelector<HTMLInputElement>('[name="email"]')!.value = 'jane@example.com'
+
+    el.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+
+    const btn = el.querySelector<HTMLButtonElement>('[data-submit-btn]')
+    expect(btn?.disabled).toBe(true)
+    expect(btn?.textContent).toBe('Submitting…')
   })
 })
