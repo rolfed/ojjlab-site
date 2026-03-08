@@ -143,6 +143,68 @@
   }
 }
 
+/* ─── Instructor Spotlight ──────────────────────────────────────────────────── */
+
+@layer components {
+  /* Track viewport — clips off-screen slots */
+  .spotlight-viewport {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  /* Track — flex row; GSAP sets translateX */
+  .spotlight-track {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    padding-block: 20px; /* room for scale(1.1) hover without clipping */
+    will-change: transform;
+    min-height: 700px;
+  }
+
+  /* Individual instructor slot — morphs between circle and card via GSAP */
+  .spotlight-slot {
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .spotlight-slot:focus-visible {
+    outline: 3px solid var(--color-brand-accent);
+    outline-offset: 3px;
+  }
+
+  /* Nav pill buttons */
+  .spotlight-nav-btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--color-neutral-400);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+
+  .spotlight-nav-btn:hover {
+    background: rgba(255, 255, 255, 0.13);
+    color: #fff;
+  }
+
+  .spotlight-nav-btn[aria-pressed="true"] {
+    background: var(--color-brand-accent);
+    color: #fff;
+  }
+
+  .spotlight-nav-btn:focus-visible {
+    outline: 3px solid var(--color-brand-accent);
+    outline-offset: 3px;
+  }
+}
+
 /* ─── Skip Link ─────────────────────────────────────────────────────────────── */
 
 @layer components {
