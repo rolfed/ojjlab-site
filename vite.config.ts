@@ -12,7 +12,7 @@ const root = import.meta.dirname
  */
 function mpaDevRewrite(): Plugin {
   const rewrites: Record<string, string> = {
-    '/':          '/src/pages/index.html',
+    '/':          '/src/pages/home.html',
     '/about/':    '/src/pages/about.html',
     '/schedule/': '/src/pages/schedule.html',
     '/programs/': '/src/pages/programs.html',
@@ -46,7 +46,7 @@ function mpaDevRewrite(): Plugin {
 function mpaBuildRewrite(): Plugin {
   const outDir = join(root, 'dist')
   const moves: [string, string][] = [
-    ['src/pages/index.html',    'index.html'],
+    ['src/pages/home.html',     'index.html'],
     ['src/pages/about.html',    'about/index.html'],
     ['src/pages/schedule.html', 'schedule/index.html'],
     ['src/pages/programs.html', 'programs/index.html'],
@@ -84,7 +84,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        home:             `${root}/src/pages/index.html`,
+        home:             `${root}/src/pages/home.html`,
         'about/index':    `${root}/src/pages/about.html`,
         'schedule/index': `${root}/src/pages/schedule.html`,
         'programs/index': `${root}/src/pages/programs.html`,

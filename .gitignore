@@ -31,10 +31,8 @@ Thumbs.db
 *.log
 npm-debug.log*
 
-# Dev screenshots
-*.png
-*.jpeg
-*.jpg
+# Dev screenshots (Playwright verification)
+tests/screenshots/
 
 # Playwright MCP
 .playwright-mcp/

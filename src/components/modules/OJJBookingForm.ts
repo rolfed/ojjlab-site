@@ -47,7 +47,7 @@ function programToggleHTML(): string {
   ]
 
   const buttons = segments.map(({ value, label, sub }, i) => `
-    <label class="relative flex-1 min-w-0">
+    <label class="relative flex-1 min-w-0 flex">
       <input
         type="radio"
         name="program"
@@ -57,7 +57,7 @@ function programToggleHTML(): string {
       />
       <span class="
         flex flex-col items-center justify-center gap-0.5
-        py-3 px-2 rounded-lg cursor-pointer select-none
+        h-full py-3 px-2 rounded-lg cursor-pointer select-none
         text-xs sm:text-sm font-semibold leading-tight text-center
         transition-colors duration-150
         text-neutral-400 hover:text-white
