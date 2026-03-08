@@ -154,16 +154,6 @@
     width: 100%;
   }
 
-  /* Track — flex row; GSAP sets translateX */
-  .spotlight-track {
-    display: flex;
-    align-items: center;
-    width: max-content;
-    padding-block: 20px; /* room for scale(1.1) hover without clipping */
-    will-change: transform;
-    min-height: 700px;
-  }
-
   /* Individual instructor slot — morphs between circle and card via GSAP */
   .spotlight-slot {
     position: relative;

@@ -1,20 +1,21 @@
 /**
  * ojj-instructors-section — Instructor spotlight carousel.
  *
- * Layout: one expanded instructor profile card centered in a horizontal track,
- * flanked by circular avatar portraits. A nav row of instructor names sits
- * below. Clicking a name (or an avatar circle):
- *   1. Collapses the active card back to a circle (reverse of its expand TL)
- *   2. Shifts the track so the chosen instructor slides to center
- *   3. Expands the chosen instructor into the full profile card
+ * Architecture: slots are absolutely positioned inside a fixed-height viewport.
+ * No flex track, no translateX — all motion via x/y CSS transforms (GPU only).
+ * A single master GSAP timeline drives each transition so _isAnimating unlocks
+ * at the correct moment (no detached child timelines).
  *
- * Only one card is expanded at a time. Transitions are locked while animating.
- * All three actions are coordinated on a master GSAP timeline.
+ * Transition choreography (per user spec):
+ *   1. Circle → rectangle morph (all slots reposition simultaneously)
+ *   2. Name slides in from the left with a fade
+ *   3. Rank (belt label) slides in
+ *   4. Title (role) slides in
+ *   5. Bio / description slides in
  *
- * Scroll entrance: fired once when the section reaches 80% into the viewport
- * via ScrollTrigger. Adam Fox is always the default active instructor.
- *
- * Reduced-motion: static grid of ojj-instructor-card elements with scrollReveal.
+ * Scroll entrance: fires once when section reaches 80% into viewport.
+ * Adam Fox (index 0) is always the default active instructor.
+ * Reduced-motion: static grid with scrollReveal stagger.
  */
 
 import gsap from 'gsap'
@@ -54,7 +55,7 @@ const INSTRUCTORS: Instructor[] = [
     name:  'Jacob Marical',
     belt:  'na',
     title: 'Wrestling Coach',
-    bio:   "Experienced wrestler bringing takedown fundamentals to the gym. Justin's wrestling program adds a critical dimension to every student's grappling game.",
+    bio:   "Experienced wrestler bringing takedown fundamentals to the gym. Jacob's wrestling program adds a critical dimension to every student's grappling game.",
   },
   {
     name:  'Justin Koreis',
@@ -70,39 +71,55 @@ const BELT_ACCENT: Record<Belt, string> = {
   purple: '#7c3aed',
   blue:   '#3b82f6',
   white:  '#ffffff',
-  na:     '#9ca3af'
+  na:     '#9ca3af',
 }
 
 const BELT_GRADIENT: Record<Belt, string> = {
-    black: 'linear-gradient(160deg, #111111 0%, #1c1c1c 50%, #0a0a0a 100%)',
-    brown: 'linear-gradient(160deg, #1a0e07 0%, #2d1b0f 50%, #110a04 100%)',
-    purple: 'linear-gradient(160deg, #120920 0%, #1e1030 50%, #0a0513 100%)',
-    blue: 'linear-gradient(160deg, #060d1a 0%, #0c1e3a 50%, #040a14 100%)',
-    white: 'linear-gradient(160deg, #ffffff 0%, #0c1e3a 50%, #ffffff 100%)',
-    na: 'linear-gradient(160deg, #111111 0%, #1a1a2e 50%, #0a0a0a 100%)',
+  black:  'linear-gradient(160deg, #111111 0%, #1c1c1c 50%, #0a0a0a 100%)',
+  brown:  'linear-gradient(160deg, #1a0e07 0%, #2d1b0f 50%, #110a04 100%)',
+  purple: 'linear-gradient(160deg, #120920 0%, #1e1030 50%, #0a0513 100%)',
+  blue:   'linear-gradient(160deg, #060d1a 0%, #0c1e3a 50%, #040a14 100%)',
+  white:  'linear-gradient(160deg, #ffffff 0%, #0c1e3a 50%, #ffffff 100%)',
+  na:     'linear-gradient(160deg, #111111 0%, #1a1a2e 50%, #0a0a0a 100%)',
 }
 
 /** Diameter (px) of inactive avatar circles. */
 const CIRCLE_SIZE = 88
 
-/** Fixed height (px) of the expanded instructor card. */
+/** Height (px) of the expanded instructor card. */
 const CARD_HEIGHT = 440
 
-/** Gap (px) between slots in the track. */
+/** Gap (px) between adjacent slots. */
 const SLOT_GAP = 28
 
-/** Width (px) of the expanded card — responsive. */
+/** Y offset (px) that vertically centers a circle within the card-height stage. */
+const CIRCLE_TOP = (CARD_HEIGHT - CIRCLE_SIZE) / 2
+
+/** Width (px) of the expanded card — capped for narrow viewports. */
 function cardWidth(): number {
   return Math.min(300, window.innerWidth - 80)
+}
+
+/**
+ * Computes the CSS `x` (translateX) for slot `i` given the current active index.
+ * The active card is always horizontally centered in the viewport.
+ * Inactive circles stack outward from the card's edges.
+ */
+function slotX(i: number, activeIndex: number, viewportWidth: number): number {
+  const CW       = cardWidth()
+  const cardLeft = (viewportWidth - CW) / 2
+  if (i === activeIndex) return cardLeft
+  if (i < activeIndex) {
+    return cardLeft - (activeIndex - i) * (CIRCLE_SIZE + SLOT_GAP)
+  }
+  return cardLeft + CW + SLOT_GAP + (i - activeIndex - 1) * (CIRCLE_SIZE + SLOT_GAP)
 }
 
 export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
   private _activeIndex  = 0
   private _isAnimating  = false
   private _hasEntered   = false
-  private _expandTLs    = new Map<number, gsap.core.Timeline>()
   private _st:          ScrollTrigger | null = null
-  private _trackEl:     HTMLElement | null   = null
   private _viewportEl:  HTMLElement | null   = null
   private _slots:       HTMLElement[]        = []
   private _navBtns:     HTMLButtonElement[]  = []
@@ -143,14 +160,12 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
           </p>
         </div>
 
-        <div data-viewport class="spotlight-viewport">
-          <div
-            data-track
-            class="spotlight-track"
-            style="gap:${SLOT_GAP}px"
-          >
-            ${slotsHTML}
-          </div>
+        <div
+          data-viewport
+          class="spotlight-viewport"
+          style="height:${CARD_HEIGHT}px"
+        >
+          ${slotsHTML}
         </div>
 
         <nav
@@ -168,7 +183,9 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
     const accent    = BELT_ACCENT[inst.belt]
     const gradient  = BELT_GRADIENT[inst.belt]
     const initial   = inst.name.charAt(0)
-    const beltLabel = inst.belt === 'na' ? '' : `${inst.belt.charAt(0).toUpperCase()}${inst.belt.slice(1)} Belt`
+    const beltLabel = inst.belt === 'na'
+      ? ''
+      : `${inst.belt.charAt(0).toUpperCase()}${inst.belt.slice(1)} Belt`
 
     return `
       <div
@@ -192,7 +209,6 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
             user-select:none;letter-spacing:-0.02em;
           ">${initial}</span>
 
-          <!-- Belt ring — fades out on expand -->
           <div data-ring aria-hidden="true" style="
             position:absolute;inset:0;border-radius:inherit;
             border:3px solid ${accent};pointer-events:none;
@@ -206,7 +222,6 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
         ">
           <!-- Portrait area — top 58% -->
           <div style="position:relative;flex:0 0 58%;overflow:hidden;background:${gradient};">
-            <!-- Large monogram background -->
             <div aria-hidden="true" style="
               position:absolute;inset:0;
               display:flex;align-items:center;justify-content:center;
@@ -215,19 +230,17 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
               line-height:1;user-select:none;
             ">${initial}</div>
 
-            <!-- Bottom gradient fade -->
             <div aria-hidden="true" style="
               position:absolute;bottom:0;left:0;right:0;height:70%;
               background:linear-gradient(to top,rgba(0,0,0,0.95) 0%,rgba(0,0,0,0.4) 50%,transparent 100%);
             "></div>
 
-            <!-- Belt accent stripe -->
             <div aria-hidden="true" style="
               position:absolute;left:0;top:0;bottom:0;width:4px;
               background:${accent};box-shadow:2px 0 14px ${accent}80;
             "></div>
 
-            <!-- Name + rank overlay -->
+            <!-- Name + rank overlay — staggered in individually -->
             <div style="position:absolute;bottom:0;left:0;right:0;padding:1rem 1.25rem;z-index:1;">
               <p data-rank style="
                 font-size:0.65rem;font-weight:700;
@@ -268,20 +281,13 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
       return
     }
 
-    this._trackEl   = this.querySelector<HTMLElement>('[data-track]')
     this._viewportEl = this.querySelector<HTMLElement>('[data-viewport]')
-    this._slots     = Array.from(this.querySelectorAll<HTMLElement>('[data-slot]'))
-    this._navBtns   = Array.from(this.querySelectorAll<HTMLButtonElement>('[data-nav-btn]'))
+    this._slots      = Array.from(this.querySelectorAll<HTMLElement>('[data-slot]'))
+    this._navBtns    = Array.from(this.querySelectorAll<HTMLButtonElement>('[data-nav-btn]'))
 
-    if (!this._trackEl || !this._viewportEl || this._slots.length === 0) { return }
+    if (!this._viewportEl || this._slots.length === 0) { return }
 
     this._initSlotStates()
-    this._buildAllExpandTimelines()
-
-    // Position track so slot 0's circle is centered — entrance will shift it
-    // to the card-centered position as part of the expand animation.
-    gsap.set(this._trackEl, { x: this._circleOffset(0) })
-
     this._bindNavClicks()
     this._bindSlotInteraction()
     this._bindHoverEffects()
@@ -295,19 +301,22 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
     if (this._resizeTimer !== null) { clearTimeout(this._resizeTimer) }
     this._st?.kill()
     this._st = null
-    this._expandTLs.forEach((tl) => tl.kill())
-    this._expandTLs.clear()
     super.cleanup()
   }
 
   // ── Initialization ───────────────────────────────────────────────────────
 
   /**
-   * Set every slot to its pre-entrance circle state (invisible) via gsap.set
-   * so there is no flash of unstyled content before the entrance fires.
+   * Set every slot to its pre-entrance state using absolute positioning.
+   * Slots use x/y transforms for motion (GPU only — no layout reflow).
+   * Width/height animate for the circle↔card morph.
    */
   private _initSlotStates(): void {
-    this._slots.forEach((slot) => {
+    const vw = this._viewportEl!.offsetWidth
+    const CW = cardWidth()
+
+    this._slots.forEach((slot, i) => {
+      const isActive = i === 0
       const avatarEl = slot.querySelector<HTMLElement>('[data-avatar]')!
       const ringEl   = slot.querySelector<HTMLElement>('[data-ring]')!
       const cardEl   = slot.querySelector<HTMLElement>('[data-card]')!
@@ -316,105 +325,31 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
       const titleEl  = slot.querySelector<HTMLElement>('[data-ititle]')!
       const bioEl    = slot.querySelector<HTMLElement>('[data-bio]')!
 
-      // All slots start as invisible circles
-      gsap.set(slot,    { width: CIRCLE_SIZE, height: CIRCLE_SIZE, borderRadius: '50%', opacity: 0, scale: 0 })
-      gsap.set(avatarEl, { opacity: 1, scale: 1 })
-      gsap.set(ringEl,   { opacity: 0.5 })
-      gsap.set(cardEl,   { opacity: 0 })
-      // Text elements start hidden for the expand animation to reveal
-      gsap.set([rankEl, nameEl, titleEl, bioEl], { opacity: 0, y: 6 })
+      gsap.set(slot, {
+        position:     'absolute',
+        top:          0,
+        left:         0,
+        x:            slotX(i, 0, vw),
+        y:            isActive ? 0 : CIRCLE_TOP,
+        width:        isActive ? CW : CIRCLE_SIZE,
+        height:       isActive ? CARD_HEIGHT : CIRCLE_SIZE,
+        borderRadius: isActive ? '1rem' : '50%',
+        opacity:      0,
+      })
+
+      gsap.set(avatarEl, { opacity: isActive ? 0 : 1 })
+      gsap.set(ringEl,   { opacity: isActive ? 0 : 0.5 })
+      gsap.set(cardEl,   { opacity: isActive ? 1 : 0 })
+      gsap.set([nameEl, rankEl, titleEl, bioEl], { opacity: 0, x: -20 })
+
+      // Expose card content for screen readers on the default active slot
+      if (isActive) {
+        cardEl.removeAttribute('aria-hidden')
+      }
     })
   }
 
-  private _buildAllExpandTimelines(): void {
-    const CW = cardWidth()
-    this._slots.forEach((slot, i) => {
-      this._expandTLs.set(i, this._buildExpandTimeline(slot, CW))
-    })
-  }
-
-  /**
-   * Builds a paused GSAP timeline for expanding one slot from circle → card.
-   * Reversing it collapses the card back to a circle.
-   * Does NOT animate the track — track shifting is handled by the transition coordinator.
-   */
-  private _buildExpandTimeline(slot: HTMLElement, CW: number): gsap.core.Timeline {
-    const avatarEl = slot.querySelector<HTMLElement>('[data-avatar]')!
-    const ringEl   = slot.querySelector<HTMLElement>('[data-ring]')!
-    const cardEl   = slot.querySelector<HTMLElement>('[data-card]')!
-    const rankEl   = slot.querySelector<HTMLElement>('[data-rank]')!
-    const nameEl   = slot.querySelector<HTMLElement>('[data-iname]')!
-    const titleEl  = slot.querySelector<HTMLElement>('[data-ititle]')!
-    const bioEl    = slot.querySelector<HTMLElement>('[data-bio]')!
-
-    return gsap.timeline({ paused: true })
-
-      // ── Phase 1: slot morphs circle → card shape ──────────────── 0s
-      .to(slot, {
-        width:        CW,
-        height:       CARD_HEIGHT,
-        borderRadius: '1rem',
-        duration:     0.55,
-        ease:         'power3.inOut',
-      }, 0)
-
-      // ── Phase 1b: avatar fades out ─────────────────────────────── 0s
-      .to(avatarEl, {
-        opacity:  0,
-        scale:    0.75,
-        duration: 0.25,
-        ease:     'power2.in',
-      }, 0)
-
-      // ── Phase 1c: belt ring fades out ──────────────────────────── 0s
-      .to(ringEl, {
-        opacity:  0,
-        duration: 0.2,
-      }, 0)
-
-      // ── Phase 2: card layer fades in ───────────────────────────── 0.28s
-      .to(cardEl, {
-        opacity:  1,
-        duration: 0.3,
-        ease:     'power2.out',
-        onStart() { cardEl.removeAttribute('aria-hidden') },
-        onReverseComplete() { cardEl.setAttribute('aria-hidden', 'true') },
-      }, 0.28)
-
-      // ── Phase 3: text elements stagger up ─────────────────────── 0.4s
-      .to([rankEl, nameEl, titleEl, bioEl], {
-        opacity:  1,
-        y:        0,
-        stagger:  0.06,
-        duration: 0.3,
-        ease:     'power2.out',
-      }, 0.4)
-  }
-
-  // ── Offset calculations ──────────────────────────────────────────────────
-
-  /**
-   * Track X so a circle-state slot's center aligns with the viewport center.
-   * Used for the initial pre-entrance position.
-   */
-  private _circleOffset(targetIndex: number): number {
-    const offsetBefore   = targetIndex * (CIRCLE_SIZE + SLOT_GAP)
-    const viewportCenter = (this._viewportEl?.offsetWidth ?? window.innerWidth) / 2
-    return viewportCenter - offsetBefore - CIRCLE_SIZE / 2
-  }
-
-  /**
-   * Track X so the expanded card's center aligns with the viewport center.
-   * Assumes all other slots are in circle state (width: CIRCLE_SIZE).
-   */
-  private _cardOffset(targetIndex: number): number {
-    const CW             = cardWidth()
-    const offsetBefore   = targetIndex * (CIRCLE_SIZE + SLOT_GAP)
-    const viewportCenter = (this._viewportEl?.offsetWidth ?? window.innerWidth) / 2
-    return viewportCenter - offsetBefore - CW / 2
-  }
-
-  // ── Scroll entrance ───────────────────────────────────────────────────────
+  // ── Scroll entrance ──────────────────────────────────────────────────────
 
   private _registerScrollTrigger(): void {
     const section = this.querySelector<HTMLElement>('[data-spotlight-section]')
@@ -433,8 +368,13 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
     this._hasEntered  = true
     this._isAnimating = true
 
-    const headerEl = this.querySelector<HTMLElement>('[data-header]')
-    const navEl    = this.querySelector<HTMLElement>('[data-nav]')
+    const headerEl   = this.querySelector<HTMLElement>('[data-header]')
+    const navEl      = this.querySelector<HTMLElement>('[data-nav]')
+    const activeSlot = this._slots[0]!
+    const nameEl     = activeSlot.querySelector<HTMLElement>('[data-iname]')!
+    const rankEl     = activeSlot.querySelector<HTMLElement>('[data-rank]')!
+    const titleEl    = activeSlot.querySelector<HTMLElement>('[data-ititle]')!
+    const bioEl      = activeSlot.querySelector<HTMLElement>('[data-bio]')!
 
     const entrance = gsap.timeline({
       onComplete: () => { this._isAnimating = false },
@@ -451,35 +391,27 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
       }, 0)
     }
 
-    // Inactive circles (1–4) pop in, staggered
+    // Active card (Adam) lifts into view
+    entrance.fromTo(activeSlot,
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' },
+      0.2
+    )
+
+    // Inactive circles stagger in from the right (outward from card)
     const inactiveSlots = this._slots.slice(1)
-    if (inactiveSlots.length > 0) {
-      entrance.to(inactiveSlots, {
-        opacity:  1,
-        scale:    1,
-        duration: 0.4,
-        stagger:  0.08,
-        ease:     'back.out(1.5)',
-      }, 0.2)
-    }
-
-    // Adam (slot 0) pops in as a circle
-    entrance.to(this._slots[0]!, {
+    entrance.to(inactiveSlots, {
       opacity:  1,
-      scale:    1,
-      duration: 0.45,
-      ease:     'back.out(1.5)',
-    }, 0.15)
+      duration: 0.38,
+      stagger:  0.07,
+      ease:     'power2.out',
+    }, 0.3)
 
-    // Shift track to card-centered position + expand Adam simultaneously
-    entrance.add((): void => {
-      void gsap.to(this._trackEl!, {
-        x:        this._cardOffset(0),
-        duration: 0.6,
-        ease:     'power3.inOut',
-      })
-      void this._expandTLs.get(0)!.play()
-    }, 0.6)
+    // ── Text stagger: name → rank → title → bio ──────────────────────────
+    entrance.to(nameEl,  { opacity: 1, x: 0, duration: 0.4,  ease: 'power3.out' }, 0.55)
+    entrance.to(rankEl,  { opacity: 1, x: 0, duration: 0.32, ease: 'power3.out' }, 0.67)
+    entrance.to(titleEl, { opacity: 1, x: 0, duration: 0.3,  ease: 'power3.out' }, 0.77)
+    entrance.to(bioEl,   { opacity: 1, x: 0, duration: 0.3,  ease: 'power3.out' }, 0.87)
 
     // Nav fades up
     if (navEl) {
@@ -489,8 +421,115 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
         duration: 0.3,
         stagger:  0.05,
         ease:     'power2.out',
-      }, 0.4)
+      }, 0.35)
     }
+  }
+
+  // ── Transition ────────────────────────────────────────────────────────────
+
+  /**
+   * Drives the full instructor switch on a single master timeline.
+   * All motion is coordinated so _isAnimating releases exactly when
+   * the last tween completes — no detached child timelines.
+   *
+   * Phase 0 (t=0.00):  All slots slide to their new x/y positions.
+   * Phase 0b (t=0.00): Previous card collapses to circle.
+   * Phase 1 (t=0.05):  New circle expands to card.
+   * Phase 2 (t=0.50+): Text staggers in: name → rank → title → bio.
+   */
+  private _goTo(targetIndex: number): void {
+    if (this._isAnimating)                 { return }
+    if (targetIndex === this._activeIndex) { return }
+    if (!this._hasEntered)                 { return }
+
+    const prevIndex   = this._activeIndex
+    this._activeIndex = targetIndex
+    this._isAnimating = true
+
+    // ARIA + tabindex
+    this._navBtns[prevIndex]?.setAttribute('aria-pressed', 'false')
+    this._navBtns[targetIndex]?.setAttribute('aria-pressed', 'true')
+    this._slots[prevIndex]?.setAttribute('aria-expanded', 'false')
+    this._slots[targetIndex]?.setAttribute('aria-expanded', 'true')
+    this._slots[prevIndex]?.setAttribute('tabindex', '-1')
+    this._slots[targetIndex]?.setAttribute('tabindex', '0')
+
+    const prevSlot  = this._slots[prevIndex]!
+    const nextSlot  = this._slots[targetIndex]!
+    const CW        = cardWidth()
+    const vw        = this._viewportEl!.offsetWidth
+
+    const prevAvatar = prevSlot.querySelector<HTMLElement>('[data-avatar]')!
+    const prevRing   = prevSlot.querySelector<HTMLElement>('[data-ring]')!
+    const prevCard   = prevSlot.querySelector<HTMLElement>('[data-card]')!
+    const nextAvatar = nextSlot.querySelector<HTMLElement>('[data-avatar]')!
+    const nextRing   = nextSlot.querySelector<HTMLElement>('[data-ring]')!
+    const nextCard   = nextSlot.querySelector<HTMLElement>('[data-card]')!
+    const nextName   = nextSlot.querySelector<HTMLElement>('[data-iname]')!
+    const nextRank   = nextSlot.querySelector<HTMLElement>('[data-rank]')!
+    const nextTitle  = nextSlot.querySelector<HTMLElement>('[data-ititle]')!
+    const nextBio    = nextSlot.querySelector<HTMLElement>('[data-bio]')!
+
+    // Reset incoming text + card layer to their starting state
+    gsap.set([nextName, nextRank, nextTitle, nextBio], { opacity: 0, x: -20 })
+    gsap.set(nextCard,   { opacity: 0 })
+    gsap.set(nextAvatar, { opacity: 1 })
+    gsap.set(nextRing,   { opacity: 0.5 })
+
+    const tl = gsap.timeline({
+      onComplete: () => { this._isAnimating = false },
+    })
+
+    // ── Phase 0: All slots reposition simultaneously ───────────────── t=0.00
+    this._slots.forEach((slot, i) => {
+      tl.to(slot, {
+        x:        slotX(i, targetIndex, vw),
+        y:        i === targetIndex ? 0 : CIRCLE_TOP,
+        duration: 0.55,
+        ease:     'expo.inOut',
+      }, 0)
+    })
+
+    // ── Phase 0b: Collapse previous card → circle ──────────────────── t=0.00
+    tl.to(prevSlot, {
+      width:        CIRCLE_SIZE,
+      height:       CIRCLE_SIZE,
+      borderRadius: '50%',
+      duration:     0.55,
+      ease:         'expo.inOut',
+    }, 0)
+    tl.to(prevCard, {
+      opacity:    0,
+      duration:   0.15,
+      ease:       'power2.in',
+      onComplete: () => { prevCard.setAttribute('aria-hidden', 'true') },
+    }, 0)
+    tl.to(prevAvatar, { opacity: 1, duration: 0.25, ease: 'power2.out' }, 0.15)
+    tl.to(prevRing,   { opacity: 0.5, duration: 0.2 }, 0.15)
+
+    // ── Phase 1: Expand new circle → card ─────────────────────────── t=0.05
+    tl.to(nextSlot, {
+      width:        CW,
+      height:       CARD_HEIGHT,
+      borderRadius: '1rem',
+      duration:     0.55,
+      ease:         'expo.inOut',
+    }, 0.05)
+    tl.to(nextAvatar, { opacity: 0, duration: 0.2, ease: 'power2.in' }, 0.05)
+    tl.to(nextRing,   { opacity: 0, duration: 0.15 }, 0.05)
+    // Card background visible once shape is ~50% formed
+    tl.to(nextCard, {
+      opacity:  1,
+      duration: 0.25,
+      ease:     'power2.out',
+      onStart:  () => { nextCard.removeAttribute('aria-hidden') },
+    }, 0.28)
+
+    // ── Phase 2: Stagger text once shape is ~90% formed ───────────── t=0.50+
+    tl.to(nextName,  { opacity: 1, x: 0, duration: 0.4,  ease: 'power3.out' }, 0.50)
+    tl.to(nextRank,  { opacity: 1, x: 0, duration: 0.32, ease: 'power3.out' }, 0.62)
+    tl.to(nextTitle, { opacity: 1, x: 0, duration: 0.3,  ease: 'power3.out' }, 0.72)
+    tl.to(nextBio,   { opacity: 1, x: 0, duration: 0.3,  ease: 'power3.out' }, 0.82)
   }
 
   // ── Interaction ──────────────────────────────────────────────────────────
@@ -524,137 +563,15 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
       slot.addEventListener('pointerenter', () => {
         if (i === this._activeIndex) { return }
         gsap.to(slot, { scale: 1.1, duration: 0.2, ease: 'power2.out' })
-        if (ringEl) {
-          gsap.to(ringEl, { opacity: 1, duration: 0.18 })
-        }
+        if (ringEl) { gsap.to(ringEl, { opacity: 1, duration: 0.18 }) }
       })
 
       slot.addEventListener('pointerleave', () => {
         if (i === this._activeIndex) { return }
         gsap.to(slot, { scale: 1, duration: 0.25, ease: 'power2.inOut' })
-        if (ringEl) {
-          gsap.to(ringEl, { opacity: 0.5, duration: 0.2 })
-        }
+        if (ringEl) { gsap.to(ringEl, { opacity: 0.5, duration: 0.2 }) }
       })
     })
-  }
-
-  /**
-   * Main transition coordinator.
-   * 1. Collapses the current card (reverse of its expand TL)
-   * 2. Shifts the track to center the new instructor
-   * 3. Expands the new instructor's card
-   */
-  private _goTo(targetIndex: number): void {
-    if (this._isAnimating)                 { return }
-    if (targetIndex === this._activeIndex) { return }
-    if (!this._hasEntered)                 { return }
-
-    const prevIndex       = this._activeIndex
-    this._activeIndex     = targetIndex
-    this._isAnimating     = true
-
-    // Determine stagger direction for text reveal based on navigation direction
-    const direction = targetIndex > prevIndex ? 1 : -1
-
-    // Update ARIA + tabindex
-    this._navBtns[prevIndex]?.setAttribute('aria-pressed', 'false')
-    this._navBtns[targetIndex]?.setAttribute('aria-pressed', 'true')
-    this._slots[prevIndex]?.setAttribute('aria-expanded', 'false')
-    this._slots[targetIndex]?.setAttribute('aria-expanded', 'true')
-    this._slots[prevIndex]?.setAttribute('tabindex', '-1')
-    this._slots[targetIndex]?.setAttribute('tabindex', '0')
-
-    const newOffset = this._cardOffset(targetIndex)
-    const prevTL    = this._expandTLs.get(prevIndex)!
-
-    // Re-build the expand TL for the incoming instructor with directional stagger
-    const updatedNextTL = this._buildExpandTimelineDirectional(
-      this._slots[targetIndex]!,
-      cardWidth(),
-      direction
-    )
-    this._expandTLs.set(targetIndex, updatedNextTL)
-
-    const transition = gsap.timeline({
-      onComplete: () => { this._isAnimating = false },
-    })
-
-    // 1. Collapse current card → circle
-    transition.add(prevTL.reverse(), 0)
-
-    // 2. Shift track (slight overlap — collapse leads by 80ms)
-    transition.add(
-      gsap.to(this._trackEl!, {
-        x:        newOffset,
-        duration: 0.55,
-        ease:     'power2.inOut',
-      }),
-      0.08
-    )
-
-    // 3. Expand the new card (begins as track nears its destination)
-    transition.add((): void => { void updatedNextTL.play() }, 0.38)
-  }
-
-  /**
-   * Variant of _buildExpandTimeline that reverses the text stagger direction
-   * based on which way the user is navigating through the carousel.
-   */
-  private _buildExpandTimelineDirectional(
-    slot:      HTMLElement,
-    CW:        number,
-    direction: 1 | -1
-  ): gsap.core.Timeline {
-    const avatarEl = slot.querySelector<HTMLElement>('[data-avatar]')!
-    const ringEl   = slot.querySelector<HTMLElement>('[data-ring]')!
-    const cardEl   = slot.querySelector<HTMLElement>('[data-card]')!
-    const rankEl   = slot.querySelector<HTMLElement>('[data-rank]')!
-    const nameEl   = slot.querySelector<HTMLElement>('[data-iname]')!
-    const titleEl  = slot.querySelector<HTMLElement>('[data-ititle]')!
-    const bioEl    = slot.querySelector<HTMLElement>('[data-bio]')!
-
-    // Ensure text starts in hidden state before expand
-    gsap.set([rankEl, nameEl, titleEl, bioEl], {
-      opacity: 0,
-      y:       direction * 8,
-    })
-    gsap.set(cardEl,   { opacity: 0 })
-    gsap.set(avatarEl, { opacity: 1, scale: 1 })
-    gsap.set(ringEl,   { opacity: 0.5 })
-
-    return gsap.timeline({ paused: true })
-      .to(slot, {
-        width:        CW,
-        height:       CARD_HEIGHT,
-        borderRadius: '1rem',
-        duration:     0.55,
-        ease:         'power3.inOut',
-      }, 0)
-      .to(avatarEl, {
-        opacity:  0,
-        scale:    0.75,
-        duration: 0.25,
-        ease:     'power2.in',
-      }, 0)
-      .to(ringEl, {
-        opacity:  0,
-        duration: 0.2,
-      }, 0)
-      .to(cardEl, {
-        opacity:  1,
-        duration: 0.3,
-        ease:     'power2.out',
-        onStart() { cardEl.removeAttribute('aria-hidden') },
-        onReverseComplete() { cardEl.setAttribute('aria-hidden', 'true') },
-      }, 0.28)
-      .to([rankEl, nameEl, titleEl, bioEl], {
-        opacity:  1,
-        y:        0,
-        stagger:  direction > 0 ? 0.06 : -0.06,
-        duration: 0.3,
-        ease:     'power2.out',
-      }, 0.4)
   }
 
   // ── Resize ────────────────────────────────────────────────────────────────
@@ -662,9 +579,18 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
   private _onResize = (): void => {
     if (this._resizeTimer !== null) { clearTimeout(this._resizeTimer) }
     this._resizeTimer = setTimeout(() => {
-      if (!this._hasEntered || !this._trackEl) { return }
-      // Snap track to correct position for current active slot
-      gsap.set(this._trackEl, { x: this._cardOffset(this._activeIndex) })
+      if (!this._hasEntered || !this._viewportEl) { return }
+      const vw = this._viewportEl.offsetWidth
+      const CW = cardWidth()
+      this._slots.forEach((slot, i) => {
+        const isActive = i === this._activeIndex
+        gsap.set(slot, {
+          x:      slotX(i, this._activeIndex, vw),
+          y:      isActive ? 0 : CIRCLE_TOP,
+          width:  isActive ? CW : CIRCLE_SIZE,
+          height: isActive ? CARD_HEIGHT : CIRCLE_SIZE,
+        })
+      })
       ScrollTrigger.refresh()
     }, 150)
   }
