@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Your Free Trial Class — Oregon Jiu Jitsu Lab</title>
+    <meta
+      name="description"
+      content="Choose your program and schedule your first free BJJ class at Oregon Jiu Jitsu Lab in Hillsboro, Oregon."
+    />
+    <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+  </head>
+  <body class="bg-brand-primary text-neutral-100">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <ojj-site-header current-page="" data-turbo-permanent id="site-header"></ojj-site-header>
+    <ojj-scroll-progress aria-hidden="true"></ojj-scroll-progress>
+
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        <main id="main-content" tabindex="-1">
+
+          <!-- Page header -->
+          <section class="bg-neutral-950 pt-28 pb-10">
+            <div class="max-w-2xl mx-auto px-4 sm:px-6 text-center">
+              <!-- Step indicator -->
+              <div class="flex items-center justify-center gap-2 mb-6" aria-label="Step 2 of 2">
+                <span class="flex items-center justify-center w-6 h-6 rounded-full bg-neutral-700 text-neutral-400 text-xs font-bold">1</span>
+                <span class="h-px w-8 bg-neutral-700" aria-hidden="true"></span>
+                <span class="flex items-center justify-center w-6 h-6 rounded-full bg-brand-accent text-white text-xs font-bold" aria-current="step">2</span>
+              </div>
+              <h1 class="font-heading text-3xl sm:text-4xl font-black text-white mb-3">
+                Book Your Free Class
+              </h1>
+              <p class="text-neutral-400 text-base max-w-md mx-auto">
+                Tell us a bit about yourself, then pick a time that works for you.
+              </p>
+            </div>
+          </section>
+
+          <!-- Booking form -->
+          <section class="bg-brand-primary py-12">
+            <div class="max-w-2xl mx-auto px-4 sm:px-6">
+              <ojj-booking-form></ojj-booking-form>
+            </div>
+          </section>
+
+        </main>
+
+        <ojj-site-footer></ojj-site-footer>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/pages/book-trial.ts"></script>
+  </body>
+</html>

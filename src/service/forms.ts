@@ -13,7 +13,7 @@ export async function submitFreeTrial(formData: FormData, endpoint = GHL_ENDPOIN
       mode: 'no-cors'
     });
 
-    window.location.href = '/schedule-trial-class';
+    window.location.href = '/book-trial/';
 
   } catch (err) {
     console.error('[FreeTrial] submission failed: ', err);
