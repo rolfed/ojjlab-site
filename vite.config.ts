@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
-import type { Plugin } from 'vite'
+import type { Plugin, ViteDevServer } from 'vite'
 import { mkdirSync, renameSync, rmSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 
@@ -26,7 +26,7 @@ function mpaDevRewrite(): Plugin {
   return {
     name: 'mpa-dev-rewrite',
     apply: 'serve',
-    configureServer(server) {
+    configureServer(server: ViteDevServer): void {
       server.middlewares.use((req, _res, next) => {
         const url = req.url ?? '/'
         const clean = url.endsWith('/') ? url : `${url}/`
@@ -61,7 +61,7 @@ function mpaBuildRewrite(): Plugin {
   return {
     name: 'mpa-build-rewrite',
     apply: 'build',
-    closeBundle() {
+    closeBundle(): void {
       for (const [from, to] of moves) {
         const src = join(outDir, from)
         const dest = join(outDir, to)

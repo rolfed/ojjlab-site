@@ -38,7 +38,7 @@ export function initAnimations(): void {
   // Kill all ScrollTriggers when the tab goes hidden (page unload / bfcache)
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
-      ScrollTrigger.getAll().forEach((st) => st.kill())
+      ScrollTrigger.getAll().forEach((st) => { st.kill(); })
     }
   })
 
@@ -85,8 +85,8 @@ export function scrollReveal(
     presetKey === 'stagger' ? (opts.stagger ?? stDefaults.stagger ?? 0.1) : undefined
 
   const triggerEl: Element | undefined = Array.isArray(targets)
-    ? (targets as Element[])[0]
-    : (targets as Element)
+    ? (targets)[0]
+    : (targets)
 
   if (!triggerEl) { return null }
 
@@ -96,7 +96,7 @@ export function scrollReveal(
     delay: opts.delay ?? 0,
     ease: opts.ease ?? defaults.ease ?? 'power2.out',
     scrollTrigger: {
-      trigger: triggerEl as Element,
+      trigger: triggerEl,
       start: opts.start ?? stDefaults.start ?? 'top 85%',
       once: opts.once ?? stDefaults.once ?? true,
     },
@@ -176,7 +176,7 @@ export function pinHorizontal(
     scrollTrigger: {
       trigger: container,
       start: opts.start ?? 'top top',
-      end: () => `+=${scrollWidth}`,
+      end: () => `+=${String(scrollWidth)}`,
       scrub: opts.scrub ?? 1,
       pin: true,
       anticipatePin: 1,
@@ -219,7 +219,7 @@ export function pinnedReveal(config: PinnedRevealConfig): gsap.core.Timeline | n
   gsap.set(track, { x: 0 })
 
   const trackDist = (): number => {
-    const wrap = track.parentElement!
+    const wrap = track.parentElement ?? track
     const wrapRect = wrap.getBoundingClientRect()
     const wrapPadLeft = parseFloat(getComputedStyle(wrap).paddingLeft)
     const naturalLeft = wrapRect.left + wrapPadLeft
@@ -234,7 +234,7 @@ export function pinnedReveal(config: PinnedRevealConfig): gsap.core.Timeline | n
     scrollTrigger: {
       trigger,
       start: 'top top',
-      end: () => `+=${HEADING_PHASE_PX + trackDist()}`,
+      end: () => `+=${String(HEADING_PHASE_PX + trackDist())}`,
       pin: true,
       anticipatePin: 1,
       scrub: 1,
@@ -242,15 +242,15 @@ export function pinnedReveal(config: PinnedRevealConfig): gsap.core.Timeline | n
 
       // ── Debug callbacks (dev only) ────────────────────────────────────
       onEnter: () =>
-        console.log(`[ST:${label}] onEnter — pin active`),
+        { console.log(`[ST:${label}] onEnter — pin active`); },
       onLeave: (self) =>
-        console.log(`[ST:${label}] onLeave — progress=${self.progress.toFixed(2)} pin released`),
+        { console.log(`[ST:${label}] onLeave — progress=${self.progress.toFixed(2)} pin released`); },
       onEnterBack: (self) =>
-        console.log(`[ST:${label}] onEnterBack — progress=${self.progress.toFixed(2)}`),
+        { console.log(`[ST:${label}] onEnterBack — progress=${self.progress.toFixed(2)}`); },
       onLeaveBack: () =>
-        console.log(`[ST:${label}] onLeaveBack — above pin start`),
+        { console.log(`[ST:${label}] onLeaveBack — above pin start`); },
       onUpdate: (self) =>
-        console.debug(`[ST:${label}] onUpdate — progress=${self.progress.toFixed(3)} dir=${self.direction}`),
+        { console.debug(`[ST:${label}] onUpdate — progress=${self.progress.toFixed(3)} dir=${String(self.direction)}`); },
     },
   })
 
@@ -302,10 +302,10 @@ export function marquee(
   // Pause on hover / focus-within
   const parent = track.parentElement
   if (parent) {
-    parent.addEventListener('mouseenter', () => tween.pause())
-    parent.addEventListener('mouseleave', () => tween.play())
-    parent.addEventListener('focusin', () => tween.pause())
-    parent.addEventListener('focusout', () => tween.play())
+    parent.addEventListener('mouseenter', () => { void tween.pause() })
+    parent.addEventListener('mouseleave', () => { void tween.play() })
+    parent.addEventListener('focusin', () => { void tween.pause() })
+    parent.addEventListener('focusout', () => { void tween.play() })
   }
 
   return tween

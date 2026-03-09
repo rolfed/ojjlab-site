@@ -1,6 +1,6 @@
 import { chromium } from '@playwright/test'
 
-;(async () => {
+void (async (): Promise<void> => {
   const browser = await chromium.launch({ headless: true })
   const page = await browser.newPage()
   await page.setViewportSize({ width: 1280, height: 800 })
@@ -12,11 +12,11 @@ import { chromium } from '@playwright/test'
   await page.goto('http://localhost:5175', { waitUntil: 'networkidle' })
   await page.waitForTimeout(1500)
 
-  const info = await page.evaluate(() => {
-    const section = document.querySelector('[data-carousel-section]') as HTMLElement | null
-    const track = document.querySelector('[data-track]') as HTMLElement | null
-    const heading = document.querySelector('[data-heading]') as HTMLElement | null
-    const cs = (el: HTMLElement | null) => el ? getComputedStyle(el) : null
+  const info = await page.evaluate((): unknown => {
+    const section = document.querySelector<HTMLElement>('[data-carousel-section]')
+    const track = document.querySelector<HTMLElement>('[data-track]')
+    const heading = document.querySelector<HTMLElement>('[data-heading]')
+    const cs = (el: HTMLElement | null): CSSStyleDeclaration | null => el ? getComputedStyle(el) : null
     const ss = cs(section), ts = cs(track)
     return {
       sectionExists: !!section,
@@ -44,21 +44,21 @@ import { chromium } from '@playwright/test'
 
   await page.screenshot({ path: '/tmp/c0-load.png' })
 
-  await page.evaluate(() => {
+  await page.evaluate((): void => {
     const s = document.querySelector('[data-carousel-section]')
     if (s) s.scrollIntoView({ behavior: 'instant' })
   })
   await page.waitForTimeout(800)
   await page.screenshot({ path: '/tmp/c1-enter.png' })
 
-  const enterState = await page.evaluate(() => {
+  const enterState = await page.evaluate((): unknown => {
     const track = document.querySelector('[data-track]') as HTMLElement
     const heading = document.querySelector('[data-heading]') as HTMLElement
     return {
       scrollY: window.scrollY,
-      trackTransform: getComputedStyle(track)?.transform,
-      trackPaddingLeft: getComputedStyle(track)?.paddingLeft,
-      headingOpacity: getComputedStyle(heading)?.opacity,
+      trackTransform: getComputedStyle(track).transform,
+      trackPaddingLeft: getComputedStyle(track).paddingLeft,
+      headingOpacity: getComputedStyle(heading).opacity,
       pinSpacers: Array.from(document.querySelectorAll('[class*="pin-spacer"]')).map(e => ({
         h: (e as HTMLElement).offsetHeight
       })),
@@ -67,11 +67,11 @@ import { chromium } from '@playwright/test'
   console.log('\n=== AT SECTION ENTRY ===')
   console.log(JSON.stringify(enterState, null, 2))
 
-  await page.evaluate(() => window.scrollBy(0, 800))
+  await page.evaluate((): void => { window.scrollBy(0, 800) })
   await page.waitForTimeout(1000)
   await page.screenshot({ path: '/tmp/c2-mid.png' })
 
-  const midState = await page.evaluate(() => {
+  const midState = await page.evaluate((): unknown => {
     const track = document.querySelector('[data-track]') as HTMLElement
     const heading = document.querySelector('[data-heading]') as HTMLElement
     const cards = Array.from(document.querySelectorAll('[data-track] > div')).map(c => {
@@ -81,8 +81,8 @@ import { chromium } from '@playwright/test'
     })
     return {
       scrollY: window.scrollY,
-      trackTransform: getComputedStyle(track)?.transform,
-      headingOpacity: getComputedStyle(heading)?.opacity,
+      trackTransform: getComputedStyle(track).transform,
+      headingOpacity: getComputedStyle(heading).opacity,
       cards,
       pinSpacers: Array.from(document.querySelectorAll('[class*="pin-spacer"]')).map(e => ({
         h: (e as HTMLElement).offsetHeight
@@ -92,15 +92,15 @@ import { chromium } from '@playwright/test'
   console.log('\n=== MID SCROLL (+800px) ===')
   console.log(JSON.stringify(midState, null, 2))
 
-  await page.evaluate(() => window.scrollBy(0, 2000))
+  await page.evaluate((): void => { window.scrollBy(0, 2000) })
   await page.waitForTimeout(1000)
   await page.screenshot({ path: '/tmp/c3-end.png' })
 
-  const endState = await page.evaluate(() => {
+  const endState = await page.evaluate((): unknown => {
     const track = document.querySelector('[data-track]') as HTMLElement
     return {
       scrollY: window.scrollY,
-      trackTransform: getComputedStyle(track)?.transform,
+      trackTransform: getComputedStyle(track).transform,
     }
   })
   console.log('\n=== END SCROLL ===')

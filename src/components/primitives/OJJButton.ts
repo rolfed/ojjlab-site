@@ -46,13 +46,13 @@ export class OJJButton extends BaseElement {
     const disabled = this.hasAttribute('disabled')
     const external = this.hasAttribute('external')
 
-    const variantCls = VARIANT_CLASSES[variant] ?? VARIANT_CLASSES.primary
-    const sizeCls = SIZE_CLASSES[size] ?? SIZE_CLASSES.md
+    const variantCls = VARIANT_CLASSES[variant]
+    const sizeCls = SIZE_CLASSES[size]
     const baseCls = `inline-flex items-center gap-2 font-semibold rounded-md transition-colors duration-150 cursor-pointer ${variantCls} ${sizeCls}`
     const disabledCls = disabled ? 'opacity-50 pointer-events-none' : ''
 
     // Preserve slot content before re-render
-    const slotContent = this.querySelector('[data-slot]')?.innerHTML ?? this.textContent?.trim() ?? ''
+    const slotContent = this.querySelector('[data-slot]')?.innerHTML ?? this.textContent.trim()
 
     if (href) {
       const externalAttrs = external

@@ -132,7 +132,7 @@ export class OJJReviewCard extends BaseElement {
 
       <article class="card">
         <div class="header">
-          <div class="stars" role="img" aria-label="${rating} out of 5 stars">${stars}</div>
+          <div class="stars" role="img" aria-label="${String(rating)} out of 5 stars">${stars}</div>
           <span class="google-badge" aria-label="Google Review">Google</span>
         </div>
 

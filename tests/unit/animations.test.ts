@@ -105,6 +105,7 @@ describe('scrollReveal()', () => {
   it('returns a tween for fadeUp preset', () => {
     const el = makeEl()
     const result = scrollReveal(el, 'fadeUp')
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
     expect(gsap.fromTo).toHaveBeenCalled()
     expect(result).toBe(mockTween)
   })
@@ -118,6 +119,7 @@ describe('scrollReveal()', () => {
   it('returns a tween for stagger preset with array of elements', () => {
     const els = [makeEl(), makeEl()]
     const result = scrollReveal(els, 'stagger')
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
     expect(gsap.fromTo).toHaveBeenCalled()
     expect(result).toBe(mockTween)
   })
@@ -130,8 +132,9 @@ describe('scrollReveal()', () => {
   it('passes custom duration to GSAP', () => {
     const el = makeEl()
     scrollReveal(el, 'fadeUp', { duration: 1.2 })
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
     const call = vi.mocked(gsap.fromTo).mock.calls[0]
-    expect((call?.[2] as gsap.TweenVars)?.duration).toBe(1.2)
+    expect((call?.[2] as gsap.TweenVars).duration).toBe(1.2)
   })
 })
 
@@ -141,6 +144,7 @@ describe('heroEntrance()', () => {
   it('returns a tween', () => {
     const el = makeEl()
     const result = heroEntrance([el])
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
     expect(gsap.fromTo).toHaveBeenCalled()
     expect(result).toBe(mockTween)
   })
@@ -148,6 +152,7 @@ describe('heroEntrance()', () => {
   it('filters out null targets', () => {
     const el = makeEl()
     const result = heroEntrance([null, el, null])
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
     expect(gsap.fromTo).toHaveBeenCalled()
     expect(result).toBe(mockTween)
   })
@@ -249,7 +254,7 @@ describe('counter()', () => {
     expect(typeof toArgs?.[0]).toBe('object')
     expect((toArgs?.[0] as { value: number }).value).toBe(0)
     // Second arg includes endValue
-    expect((toArgs?.[1] as gsap.TweenVars)?.value).toBe(42)
+    expect((toArgs?.[1] as gsap.TweenVars).value).toBe(42)
   })
 })
 

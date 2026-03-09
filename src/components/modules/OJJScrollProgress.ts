@@ -12,7 +12,7 @@ export class OJJScrollProgress extends BaseElement {
       const pos = smoother ? smoother.scrollTop() : window.scrollY
       const scrollable = document.documentElement.scrollHeight - window.innerHeight
       const progress = scrollable > 0 ? Math.min(1, pos / scrollable) : 0
-      if (this._bar) { this._bar.style.transform = `scaleX(${progress})` }
+      if (this._bar) { this._bar.style.transform = `scaleX(${String(progress)})` }
     })
   }
 

@@ -61,7 +61,7 @@ export class OJJSiteFooter extends BaseElement {
           </div>
 
           <div class="mt-10 pt-6 border-t border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-            <p>&copy; ${year} Oregon Jiu Jitsu Lab. All rights reserved.</p>
+            <p>&copy; ${String(year)} Oregon Jiu Jitsu Lab. All rights reserved.</p>
             <p>
               <a href="/privacy/" class="hover:text-white transition-colors">Privacy Policy</a>
             </p>

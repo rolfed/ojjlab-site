@@ -18,6 +18,11 @@ export default tseslint.config(
     },
   },
   {
+    // eslint.config.js is a JS file not included in tsconfig — disable type-aware rules for it
+    files: ['eslint.config.js'],
+    ...tseslint.configs.disableTypeChecked,
+  },
+  {
     ignores: ['dist/**', 'node_modules/**', 'playwright-report/**', 'coverage/**'],
   }
 )

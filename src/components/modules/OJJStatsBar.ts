@@ -39,9 +39,9 @@ export class OJJStatsBar extends AnimatableMixin(BaseElement) {
     const items = stats
       .map(
         ({ value, label, suffix = '' }, i) => `
-        <div class="text-center" data-stat="${i}">
+        <div class="text-center" data-stat="${String(i)}">
           <p class="font-heading text-4xl sm:text-5xl font-black text-brand-accent mb-1">
-            <span data-counter="${value}">0</span>${suffix}
+            <span data-counter="${String(value)}">0</span>${suffix}
           </p>
           <p class="text-neutral-400 text-sm uppercase tracking-wide font-medium">${label}</p>
         </div>

@@ -20,7 +20,7 @@ class TestElement extends BaseElement {
   }
 
   // Expose emit for testing
-  public testEmit<T>(eventName: string, detail?: T): void {
+  public testEmit(eventName: string, detail?: unknown): void {
     this.emit(eventName, detail)
   }
 }
@@ -92,7 +92,7 @@ describe('BaseElement', () => {
 
       el.testEmit('detail-event', { value: 42, label: 'test' })
 
-      expect(handler.mock.calls[0]?.[0].detail).toEqual({ value: 42, label: 'test' })
+      expect((handler.mock.calls[0]?.[0] as CustomEvent).detail).toEqual({ value: 42, label: 'test' })
       document.removeEventListener('ojj:detail-event', handler)
     })
 
@@ -114,7 +114,7 @@ describe('BaseElement', () => {
 
       el.testEmit('no-detail')
 
-      expect(handler.mock.calls[0]?.[0].detail).toBeNull()
+      expect((handler.mock.calls[0]?.[0] as CustomEvent).detail).toBeNull()
       document.removeEventListener('ojj:no-detail', handler)
     })
   })

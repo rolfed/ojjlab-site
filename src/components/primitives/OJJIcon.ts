@@ -37,7 +37,7 @@ export class OJJIcon extends BaseElement {
     const name = (this.getAttribute('name') ?? 'menu') as IconName
     const size = this.getAttribute('size') ?? '24'
     const label = this.getAttribute('label')
-    const paths = ICONS[name] ?? ICONS.menu
+    const paths = ICONS[name]
 
     const ariaAttrs = label
       ? `role="img" aria-label="${label}"`

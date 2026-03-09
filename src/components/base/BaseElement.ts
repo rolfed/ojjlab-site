@@ -45,7 +45,7 @@ export abstract class BaseElement extends HTMLElement {
    * Dispatch a namespaced custom event that bubbles across Shadow DOM boundaries.
    * Event name is automatically prefixed with "ojj:".
    */
-  protected emit<T>(eventName: string, detail?: T): void {
+  protected emit(eventName: string, detail?: unknown): void {
     this.dispatchEvent(
       new CustomEvent(`ojj:${eventName}`, {
         bubbles: true,

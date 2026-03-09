@@ -148,12 +148,16 @@ export class OJJTrialForm extends BaseElement {
       if (!this._validate(form)) return
 
       const formData = new FormData(form)
+      const getStr = (key: string): string => {
+        const val = formData.get(key)
+        return typeof val === 'string' ? val : ''
+      }
 
       this.emit('trial-submit', {
-        firstName: String(formData.get('firstName') ?? ''),
-        lastName:  String(formData.get('lastName') ?? ''),
-        email:     String(formData.get('email') ?? ''),
-        phone:     formData.get('phone') ? String(formData.get('phone')) : undefined,
+        firstName: getStr('firstName'),
+        lastName:  getStr('lastName'),
+        email:     getStr('email'),
+        phone:     getStr('phone') || undefined,
       })
 
       this._setSubmitting(true)

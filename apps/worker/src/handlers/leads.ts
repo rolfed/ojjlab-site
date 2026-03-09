@@ -7,7 +7,7 @@ import { log } from '../lib/logger.js'
 //   - Check CORS and rate limit
 //   - Create GHL contact with program tag via ghl.createContact()
 //   - Return { success: true, program } on 201
-export async function handleLeadsStart(
+export function handleLeadsStart(
   request: Request,
   env: Env,
   ctx: RequestContext,
@@ -15,5 +15,5 @@ export async function handleLeadsStart(
 ): Promise<Response> {
   const ms = Date.now() - startTime
   log('warn', ctx, 501, ms, env, 'not_implemented')
-  return Response.json({ error: 'Not implemented' }, { status: 501 })
+  return Promise.resolve(Response.json({ error: 'Not implemented' }, { status: 501 }))
 }

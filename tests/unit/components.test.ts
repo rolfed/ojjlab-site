@@ -43,9 +43,9 @@ import '@/components/modules/OJJTrialForm'
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
-function mount<T extends HTMLElement>(tag: string, attrs: Record<string, string> = {}): T {
-  const el = document.createElement(tag) as T
-  Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v))
+function mount(tag: string, attrs: Record<string, string> = {}): HTMLElement {
+  const el = document.createElement(tag)
+  Object.entries(attrs).forEach(([k, v]) => { el.setAttribute(k, v); })
   document.body.appendChild(el)
   return el
 }
@@ -59,7 +59,7 @@ function unmount(el: HTMLElement): void {
 describe('ojj-icon', () => {
   let el: HTMLElement
 
-  afterEach(() => unmount(el))
+  afterEach(() => { unmount(el); })
 
   it('renders an SVG element', () => {
     el = mount('ojj-icon', { name: 'menu' })
@@ -105,7 +105,7 @@ describe('ojj-icon', () => {
 describe('ojj-badge', () => {
   let el: HTMLElement
 
-  afterEach(() => unmount(el))
+  afterEach(() => { unmount(el); })
 
   it('renders a span with badge content', () => {
     el = mount('ojj-badge')
@@ -132,7 +132,7 @@ describe('ojj-badge', () => {
 describe('ojj-button', () => {
   let el: HTMLElement
 
-  afterEach(() => unmount(el))
+  afterEach(() => { unmount(el); })
 
   it('renders a <button> when no href', () => {
     el = mount('ojj-button')
@@ -182,7 +182,7 @@ describe('ojj-button', () => {
 describe('ojj-site-footer', () => {
   let el: HTMLElement
 
-  afterEach(() => unmount(el))
+  afterEach(() => { unmount(el); })
 
   it('renders a footer element', () => {
     el = mount('ojj-site-footer')
@@ -207,7 +207,7 @@ describe('ojj-site-footer', () => {
 describe('ojj-marquee', () => {
   let el: HTMLElement
 
-  afterEach(() => unmount(el))
+  afterEach(() => { unmount(el); })
 
   it('renders a track element', () => {
     el = mount('ojj-marquee')
@@ -232,7 +232,7 @@ describe('ojj-marquee', () => {
 describe('ojj-stats-bar', () => {
   let el: HTMLElement
 
-  afterEach(() => unmount(el))
+  afterEach(() => { unmount(el); })
 
   it('renders 3 stat items by default', () => {
     el = mount('ojj-stats-bar')
@@ -260,7 +260,7 @@ describe('ojj-stats-bar', () => {
 describe('ojj-testimonial', () => {
   let el: HTMLElement
 
-  afterEach(() => unmount(el))
+  afterEach(() => { unmount(el); })
 
   it('uses Shadow DOM', () => {
     el = mount('ojj-testimonial', {
@@ -287,7 +287,7 @@ describe('ojj-testimonial', () => {
 describe('ojj-review-card', () => {
   let el: HTMLElement
 
-  afterEach(() => unmount(el))
+  afterEach(() => { unmount(el); })
 
   it('uses Shadow DOM', () => {
     el = mount('ojj-review-card', { author: 'Jane Doe', rating: '5', text: 'Great gym!' })
@@ -360,7 +360,7 @@ describe('ojj-trial-form', () => {
   let el: HTMLElement
 
   beforeEach(() => vi.clearAllMocks())
-  afterEach(() => unmount(el))
+  afterEach(() => { unmount(el); })
 
   it('renders a form element', () => {
     el = mount('ojj-trial-form')
@@ -384,7 +384,10 @@ describe('ojj-trial-form', () => {
 
   it('shows lastName validation error when only firstName is filled', () => {
     el = mount('ojj-trial-form')
-    el.querySelector<HTMLInputElement>('[name="firstName"]')!.value = 'Jane'
+    const firstNameInput = el.querySelector<HTMLInputElement>('[name="firstName"]')
+    expect(firstNameInput).toBeDefined()
+    if (!firstNameInput) return
+    firstNameInput.value = 'Jane'
     el.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
     const lastError = el.querySelector('[data-error="lastName"]')
     expect(lastError?.classList.contains('hidden')).toBe(false)
@@ -395,9 +398,16 @@ describe('ojj-trial-form', () => {
     const handler = vi.fn()
     el.addEventListener('ojj:trial-submit', handler)
 
-    el.querySelector<HTMLInputElement>('[name="firstName"]')!.value = 'Jane'
-    el.querySelector<HTMLInputElement>('[name="lastName"]')!.value = 'Smith'
-    el.querySelector<HTMLInputElement>('[name="email"]')!.value = 'jane@example.com'
+    const firstNameInput = el.querySelector<HTMLInputElement>('[name="firstName"]')
+    const lastNameInput = el.querySelector<HTMLInputElement>('[name="lastName"]')
+    const emailInput = el.querySelector<HTMLInputElement>('[name="email"]')
+    expect(firstNameInput).toBeDefined()
+    expect(lastNameInput).toBeDefined()
+    expect(emailInput).toBeDefined()
+    if (!firstNameInput || !lastNameInput || !emailInput) return
+    firstNameInput.value = 'Jane'
+    lastNameInput.value = 'Smith'
+    emailInput.value = 'jane@example.com'
 
     el.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
 
@@ -411,9 +421,16 @@ describe('ojj-trial-form', () => {
   it('calls submitFreeTrial with FormData on valid submit', () => {
     el = mount('ojj-trial-form')
 
-    el.querySelector<HTMLInputElement>('[name="firstName"]')!.value = 'Jane'
-    el.querySelector<HTMLInputElement>('[name="lastName"]')!.value = 'Smith'
-    el.querySelector<HTMLInputElement>('[name="email"]')!.value = 'jane@example.com'
+    const firstNameInput = el.querySelector<HTMLInputElement>('[name="firstName"]')
+    const lastNameInput = el.querySelector<HTMLInputElement>('[name="lastName"]')
+    const emailInput = el.querySelector<HTMLInputElement>('[name="email"]')
+    expect(firstNameInput).toBeDefined()
+    expect(lastNameInput).toBeDefined()
+    expect(emailInput).toBeDefined()
+    if (!firstNameInput || !lastNameInput || !emailInput) return
+    firstNameInput.value = 'Jane'
+    lastNameInput.value = 'Smith'
+    emailInput.value = 'jane@example.com'
 
     el.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
 
@@ -424,9 +441,16 @@ describe('ojj-trial-form', () => {
   it('disables submit button while submitting', () => {
     el = mount('ojj-trial-form')
 
-    el.querySelector<HTMLInputElement>('[name="firstName"]')!.value = 'Jane'
-    el.querySelector<HTMLInputElement>('[name="lastName"]')!.value = 'Smith'
-    el.querySelector<HTMLInputElement>('[name="email"]')!.value = 'jane@example.com'
+    const firstNameInput = el.querySelector<HTMLInputElement>('[name="firstName"]')
+    const lastNameInput = el.querySelector<HTMLInputElement>('[name="lastName"]')
+    const emailInput = el.querySelector<HTMLInputElement>('[name="email"]')
+    expect(firstNameInput).toBeDefined()
+    expect(lastNameInput).toBeDefined()
+    expect(emailInput).toBeDefined()
+    if (!firstNameInput || !lastNameInput || !emailInput) return
+    firstNameInput.value = 'Jane'
+    lastNameInput.value = 'Smith'
+    emailInput.value = 'jane@example.com'
 
     el.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
 

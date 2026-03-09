@@ -23,11 +23,26 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type BaseElementConstructor = abstract new (...args: any[]) => BaseElement
 
+// Utility type used as the declared return type of AnimatableMixin.
+// Only lists the protected executor wrappers that subclasses call via `this.x()`.
+// trackTween / trackScrollingTween are intentionally omitted — they are protected
+// internal helpers and cannot appear in a structural interface type.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnimatableConstructor<TBase extends BaseElementConstructor> = TBase & (abstract new (...args: any[]) => {
+  scrollReveal(target: Element | Element[] | NodeListOf<Element>, presetKey: 'fadeUp' | 'fadeIn' | 'stagger', opts?: AnimationOptions): gsap.core.Tween | null
+  heroEntrance(targets: (Element | null)[], opts?: AnimationOptions): gsap.core.Tween | null
+  parallax(target: Element | null, opts?: AnimationOptions): gsap.core.Tween | null
+  pinHorizontal(container: Element | null, track: Element | null, opts?: AnimationOptions): gsap.core.Tween | null
+  pinnedReveal(config: PinnedRevealConfig): gsap.core.Timeline | null
+  marquee(track: Element | null, opts?: AnimationOptions): gsap.core.Tween | null
+  counter(target: Element | null, endValue: number, opts?: AnimationOptions): gsap.core.Tween | null
+})
+
 /**
  * Returns a class that extends Base with animation instance methods and
  * automatic cleanup on disconnectedCallback.
  */
-export function AnimatableMixin<TBase extends BaseElementConstructor>(Base: TBase) {
+export function AnimatableMixin<TBase extends BaseElementConstructor>(Base: TBase): AnimatableConstructor<TBase> {
   abstract class Animatable extends Base {
     private _tweens: gsap.core.Tween[] = []
     /** Snapshot of ScrollTrigger count before an animation call, for tracking new ones. */
@@ -113,14 +128,12 @@ export function AnimatableMixin<TBase extends BaseElementConstructor>(Base: TBas
 
     protected override cleanup(): void {
       // Kill everything registered (tweens + any ScrollTriggers stored as tweens)
-      this._tweens.forEach((t) => {
-        if (t && typeof t.kill === 'function') { t.kill() }
-      })
+      this._tweens.forEach((t) => { void t.kill() })
       this._tweens = []
 
       super.cleanup()
     }
   }
 
-  return Animatable
+  return Animatable as unknown as AnimatableConstructor<TBase>
 }

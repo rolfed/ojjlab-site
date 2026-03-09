@@ -1,5 +1,3 @@
-type STATUS = 'success' | 'failure'; 
-
 const GHL_ENDPOINT = 'https://links.goldenleadsolutions.com/widget/form/f48eANaPNMCRSx2XP3Y7'
 
 export async function submitFreeTrial(formData: FormData, endpoint = GHL_ENDPOINT): Promise<void>  {

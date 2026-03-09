@@ -172,8 +172,10 @@ export const REVIEWS: Review[] = [
 ]
 
 /** Top 3 reviews for the homepage — curated for maximum impact. */
-export const FEATURED_REVIEWS: Review[] = [
-  REVIEWS.find(r => r.author === 'Phong Nguyen')!,
-  REVIEWS.find(r => r.author === 'Noah Murphy')!,
-  REVIEWS.find(r => r.author === 'Luis Sierra')!,
-]
+export const FEATURED_REVIEWS: Review[] = (
+  [
+    REVIEWS.find(r => r.author === 'Phong Nguyen'),
+    REVIEWS.find(r => r.author === 'Noah Murphy'),
+    REVIEWS.find(r => r.author === 'Luis Sierra'),
+  ] as Array<Review | undefined>
+).filter((r): r is Review => r !== undefined)

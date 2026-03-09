@@ -176,17 +176,19 @@ function adultSectionHTML(): string {
 
 /** A single child entry row (name + age + notes). */
 function childEntryHTML(prefix: string, index: number, removable: boolean): string {
+  const idx = String(index)
+  const humanIdx = String(index + 1)
   return `
     <div data-child-entry class="flex flex-col gap-3 p-4 rounded-xl bg-neutral-800/50 border border-neutral-700">
       <div class="flex items-center justify-between min-h-6">
         <span class="text-xs font-semibold text-neutral-400 uppercase tracking-wide" data-child-label>
-          Child ${index + 1}
+          Child ${humanIdx}
         </span>
         ${removable ? `
           <button
             type="button"
             data-remove-child
-            aria-label="Remove child ${index + 1}"
+            aria-label="Remove child ${humanIdx}"
             class="text-xs text-neutral-500 hover:text-brand-accent transition-colors
                    focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-accent rounded"
           >Remove</button>
@@ -195,12 +197,12 @@ function childEntryHTML(prefix: string, index: number, removable: boolean): stri
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         ${fieldGroup(
-          `${prefix}-name-${index}`,
+          `${prefix}-name-${idx}`,
           "Child's Name",
           true,
           `<input
-             id="${prefix}-name-${index}"
-             name="${prefix}-name-${index}"
+             id="${prefix}-name-${idx}"
+             name="${prefix}-name-${idx}"
              type="text"
              autocomplete="off"
              placeholder="Full name"
@@ -209,12 +211,12 @@ function childEntryHTML(prefix: string, index: number, removable: boolean): stri
           "Please enter the child's name.",
         )}
         ${fieldGroup(
-          `${prefix}-age-${index}`,
+          `${prefix}-age-${idx}`,
           "Child's Age",
           true,
           `<input
-             id="${prefix}-age-${index}"
-             name="${prefix}-age-${index}"
+             id="${prefix}-age-${idx}"
+             name="${prefix}-age-${idx}"
              type="number"
              min="3" max="17"
              placeholder="Age"
@@ -225,12 +227,12 @@ function childEntryHTML(prefix: string, index: number, removable: boolean): stri
       </div>
 
       ${fieldGroup(
-        `${prefix}-notes-${index}`,
+        `${prefix}-notes-${idx}`,
         'Notes',
         false,
         `<textarea
-           id="${prefix}-notes-${index}"
-           name="${prefix}-notes-${index}"
+           id="${prefix}-notes-${idx}"
+           name="${prefix}-notes-${idx}"
            rows="2"
            placeholder="Injuries, medical notes, or anything we should know"
            class="${TEXTAREA}"
@@ -351,7 +353,7 @@ function validateAdultSection(section: HTMLElement): boolean {
   const firstRadio = section.querySelector<HTMLInputElement>('[name="hasTrained"]')
   if (!checked) {
     setFieldError(firstRadio, hasTrainedError, true)
-    if (!firstInvalid && firstRadio) firstInvalid = firstRadio
+    if (firstRadio) firstInvalid = firstRadio
     valid = false
   } else {
     setFieldError(firstRadio, hasTrainedError, false)
@@ -552,12 +554,12 @@ export class OJJBookingForm extends BaseElement {
 
     // Re-number labels so they stay in sync with position
     list?.querySelectorAll<HTMLElement>('[data-child-label]').forEach((label, i) => {
-      label.textContent = `Child ${i + 1}`
+      label.textContent = `Child ${String(i + 1)}`
     })
 
     // Re-number aria-labels on remove buttons
     list?.querySelectorAll<HTMLButtonElement>('[data-remove-child]').forEach((b, i) => {
-      b.setAttribute('aria-label', `Remove child ${i + 2}`)
+      b.setAttribute('aria-label', `Remove child ${String(i + 2)}`)
     })
   }
 

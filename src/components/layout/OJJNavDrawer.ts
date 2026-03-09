@@ -88,8 +88,8 @@ export class OJJNavDrawer extends AnimatableMixin(BaseElement) {
   }
 
   protected override bindEvents(): void {
-    this.querySelector('[data-close]')?.addEventListener('click', () => this._close())
-    this.querySelector('[data-overlay]')?.addEventListener('click', () => this._close())
+    this.querySelector('[data-close]')?.addEventListener('click', () => { this._close(); })
+    this.querySelector('[data-overlay]')?.addEventListener('click', () => { this._close(); })
   }
 
   attributeChangedCallback(name: string, _old: string | null, newVal: string | null): void {

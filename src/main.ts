@@ -24,7 +24,7 @@ initAnimations()
 // when disconnectedCallback fires as old body elements are removed.
 document.addEventListener('turbo:before-render', () => {
   ScrollSmoother.get()?.kill()
-  ScrollTrigger.getAll().forEach((st) => st.kill())
+  ScrollTrigger.getAll().forEach((st) => { st.kill(); })
 })
 
 // After each body swap: recreate smoother, recalculate scroll positions,

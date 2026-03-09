@@ -7,7 +7,7 @@ import { log } from '../../lib/logger.js'
 //   - Validate payload (calendarId, program, availability, timezone) via Zod
 //   - Update GHL calendar availability via ghl.updateCalendarSchedule()
 //   - Note: GHL Schedules API may be a stub — verify API availability at implementation time
-export async function handleAdminCalendar(
+export function handleAdminCalendar(
   request: Request,
   env: Env,
   ctx: RequestContext,
@@ -15,5 +15,5 @@ export async function handleAdminCalendar(
 ): Promise<Response> {
   const ms = Date.now() - startTime
   log('warn', ctx, 501, ms, env, 'not_implemented')
-  return Response.json({ error: 'Not implemented' }, { status: 501 })
+  return Promise.resolve(Response.json({ error: 'Not implemented' }, { status: 501 }))
 }

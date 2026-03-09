@@ -47,8 +47,8 @@ export class OJJInstructorCard extends BaseElement {
     const role      = this.getAttribute('title') ?? 'Instructor'
     const bio       = this.getAttribute('bio') ?? ''
     const photo     = this.getAttribute('photo')
-    const accent    = BELT_ACCENT[belt] ?? BELT_ACCENT.black
-    const gradient  = BELT_GRADIENT[belt] ?? BELT_GRADIENT.black
+    const accent    = BELT_ACCENT[belt]
+    const gradient  = BELT_GRADIENT[belt]
     const initial   = name.charAt(0).toUpperCase()
     const beltLabel = belt.charAt(0).toUpperCase() + belt.slice(1)
 

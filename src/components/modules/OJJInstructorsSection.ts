@@ -138,7 +138,7 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
       <button
         class="spotlight-nav-btn"
         data-nav-btn
-        data-index="${i}"
+        data-index="${String(i)}"
         aria-pressed="${i === 0 ? 'true' : 'false'}"
         type="button"
       >${name}</button>
@@ -163,7 +163,7 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
         <div
           data-viewport
           class="spotlight-viewport"
-          style="height:${CARD_HEIGHT}px"
+          style="height:${String(CARD_HEIGHT)}px"
         >
           ${slotsHTML}
         </div>
@@ -191,7 +191,7 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
       <div
         class="spotlight-slot"
         data-slot
-        data-index="${i}"
+        data-index="${String(i)}"
         role="button"
         tabindex="${i === 0 ? '0' : '-1'}"
         aria-label="View ${inst.name} profile"
@@ -312,18 +312,20 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
    * Width/height animate for the circle↔card morph.
    */
   private _initSlotStates(): void {
-    const vw = this._viewportEl!.offsetWidth
+    if (!this._viewportEl) { return }
+    const vw = this._viewportEl.offsetWidth
     const CW = cardWidth()
 
     this._slots.forEach((slot, i) => {
       const isActive = i === 0
-      const avatarEl = slot.querySelector<HTMLElement>('[data-avatar]')!
-      const ringEl   = slot.querySelector<HTMLElement>('[data-ring]')!
-      const cardEl   = slot.querySelector<HTMLElement>('[data-card]')!
-      const rankEl   = slot.querySelector<HTMLElement>('[data-rank]')!
-      const nameEl   = slot.querySelector<HTMLElement>('[data-iname]')!
-      const titleEl  = slot.querySelector<HTMLElement>('[data-ititle]')!
-      const bioEl    = slot.querySelector<HTMLElement>('[data-bio]')!
+      const avatarEl = slot.querySelector<HTMLElement>('[data-avatar]')
+      const ringEl   = slot.querySelector<HTMLElement>('[data-ring]')
+      const cardEl   = slot.querySelector<HTMLElement>('[data-card]')
+      const rankEl   = slot.querySelector<HTMLElement>('[data-rank]')
+      const nameEl   = slot.querySelector<HTMLElement>('[data-iname]')
+      const titleEl  = slot.querySelector<HTMLElement>('[data-ititle]')
+      const bioEl    = slot.querySelector<HTMLElement>('[data-bio]')
+      if (!avatarEl || !ringEl || !cardEl || !rankEl || !nameEl || !titleEl || !bioEl) { return }
 
       gsap.set(slot, {
         position:     'absolute',
@@ -359,7 +361,7 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
       trigger: section,
       start:   'top 80%',
       once:    true,
-      onEnter: () => this._playEntrance(),
+      onEnter: () => { this._playEntrance(); },
     })
   }
 
@@ -370,11 +372,13 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
 
     const headerEl   = this.querySelector<HTMLElement>('[data-header]')
     const navEl      = this.querySelector<HTMLElement>('[data-nav]')
-    const activeSlot = this._slots[0]!
-    const nameEl     = activeSlot.querySelector<HTMLElement>('[data-iname]')!
-    const rankEl     = activeSlot.querySelector<HTMLElement>('[data-rank]')!
-    const titleEl    = activeSlot.querySelector<HTMLElement>('[data-ititle]')!
-    const bioEl      = activeSlot.querySelector<HTMLElement>('[data-bio]')!
+    const activeSlot = this._slots[0]
+    if (!activeSlot) { this._isAnimating = false; return }
+    const nameEl     = activeSlot.querySelector<HTMLElement>('[data-iname]')
+    const rankEl     = activeSlot.querySelector<HTMLElement>('[data-rank]')
+    const titleEl    = activeSlot.querySelector<HTMLElement>('[data-ititle]')
+    const bioEl      = activeSlot.querySelector<HTMLElement>('[data-bio]')
+    if (!nameEl || !rankEl || !titleEl || !bioEl) { this._isAnimating = false; return }
 
     const entrance = gsap.timeline({
       onComplete: () => { this._isAnimating = false },
@@ -454,21 +458,24 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
     this._slots[prevIndex]?.setAttribute('tabindex', '-1')
     this._slots[targetIndex]?.setAttribute('tabindex', '0')
 
-    const prevSlot  = this._slots[prevIndex]!
-    const nextSlot  = this._slots[targetIndex]!
+    const prevSlot  = this._slots[prevIndex]
+    const nextSlot  = this._slots[targetIndex]
+    if (!prevSlot || !nextSlot || !this._viewportEl) { this._isAnimating = false; return }
     const CW        = cardWidth()
-    const vw        = this._viewportEl!.offsetWidth
+    const vw        = this._viewportEl.offsetWidth
 
-    const prevAvatar = prevSlot.querySelector<HTMLElement>('[data-avatar]')!
-    const prevRing   = prevSlot.querySelector<HTMLElement>('[data-ring]')!
-    const prevCard   = prevSlot.querySelector<HTMLElement>('[data-card]')!
-    const nextAvatar = nextSlot.querySelector<HTMLElement>('[data-avatar]')!
-    const nextRing   = nextSlot.querySelector<HTMLElement>('[data-ring]')!
-    const nextCard   = nextSlot.querySelector<HTMLElement>('[data-card]')!
-    const nextName   = nextSlot.querySelector<HTMLElement>('[data-iname]')!
-    const nextRank   = nextSlot.querySelector<HTMLElement>('[data-rank]')!
-    const nextTitle  = nextSlot.querySelector<HTMLElement>('[data-ititle]')!
-    const nextBio    = nextSlot.querySelector<HTMLElement>('[data-bio]')!
+    const prevAvatar = prevSlot.querySelector<HTMLElement>('[data-avatar]')
+    const prevRing   = prevSlot.querySelector<HTMLElement>('[data-ring]')
+    const prevCard   = prevSlot.querySelector<HTMLElement>('[data-card]')
+    const nextAvatar = nextSlot.querySelector<HTMLElement>('[data-avatar]')
+    const nextRing   = nextSlot.querySelector<HTMLElement>('[data-ring]')
+    const nextCard   = nextSlot.querySelector<HTMLElement>('[data-card]')
+    const nextName   = nextSlot.querySelector<HTMLElement>('[data-iname]')
+    const nextRank   = nextSlot.querySelector<HTMLElement>('[data-rank]')
+    const nextTitle  = nextSlot.querySelector<HTMLElement>('[data-ititle]')
+    const nextBio    = nextSlot.querySelector<HTMLElement>('[data-bio]')
+    if (!prevAvatar || !prevRing || !prevCard || !nextAvatar || !nextRing || !nextCard ||
+        !nextName || !nextRank || !nextTitle || !nextBio) { this._isAnimating = false; return }
 
     // Reset incoming text + card layer to their starting state
     gsap.set([nextName, nextRank, nextTitle, nextBio], { opacity: 0, x: -20 })
@@ -545,7 +552,7 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
 
   private _bindSlotInteraction(): void {
     this._slots.forEach((slot, i) => {
-      slot.addEventListener('click', () => this._goTo(i))
+      slot.addEventListener('click', () => { this._goTo(i); })
       slot.addEventListener('keydown', (e: Event) => {
         const ke = e as KeyboardEvent
         if (ke.key === 'Enter' || ke.key === ' ') {

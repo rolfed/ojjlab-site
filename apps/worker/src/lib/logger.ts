@@ -25,7 +25,7 @@ const LEVEL_RANK: Record<LogLevel, number> = {
 }
 
 function minLevel(env: Env): number {
-  return LEVEL_RANK[env.LOG_LEVEL] ?? LEVEL_RANK.info
+  return LEVEL_RANK[env.LOG_LEVEL]
 }
 
 function emit(entry: LogEntry, env: Env): void {
@@ -34,7 +34,7 @@ function emit(entry: LogEntry, env: Env): void {
   if (env.ENVIRONMENT === 'local') {
     const err = entry.error ? ` | ${entry.error}` : ''
     console.log(
-      `[${entry.level.toUpperCase()}] ${entry.method} ${entry.path} → ${entry.status} (${entry.durationMs}ms)${err}`,
+      `[${entry.level.toUpperCase()}] ${entry.method} ${entry.path} → ${String(entry.status)} (${String(entry.durationMs)}ms)${err}`,
     )
   } else {
     console.log(JSON.stringify(entry))

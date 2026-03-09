@@ -26,8 +26,8 @@ export class OJJBadge extends BaseElement {
 
   protected render(): void {
     const color = (this.getAttribute('color') ?? 'accent') as BadgeColor
-    const colorCls = COLOR_CLASSES[color] ?? COLOR_CLASSES.accent
-    const text = this.textContent?.trim() ?? ''
+    const colorCls = COLOR_CLASSES[color]
+    const text = this.textContent.trim()
 
     this.innerHTML = `
       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide ${colorCls}">
