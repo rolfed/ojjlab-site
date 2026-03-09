@@ -101,16 +101,9 @@ const SLOT_GAP = 28
 /** Y offset (px) that vertically centers a circle within the card-height stage. */
 const CIRCLE_TOP = (CARD_HEIGHT - CIRCLE_SIZE) / 2
 
-// Transition timing (seconds) — named constants keep the timeline readable.
-const T_EXIT_TEXT    = 0.00   // Phase A: exit prev text
-const T_CARD_OUT     = 0.06   // Phase B: fade prev card
-const T_SLIDE        = 0.20   // Phase C: reposition + collapse
-const D_SLIDE        = 0.52   // duration of C
-const T_EXPAND       = 0.80   // Phase D: expand new circle → card (T_SLIDE + D_SLIDE + 0.08 — back.out needs settle time)
-const D_EXPAND       = 0.38   // duration of D
-const T_CARD_IN      = 0.94   // Phase E: new card fades in (T_EXPAND + 0.14)
-const T_TEXT_START   = 1.10   // Phase F: first text element
-const D_TEXT_STAGGER = 0.13   // gap between consecutive text elements
+// Phase durations (seconds). Phases chain sequentially with no overlap.
+const D_SHIFT = 0.30   // Phase 2: strip repositions left/right
+const D_MORPH = 0.25   // Phase 3: circle expands to card (center-origin)
 
 /** Width (px) of the expanded card — capped for narrow viewports. */
 function cardWidth(): number {
@@ -496,37 +489,33 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
   /**
    * Builds and runs the master instructor-switch timeline.
    *
-   * All phases use absolute timeline positions (not relative labels) so the
-   * timing is explicit and auditable. The stored _timeline reference ensures
-   * cleanup() can kill the tween if the component is disconnected mid-animation.
+   * Four sub-timelines chain strictly in sequence via '>':
+   *   exitTl  → shiftTl → morphTl → contentTl
+   *
+   * No phase begins before the previous one completes. This eliminates
+   * visual ambiguity about which instructor is entering vs exiting.
    */
   private _runTransition(targetIndex: number): void {
     const prevIndex   = this._activeIndex
     this._activeIndex = targetIndex
 
-    // ARIA and tabindex update immediately — keyboard users get instant feedback
+    // ARIA updates immediately — keyboard users get instant feedback
     this._updateARIA(prevIndex, targetIndex)
 
     const prevSlot = this._slots[prevIndex]
     const nextSlot = this._slots[targetIndex]
     if (!prevSlot || !nextSlot || !this._viewportEl) { return }
 
-    const CW = cardWidth()
-    const vw = this._viewportEl.offsetWidth
+    const CW            = cardWidth()
+    const vw            = this._viewportEl.offsetWidth
+    const cardLeft      = (vw - CW) / 2
+    const circleCenterX = cardLeft + (CW - CIRCLE_SIZE) / 2
 
-    // Previous card elements
+    // ── Collect elements ──────────────────────────────────────────────────────
     const prevCard   = prevSlot.querySelector<HTMLElement>('[data-card]')
     const prevAvatar = prevSlot.querySelector<HTMLElement>('[data-avatar]')
     const prevRing   = prevSlot.querySelector<HTMLElement>('[data-ring]')
-    const prevTextEls = [
-      prevSlot.querySelector<HTMLElement>('[data-iname]'),
-      prevSlot.querySelector<HTMLElement>('[data-rank]'),
-      prevSlot.querySelector<HTMLElement>('[data-ititle]'),
-      prevSlot.querySelector<HTMLElement>('[data-bio]'),
-      prevSlot.querySelector<HTMLElement>('[data-learn-more]'),
-    ].filter((el): el is HTMLElement => el !== null)
 
-    // Next card elements
     const nextCard   = nextSlot.querySelector<HTMLElement>('[data-card]')
     const nextAvatar = nextSlot.querySelector<HTMLElement>('[data-avatar]')
     const nextRing   = nextSlot.querySelector<HTMLElement>('[data-ring]')
@@ -539,14 +528,62 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
     if (!prevCard || !prevAvatar || !prevRing || !nextCard || !nextAvatar || !nextRing) { return }
     if (!nextNameEl || !nextRankEl || !nextTitleEl || !nextBioEl) { return }
 
-    // Snap incoming elements to their entry state before timeline starts
+    // Reset incoming elements to their pre-entrance state
     gsap.set([nextNameEl, nextRankEl, nextTitleEl, nextBioEl], { opacity: 0, y: 14 })
     if (nextLearnEl) { gsap.set(nextLearnEl, { opacity: 0, y: 14 }) }
     gsap.set(nextCard,   { opacity: 0 })
     gsap.set(nextAvatar, { opacity: 1 })
     gsap.set(nextRing,   { opacity: 0.5 })
 
-    const tl = gsap.timeline({
+    // ── Phase 1 — Exit (~0.25s) ───────────────────────────────────────────────
+    // Text exits in reverse entrance order: CTA → bio → title → belt → name.
+    // Elements slide DOWN (y: 0→14) — mirroring the entrance direction.
+    // Card then collapses to a circle at the same center point it occupied as a card.
+    const exitTl = this._buildExitTl(prevSlot, prevCard, prevAvatar, prevRing, cardLeft, CW)
+
+    // ── Phase 2 — Strip shift (~0.30s) ────────────────────────────────────────
+    // All slots slide to their new x positions. Direction (left/right) is
+    // determined by slotX(): going to a higher index shifts left, lower shifts right.
+    // Target slot parks its circle at the card center so Phase 3 can expand from there.
+    const shiftTl = gsap.timeline({ paused: true })
+    this._slots.forEach((slot, i) => {
+      shiftTl.to(slot, {
+        x:        i === targetIndex ? circleCenterX : slotX(i, targetIndex, vw),
+        y:        CIRCLE_TOP,
+        duration: D_SHIFT,
+        ease:     'power3.inOut',
+      }, 0)
+    })
+
+    // ── Phase 3 — Morph circle → card (~0.25s) ────────────────────────────────
+    // fromTo guarantees correct start values after the shift.
+    // x and y animate alongside width/height so the center stays fixed:
+    //   center-x = cardLeft + CW/2  (constant)
+    //   center-y = CARD_HEIGHT/2    (constant)
+    const morphTl = gsap.timeline({ paused: true })
+    morphTl.fromTo(nextSlot,
+      { x: circleCenterX, y: CIRCLE_TOP, width: CIRCLE_SIZE, height: CIRCLE_SIZE, borderRadius: '50%' },
+      { x: cardLeft, y: 0, width: CW, height: CARD_HEIGHT, borderRadius: '1rem', duration: D_MORPH, ease: 'power3.out' },
+      0
+    )
+    morphTl.fromTo(nextAvatar, { opacity: 1 }, { opacity: 0, duration: 0.14, ease: 'power2.in' }, 0)
+    morphTl.fromTo(nextRing,   { opacity: 0.5 }, { opacity: 0, duration: 0.12 }, 0)
+    morphTl.to(nextCard, {
+      opacity:  1,
+      duration: 0.14,
+      ease:     'power2.out',
+      onStart:  () => { nextCard.removeAttribute('aria-hidden') },
+    }, 0.10)
+
+    // ── Phase 4 — Content reveal (staggered) ─────────────────────────────────
+    // Name enters first, then belt, title, bio, optional CTA.
+    // Delays per spec: 0.05 / 0.08 / 0.12 / 0.16 / 0.20
+    const contentTl = this._buildContentTl(
+      nextNameEl, nextRankEl, nextTitleEl, nextBioEl, nextLearnEl
+    )
+
+    // ── Master timeline: phases chain strictly in sequence ────────────────────
+    const master = gsap.timeline({
       onComplete: () => {
         this._timeline = null
         if (this._pendingIndex !== null) {
@@ -556,103 +593,85 @@ export class OJJInstructorsSection extends AnimatableMixin(BaseElement) {
         }
       },
     })
-    this._timeline = tl
+    this._timeline = master
 
-    // ── Phase A: Exit prev text (stagger out) ─────────────────── t=0.00
-    if (prevTextEls.length > 0) {
-      tl.to(prevTextEls, {
-        opacity:  0,
-        y:        -8,
-        duration: 0.20,
-        stagger:  0.04,
-        ease:     'power2.in',
-      }, T_EXIT_TEXT)
-    }
+    master.add(exitTl)
+    master.add(shiftTl,   '>')
+    master.add(morphTl,   '>')
+    master.add(contentTl, '>')
+  }
 
-    // ── Phase B: Fade prev card content ─────────────────────────── t=0.05
-    tl.to(prevCard, {
-      opacity:    0,
-      duration:   0.12,
-      ease:       'power1.in',
-      onComplete: () => { prevCard.setAttribute('aria-hidden', 'true') },
-    }, T_CARD_OUT)
-
-    // ── Phase C: All slots reposition + prev slot collapses ─────── t=0.15
-    // Direction is implicit: slotX() computes new positions relative to
-    // targetIndex, so the strip slides left (going right) or right (going left).
-    //
-    // The target slot parks its circle at the center of the card's footprint
-    // (not the card's top-left corner) so Phase D can expand outward from center.
-    const cardLeft      = (vw - CW) / 2
+  /** Builds the Phase 1 exit sub-timeline (~0.25s). */
+  private _buildExitTl(
+    slot:    HTMLElement,
+    card:    HTMLElement,
+    avatar:  HTMLElement,
+    ring:    HTMLElement,
+    cardLeft: number,
+    CW:       number,
+  ): gsap.core.Timeline {
     const circleCenterX = cardLeft + (CW - CIRCLE_SIZE) / 2
 
-    // ── Phase C ──────────────────────────────────────────────────────────────
-    // x/y use back.out so each slot overshoots its destination and springs
-    // back — the "yoyo" feel. width/height collapse keeps expo.inOut (no
-    // overshoot on size, which would look broken).
-    this._slots.forEach((slot, i) => {
-      tl.to(slot, {
-        x:        i === targetIndex ? circleCenterX : slotX(i, targetIndex, vw),
-        y:        CIRCLE_TOP,
-        duration: D_SLIDE,
-        ease:     'back.out(1.7)',
-      }, T_SLIDE)
-    })
+    // Exit elements in reverse entrance order: CTA → bio → title → belt → name
+    const exitEls = [
+      slot.querySelector<HTMLElement>('[data-learn-more]'),
+      slot.querySelector<HTMLElement>('[data-bio]'),
+      slot.querySelector<HTMLElement>('[data-ititle]'),
+      slot.querySelector<HTMLElement>('[data-rank]'),
+      slot.querySelector<HTMLElement>('[data-iname]'),
+    ].filter((el): el is HTMLElement => el !== null)
 
-    tl.to(prevSlot, {
-      width:        CIRCLE_SIZE,
-      height:       CIRCLE_SIZE,
-      borderRadius: '50%',
-      duration:     D_SLIDE,
-      ease:         'expo.inOut',
-    }, T_SLIDE)
+    const tl = gsap.timeline({ paused: true })
 
-    // Avatar and ring re-emerge as the circle forms
-    tl.to(prevAvatar, { opacity: 1, duration: 0.22, ease: 'power2.out' }, T_SLIDE + 0.08)
-    tl.to(prevRing,   { opacity: 0.5, duration: 0.18 }, T_SLIDE + 0.08)
-
-    // ── Phase D: Expand new circle → card (from center outward) ──────────────
-    // fromTo with explicit start values guarantees correct geometry regardless
-    // of GSAP's internal state after Phase C's concurrent back.out tweens.
-    // x and y animate alongside width/height so the center stays fixed:
-    //   center-x = cardLeft + CW/2  (constant throughout)
-    //   center-y = CARD_HEIGHT / 2  (constant throughout)
-    tl.fromTo(nextSlot,
-      { x: circleCenterX, y: CIRCLE_TOP, width: CIRCLE_SIZE, height: CIRCLE_SIZE, borderRadius: '50%' },
-      { x: cardLeft, y: 0, width: CW, height: CARD_HEIGHT, borderRadius: '1rem', duration: D_EXPAND, ease: 'power3.out' },
-      T_EXPAND
-    )
-
-    tl.fromTo(nextAvatar, { opacity: 1 }, { opacity: 0, duration: 0.20, ease: 'power2.in' }, T_EXPAND)
-    tl.fromTo(nextRing,   { opacity: 0.5 }, { opacity: 0, duration: 0.16 }, T_EXPAND)
-
-    // ── Phase E: Card content fades in ──────────────────────────── t=0.65
-    tl.to(nextCard, {
-      opacity:    1,
-      duration:   0.18,
-      ease:       'power2.out',
-      onStart:    () => { nextCard.removeAttribute('aria-hidden') },
-    }, T_CARD_IN)
-
-    // ── Phase F: Text stagger (name → rank → title → bio) ───────── t=0.77
-    const textSequence: [HTMLElement, number][] = [
-      [nextNameEl,  T_TEXT_START],
-      [nextRankEl,  T_TEXT_START + D_TEXT_STAGGER],
-      [nextTitleEl, T_TEXT_START + D_TEXT_STAGGER * 2],
-      [nextBioEl,   T_TEXT_START + D_TEXT_STAGGER * 3],
-    ]
-    if (nextLearnEl) {
-      textSequence.push([nextLearnEl, T_TEXT_START + D_TEXT_STAGGER * 4])
+    // Text slides DOWN (y: 0→14) — reverse of entrance direction
+    if (exitEls.length > 0) {
+      tl.to(exitEls, {
+        opacity:  0,
+        y:        14,
+        duration: 0.08,
+        stagger:  0.02,
+        ease:     'power2.in',
+      }, 0)
     }
 
-    textSequence.forEach(([el, t]) => {
-      tl.to(el, {
-        opacity:  1,
-        y:        0,
-        duration: 0.32,
-        ease:     'power3.out',
-      }, t)
-    })
+    // Card background fades
+    tl.to(card, {
+      opacity:    0,
+      duration:   0.07,
+      ease:       'power1.in',
+      onComplete: () => { card.setAttribute('aria-hidden', 'true') },
+    }, 0.10)
+
+    // Slot collapses to circle at the same center-point (mirror of morph expand)
+    tl.fromTo(slot,
+      { x: cardLeft, y: 0, width: CW, height: CARD_HEIGHT, borderRadius: '1rem' },
+      { x: circleCenterX, y: CIRCLE_TOP, width: CIRCLE_SIZE, height: CIRCLE_SIZE, borderRadius: '50%', duration: 0.12, ease: 'expo.inOut' },
+      0.13
+    )
+    tl.to(avatar, { opacity: 1, duration: 0.09, ease: 'power2.out' }, 0.18)
+    tl.to(ring,   { opacity: 0.5, duration: 0.07 }, 0.18)
+
+    return tl
+  }
+
+  /** Builds the Phase 4 content reveal sub-timeline. */
+  private _buildContentTl(
+    nameEl:   HTMLElement,
+    rankEl:   HTMLElement,
+    titleEl:  HTMLElement,
+    bioEl:    HTMLElement,
+    learnEl:  HTMLElement | null,
+  ): gsap.core.Timeline {
+    const tl = gsap.timeline({ paused: true })
+    // Delays per spec: name 0.05, belt 0.08, description 0.12, CTA 0.16
+    tl.to(nameEl,  { opacity: 1, y: 0, duration: 0.22, ease: 'power3.out' }, 0.05)
+    tl.to(rankEl,  { opacity: 1, y: 0, duration: 0.20, ease: 'power3.out' }, 0.08)
+    tl.to(titleEl, { opacity: 1, y: 0, duration: 0.18, ease: 'power3.out' }, 0.12)
+    tl.to(bioEl,   { opacity: 1, y: 0, duration: 0.18, ease: 'power3.out' }, 0.16)
+    if (learnEl) {
+      tl.to(learnEl, { opacity: 1, y: 0, duration: 0.16, ease: 'power3.out' }, 0.20)
+    }
+    return tl
   }
 
   // ── ARIA / tabindex ───────────────────────────────────────────────────────

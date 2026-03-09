@@ -39,7 +39,7 @@ jobs:
         if: inputs.environment == 'staging'
         run: pnpm --filter ojjlab-worker test:integration
         env:
-          WORKER_URL: https://ojjlab-worker-staging.${{ secrets.CLOUDFLARE_ACCOUNT_ID }}.workers.dev
+          WORKER_URL: https://ojjlab-worker-staging.aged-star-52ec.workers.dev
 
       - name: Run integration tests (production)
         if: inputs.environment == 'production'

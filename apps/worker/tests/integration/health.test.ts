@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest'
 
 const BASE_URL = process.env['WORKER_URL'] ?? 'http://localhost:8787'
@@ -9,7 +10,7 @@ describe('GET /api/health', () => {
     expect(res.status).toBe(200)
     expect(res.headers.get('content-type')).toContain('application/json')
 
-    const body = (await res.json())
+    const body = await res.json()
     expect(body['status']).toBe('ok')
     expect(['ok', 'degraded']).toContain(body['ghl'])
     expect(typeof body['timestamp']).toBe('string')
@@ -18,7 +19,7 @@ describe('GET /api/health', () => {
 
   it('reports ghl: ok when credentials are valid', async () => {
     const res = await fetch(`${BASE_URL}/api/health`)
-    const body = (await res.json())
+    const body = await res.json()
     expect(body['ghl']).toBe('ok')
   })
 
