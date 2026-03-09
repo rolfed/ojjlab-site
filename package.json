@@ -16,7 +16,9 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "publish:staging": "pnpm build && pnpm --filter ojjlab-worker exec wrangler pages deploy ../../dist --project-name ojjlab-com --branch main && pnpm --filter ojjlab-worker deploy:staging",
+    "publish:prod": "pnpm build && pnpm --filter ojjlab-worker exec wrangler pages deploy ../../dist --project-name ojjlab-com --branch main && pnpm --filter ojjlab-worker deploy:production"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.0",
