@@ -22,6 +22,8 @@ function mpaDevRewrite(): Plugin {
     '/contact/':                  '/src/pages/contact.html',
     '/book-trial/':               '/src/pages/book-trial.html',
     '/trial-class-next-steps/':   '/src/pages/trial-class-next-steps.html',
+    '/instructors/adam/':         '/src/pages/instructors/adam.html',
+    '/instructors/danniel/':      '/src/pages/instructors/danniel.html',
   }
   return {
     name: 'mpa-dev-rewrite',
@@ -55,8 +57,10 @@ function mpaBuildRewrite(): Plugin {
     ['src/pages/reviews.html',  'reviews/index.html'],
     ['src/pages/contact.html',               'contact/index.html'],
     ['src/pages/book-trial.html',            'book-trial/index.html'],
-    ['src/pages/trial-class-next-steps.html','trial-class-next-steps/index.html'],
-    ['src/pages/404.html',                   '404.html'],
+    ['src/pages/trial-class-next-steps.html',       'trial-class-next-steps/index.html'],
+    ['src/pages/instructors/adam.html',             'instructors/adam/index.html'],
+    ['src/pages/instructors/danniel.html',          'instructors/danniel/index.html'],
+    ['src/pages/404.html',                          '404.html'],
   ]
   return {
     name: 'mpa-build-rewrite',
@@ -93,8 +97,10 @@ export default defineConfig({
         'reviews/index':  `${root}/src/pages/reviews.html`,
         'contact/index':                `${root}/src/pages/contact.html`,
         'book-trial/index':             `${root}/src/pages/book-trial.html`,
-        'trial-class-next-steps/index': `${root}/src/pages/trial-class-next-steps.html`,
-        '404':                          `${root}/src/pages/404.html`,
+        'trial-class-next-steps/index':  `${root}/src/pages/trial-class-next-steps.html`,
+        'instructors/adam/index':        `${root}/src/pages/instructors/adam.html`,
+        'instructors/danniel/index':     `${root}/src/pages/instructors/danniel.html`,
+        '404':                           `${root}/src/pages/404.html`,
       },
     },
   },
