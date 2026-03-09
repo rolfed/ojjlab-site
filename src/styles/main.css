@@ -194,6 +194,32 @@
     outline: 3px solid var(--color-brand-accent);
     outline-offset: 3px;
   }
+
+  /* "Learn more" link — visible only for instructors with a detail page */
+  .spotlight-learn-more {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-brand-accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 1px;
+    line-height: 1;
+    transition: border-color 150ms ease;
+  }
+
+  .spotlight-learn-more:hover {
+    border-color: var(--color-brand-accent);
+  }
+
+  .spotlight-learn-more:focus-visible {
+    outline: 2px solid var(--color-brand-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
 }
 
 /* ─── Skip Link ─────────────────────────────────────────────────────────────── */
