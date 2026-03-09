@@ -37,7 +37,7 @@ export function route(
   startTime: number,
 ): Promise<Response> {
   const preflight = handlePreflight(request, env)
-  if (preflight) return Promise.resolve(preflight)
+  if (preflight) { return Promise.resolve(preflight); }
 
   const url = new URL(request.url)
   for (const { method, pattern, handler } of routes) {
