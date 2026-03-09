@@ -1,0 +1,41 @@
+name = "ojjlab-worker"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ── Local (default) ───────────────────────────────────────────────────────────
+# Secrets are read from .dev.vars during `wrangler dev`
+[vars]
+ENVIRONMENT = "local"
+ALLOWED_ORIGIN = "http://localhost:5173"
+LOG_LEVEL = "debug"
+
+# KV namespace for rate limiting — provision before uncommenting:
+#   wrangler kv namespace create ojjlab-rate-limit
+#   wrangler kv namespace create ojjlab-rate-limit --preview
+# Then replace the placeholder IDs below.
+# [[kv_namespaces]]
+# binding = "RATE_LIMIT_KV"
+# id = "REPLACE_WITH_NAMESPACE_ID"
+# preview_id = "REPLACE_WITH_PREVIEW_NAMESPACE_ID"
+
+# ── Staging ───────────────────────────────────────────────────────────────────
+[env.staging]
+name = "ojjlab-worker-staging"
+
+[env.staging.vars]
+ENVIRONMENT = "staging"
+ALLOWED_ORIGIN = "https://ojjlab-com.pages.dev"
+LOG_LEVEL = "info"
+
+# ── Production ────────────────────────────────────────────────────────────────
+[env.production]
+name = "ojjlab-worker"
+routes = [
+  { pattern = "ojjlab.com/api/*", zone_name = "ojjlab.com" }
+]
+
+[env.production.vars]
+ENVIRONMENT = "production"
+ALLOWED_ORIGIN = "https://ojjlab.com"
+LOG_LEVEL = "warn"

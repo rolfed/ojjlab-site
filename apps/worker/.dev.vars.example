@@ -1,0 +1,5 @@
+# Worker local secrets — copy to .dev.vars (gitignored), never commit .dev.vars
+# Wrangler reads this file automatically during `wrangler dev`
+
+GHL_API_KEY=
+GHL_LOCATION_ID=
