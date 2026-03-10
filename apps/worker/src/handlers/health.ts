@@ -10,6 +10,7 @@ export async function handleHealth(
   ctx: RequestContext,
   startTime: number,
 ): Promise<Response> {
+
   if (isCorsViolation(request, env)) {
     const ms = Date.now() - startTime
     log('warn', ctx, 403, ms, env, 'cors_violation')
@@ -17,17 +18,12 @@ export async function handleHealth(
   }
 
   const ghl = await checkGhlHealth(env)
+  const ghlStatus = ghl === 'degraded' ? 'warn' : 'info';
+  const ghlError = ghl === 'degraded' ? 'ghl_degraded' : undefined;
   const status = 200
   const ms = Date.now() - startTime
 
-  log(
-    ghl === 'degraded' ? 'warn' : 'info',
-    ctx,
-    status,
-    ms,
-    env,
-    ghl === 'degraded' ? 'ghl_degraded' : undefined,
-  )
+  log(ghlStatus, ctx, status, ms, env, ghlError); 
 
   const origin = request.headers.get('Origin')
   return Response.json(

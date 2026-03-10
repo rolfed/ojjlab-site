@@ -11,8 +11,9 @@
  *   ojj:trial-submit — fired on form submit with { firstName, lastName, email, phone? }
  */
 
+import { startLead, StartLeadInput } from '@/data/leads'
 import { BaseElement } from '../base/BaseElement'
-import { submitFreeTrial } from '@/service/forms'
+import { getLeadSource } from '@/data/source'
 
 const INPUT_CLASS = `w-full bg-neutral-800 border border-neutral-700 text-white placeholder-neutral-500
   rounded-md px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2
@@ -27,8 +28,6 @@ export class OJJTrialForm extends BaseElement {
     this.innerHTML = `
       <div class="max-w-xl mx-auto" data-form-wrapper>
         <form
-          action="${action}"
-          method="POST"
           novalidate
           data-trial-form
           class="flex flex-col gap-4"
@@ -145,13 +144,22 @@ export class OJJTrialForm extends BaseElement {
 
     form.addEventListener('submit', (e) => {
       e.preventDefault()
-      if (!this._validate(form)) return
+      if (!this._validate(form)) {
+        return
+      }
 
-      const formData = new FormData(form)
+      const formData = new FormData(form);
       const getStr = (key: string): string => {
         const val = formData.get(key)
         return typeof val === 'string' ? val : ''
       }
+
+      const newLead: StartLeadInput = {
+        firstName: getStr('firstName'),
+        lastName:  getStr('lastName'),
+        email:     getStr('email'),
+        phone:     getStr('phone') || undefined,
+      };
 
       this.emit('trial-submit', {
         firstName: getStr('firstName'),
@@ -162,12 +170,33 @@ export class OJJTrialForm extends BaseElement {
 
       this._setSubmitting(true)
 
-      submitFreeTrial(formData).catch(() => {
+      console.log('New lead: ', newLead);
+      this.onSubmit(newLead).catch(() => {
         this._setSubmitting(false)
         const errorEl = this.querySelector<HTMLElement>('[data-submit-error]')
         errorEl?.classList.remove('hidden')
       })
     })
+  }
+
+  private async onSubmit(formData: StartLeadInput) {
+    try {
+      const source = getLeadSource() ?? 'ojjlab-home-trial-form';
+      const finalRequest = {
+        ...formData, 
+        source: getLeadSource() ?? 'ojjlab-home-trial-form',
+        tags: [source]
+      };
+      const result = await startLead(finalRequest);
+      // TODO implement logging
+      console.log('Lead accepted: ', result.data.accepted);
+    } catch(error) {
+      if (error) {
+        // TODO implement logging
+        console.error(error);
+      }
+
+    }
   }
 
   private _validate(form: HTMLFormElement): boolean {
@@ -203,7 +232,7 @@ export class OJJTrialForm extends BaseElement {
 
   private _setSubmitting(submitting: boolean): void {
     const btn = this.querySelector<HTMLButtonElement>('[data-submit-btn]')
-    if (!btn) return
+    if (!btn) { return };
     btn.disabled = submitting
     btn.textContent = submitting ? 'Submitting…' : 'Book My Free Trial'
   }
