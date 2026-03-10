@@ -1,90 +1,90 @@
 import type { Env } from '../types/env.js'
-import { getHighLevelClient } from './ghl.client.js'
-import type { CreateHighLevelContactRequest } from './ghl.types'
+import { CreateHighLevelContactRequest, CreateHighLevelContactResponse, GhlStatus } from './ghl.types'
 
-export type GhlStatus = 'ok' | 'degraded'
+const GHL_BASE_URL = 'https://services.leadconnectorhq.com'
+const GHL_API_VERSION = '2021-07-28'
+const GHL_TIMEOUT_MS = 5_000
 
-export interface UpdateCalendarScheduleRequest {
-  name?: string
-  description?: string
-  isActive?: boolean
-  slotDuration?: number
-  openHours?: unknown
-  allowBookingAfter?: number
-  allowBookingFor?: number
-}
 
-export class GhlError extends Error {
+export class GhlApiError extends Error {
   constructor(
     message: string,
-    public readonly cause?: unknown,
+    public readonly status: number,
+    public readonly body: string,
   ) {
     super(message)
-    this.name = 'GhlError'
+    this.name = 'GhlApiError'
+  }
+}
+
+function authHeaders(env: Env): Record<string, string> {
+  return {
+    Authorization: `Bearer ${env.GHL_API_KEY}`,
+    Version: GHL_API_VERSION,
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
   }
 }
 
 /**
- * Verifies GHL API reachability and credential validity by reading
- * the configured sub-account (location). Returns only service health.
+ * Verifies GHL API reachability and credential validity by fetching
+ * sub-account metadata. Returns only a status — never proxies the response.
  */
 export async function checkGhlHealth(env: Env): Promise<GhlStatus> {
+  const endpoint = `${GHL_BASE_URL}/locations/${env.GHL_LOCATION_ID}`;
   try {
-    const highLevel = getHighLevelClient(env)
-
-    // Adjust this method name if your installed SDK exposes a slightly different namespace.
-    await highLevel.locations.getLocation({
-      locationId: env.GHL_LOCATION_ID,
-    })
-
-    return 'ok'
+    const res = await fetch(
+      endpoint,
+      {
+        method: 'GET',
+        headers: authHeaders(env),
+        signal: AbortSignal.timeout(GHL_TIMEOUT_MS),
+      },
+    )
+    return res.ok ? 'ok' : 'degraded'
   } catch {
     return 'degraded'
   }
 }
 
-/**
- * Creates a contact in HighLevel.
- * Throws a controlled error instead of returning status-only data.
- */
 export async function createContact(
-  env: Env,
-  payload: CreateHighLevelContactRequest,
-) {
+  env: Env, contact: CreateHighLevelContactRequest
+): Promise<CreateHighLevelContactResponse> {
+  const endpoint = `${GHL_BASE_URL}/contacts`;
+  const payload = JSON.stringify(contact); 
+
   try {
-    const highLevel = getHighLevelClient(env)
 
-    const response = await highLevel.contacts.createContact({
-      ...payload,
-      locationId: payload.locationId ?? env.GHL_LOCATION_ID,
-    })
+    const response = await fetch(
+      endpoint,
+      {
+        method: 'POST',
+        headers: authHeaders(env),
+        body: payload 
+      });
 
-    return response
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new GhlApiError('Failed to create GHL contact',
+      response.status,
+      errorBody);
+    }
+
+    const jsonResponse: CreateHighLevelContactResponse = await response.json();
+    return jsonResponse;
   } catch (error) {
-    throw new GhlError('Failed to create HighLevel contact', error)
+    if (error instanceof GhlApiError) {
+      throw error;
+    }
+
+    if (error instanceof Error) {
+      throw new Error(`Unexpected error creating GHL contact: ${error.message}`);
+    }
+
+    throw new Error('Unexpected unknown error creating GHL contact');
   }
+
 }
 
-/**
- * Updates a calendar by ID.
- * The exact request shape depends on which calendar fields you support.
- */
-export async function updateCalendarSchedule(
-  env: Env,
-  calendarId: string,
-  payload: UpdateCalendarScheduleRequest,
-) {
-  try {
-    const highLevel = getHighLevelClient(env)
-
-    // Adjust method name if the SDK emits a different calendars namespace shape.
-    const response = await highLevel.calendars.updateCalendar({
-      calendarId,
-      ...payload,
-    })
-
-    return response
-  } catch (error) {
-    throw new GhlError(`Failed to update HighLevel calendar: ${calendarId}`, error)
-  }
-}
+// TODO: createContact(payload, env) — implemented with lead capture handler
+// TODO: updateCalendarSchedule(calendarId, payload, env) — implemented with admin handler
