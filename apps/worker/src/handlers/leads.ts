@@ -1,9 +1,28 @@
-import { isCorsViolation } from "../lib/cors"
+import { corsHeaders, isCorsViolation } from "../lib/cors"
 import { createContact } from "../lib/ghl"
 import { CreateHighLevelContactRequest } from "../lib/ghl.types"
 import { log, RequestContext } from "../lib/logger"
 import { Env } from "../types/env"
 import { LeadSchema, validateEmail, validatePhone } from "../validation/leads"
+
+function jsonResponse(
+  request: Request,
+  env: Env,
+  body: unknown,
+  status: number
+): Response {
+  const origin = request.headers.get('Origin');
+
+  return new Response(
+    JSON.stringify(body), 
+    {
+      status,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        ...corsHeaders(origin, env)
+    }
+  })
+}
 
 export async function handleLeadsStart(
   request: Request,
@@ -15,7 +34,7 @@ export async function handleLeadsStart(
   if (isCorsViolation(request, env)) {
     const ms = Date.now() - startTime
     log('warn', ctx, 403, ms, env, 'cors_violation')
-    return new Response('Forbidden', { status: 403 })
+    return jsonResponse(request, env, { error: 'Forbidden' }, 403);
   }
 
   try {
@@ -26,10 +45,12 @@ export async function handleLeadsStart(
       const ms = Date.now() - startTime
       log('warn', ctx, 400, ms, env, 'invalid_request')
 
-      return Response.json(
+      return jsonResponse(
+        request,
+        env,
         { error: 'Invalid request', issues: parsed.error.issues },
-        { status: 400 },
-      )
+        400
+      );
     }
 
     const body = parsed.data
@@ -39,10 +60,12 @@ export async function handleLeadsStart(
       const ms = Date.now() - startTime
       log('warn', ctx, 400, ms, env, 'invalid_email')
 
-      return Response.json(
-        { error: 'Invalid email address' },
-        { status: 400 },
-      )
+      return jsonResponse(
+        request, 
+        env, 
+        { error: 'Invalid email address'}, 
+        400
+      );
     }
 
     const phone = body.phone ? validatePhone(body.phone) : undefined
@@ -50,10 +73,11 @@ export async function handleLeadsStart(
       const ms = Date.now() - startTime
       log('warn', ctx, 400, ms, env, 'invalid_phone')
 
-      return Response.json(
-        { error: 'Invalid phone number' },
-        { status: 400 },
-      )
+      return jsonResponse(
+        request, 
+        env, 
+        { error: 'Invalid phone number' }, 
+        400);
     }
 
     const newContact: CreateHighLevelContactRequest = {
@@ -71,20 +95,24 @@ export async function handleLeadsStart(
     const ms = Date.now() - startTime
     log('info', ctx, 201, ms, env, 'contact_created');
 
-    return Response.json(
+    return jsonResponse(
+      request, 
+      env, 
       {
         ok: true,
         contactId: ghlResponse.contact?.id ?? null,
       },
-      { status: 201 },
-    )
-  } catch (error) {
+      201
+    );
+  } catch {
     const ms = Date.now() - startTime
-    log('error', ctx, 500, ms, env, 'contact_creation_failed')
+    log('error', ctx, 500, ms, env, `contact_creation_failed`)
 
-    return Response.json(
+    return jsonResponse(
+      request, 
+      env, 
       { error: 'Internal server error' },
-      { status: 500 },
-    )
+     500 
+    );
   }
 }

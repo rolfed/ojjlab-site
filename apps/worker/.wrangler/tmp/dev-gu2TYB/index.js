@@ -967,12 +967,20 @@ var CORS_HEADERS = {
   "Access-Control-Max-Age": "86400"
 };
 function isAllowedOrigin(origin, env2) {
-  if (origin === env2.ALLOWED_ORIGIN) return true;
-  if (env2.ENVIRONMENT !== "production") {
-    if (origin.endsWith(".pages.dev")) return true;
-    if (/^http:\/\/localhost(:\d+)?$/.test(origin)) return true;
+  let isAllowedOrigin2 = false;
+  if (origin === env2.ALLOWED_ORIGIN) {
+    isAllowedOrigin2 = true;
   }
-  return false;
+  if (env2.ENVIRONMENT === "production") {
+    isAllowedOrigin2 = false;
+  }
+  if (origin.endsWith(".pages.dev")) {
+    isAllowedOrigin2 = true;
+  }
+  if (/^http:\/\/localhost(:\d+)?$/.test(origin)) {
+    isAllowedOrigin2 = true;
+  }
+  return isAllowedOrigin2;
 }
 __name(isAllowedOrigin, "isAllowedOrigin");
 function corsHeaders(origin, env2) {
@@ -1057,8 +1065,8 @@ async function createContact(env2, contact) {
         errorBody
       );
     }
-    const jsonResponse = await response.json();
-    return jsonResponse;
+    const jsonResponse2 = await response.json();
+    return jsonResponse2;
   } catch (error50) {
     if (error50 instanceof GhlApiError) {
       throw error50;
@@ -17905,7 +17913,7 @@ __name(isEmail, "isEmail");
 var LeadSchema = zod_default.object({
   firstName: zod_default.string().min(1),
   lastName: zod_default.string().min(1),
-  email: zod_default.string().email(),
+  email: zod_default.email(),
   phone: zod_default.string().optional(),
   tags: zod_default.array(zod_default.string()).optional(),
   source: zod_default.string()
@@ -17914,9 +17922,9 @@ function validatePhone(phone) {
   if (!phone) {
     return void 0;
   }
+  const normalized = phone.trim();
   const parsed = parsePhoneNumberWithError3(phone, "US");
-  const isInvalidPhoneNumber = !parsed.isValid();
-  if (!parsed || isInvalidPhoneNumber) {
+  if (!parsed || !parsed.isValid) {
     throw new Error("Invalid phone number");
   }
   return parsed.number;
@@ -17932,11 +17940,25 @@ function validateEmail(email3) {
 __name(validateEmail, "validateEmail");
 
 // src/handlers/leads.ts
+function jsonResponse(request, env2, body, status) {
+  const origin = request.headers.get("Origin");
+  return new Response(
+    JSON.stringify(body),
+    {
+      status,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        ...corsHeaders(origin, env2)
+      }
+    }
+  );
+}
+__name(jsonResponse, "jsonResponse");
 async function handleLeadsStart(request, env2, ctx, startTime) {
   if (isCorsViolation(request, env2)) {
     const ms = Date.now() - startTime;
     log3("warn", ctx, 403, ms, env2, "cors_violation");
-    return new Response("Forbidden", { status: 403 });
+    return jsonResponse(request, env2, { error: "Forbidden" }, 403);
   }
   try {
     const rawBody = await request.json();
@@ -17944,9 +17966,11 @@ async function handleLeadsStart(request, env2, ctx, startTime) {
     if (!parsed.success) {
       const ms2 = Date.now() - startTime;
       log3("warn", ctx, 400, ms2, env2, "invalid_request");
-      return Response.json(
+      return jsonResponse(
+        request,
+        env2,
         { error: "Invalid request", issues: parsed.error.issues },
-        { status: 400 }
+        400
       );
     }
     const body = parsed.data;
@@ -17954,18 +17978,22 @@ async function handleLeadsStart(request, env2, ctx, startTime) {
     if (!email3) {
       const ms2 = Date.now() - startTime;
       log3("warn", ctx, 400, ms2, env2, "invalid_email");
-      return Response.json(
+      return jsonResponse(
+        request,
+        env2,
         { error: "Invalid email address" },
-        { status: 400 }
+        400
       );
     }
     const phone = body.phone ? validatePhone(body.phone) : void 0;
     if (body.phone && !phone) {
       const ms2 = Date.now() - startTime;
       log3("warn", ctx, 400, ms2, env2, "invalid_phone");
-      return Response.json(
+      return jsonResponse(
+        request,
+        env2,
         { error: "Invalid phone number" },
-        { status: 400 }
+        400
       );
     }
     const newContact = {
@@ -17980,19 +18008,23 @@ async function handleLeadsStart(request, env2, ctx, startTime) {
     const ghlResponse = await createContact(env2, newContact);
     const ms = Date.now() - startTime;
     log3("info", ctx, 201, ms, env2, "contact_created");
-    return Response.json(
+    return jsonResponse(
+      request,
+      env2,
       {
         ok: true,
         contactId: ghlResponse.contact?.id ?? null
       },
-      { status: 201 }
+      201
     );
-  } catch (error50) {
+  } catch {
     const ms = Date.now() - startTime;
-    log3("error", ctx, 500, ms, env2, "contact_creation_failed");
-    return Response.json(
+    log3("error", ctx, 500, ms, env2, `contact_creation_failed`);
+    return jsonResponse(
+      request,
+      env2,
       { error: "Internal server error" },
-      { status: 500 }
+      500
     );
   }
 }
@@ -18103,7 +18135,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env2, _ctx, middlewareCtx
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-kvfOSy/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-iU4tB6/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -18135,7 +18167,7 @@ function __facade_invoke__(request, env2, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-kvfOSy/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-iU4tB6/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

@@ -5,7 +5,7 @@ import isEmail from 'validator/es/lib/isEmail';
 export const LeadSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
-  email: z.string().email(),
+  email: z.email(),
   phone: z.string().optional(),
   tags: z.array(z.string()).optional(),
   source: z.string()
@@ -16,10 +16,10 @@ export function validatePhone(phone?: string): string | undefined {
     return undefined;
   }
 
+  const normalized = phone.trim();
   const parsed = parsePhoneNumber(phone, 'US');
 
-  const isInvalidPhoneNumber = !parsed.isValid();
-  if (!parsed || isInvalidPhoneNumber) {
+  if (!parsed || !parsed.isValid) {
     throw new Error('Invalid phone number')
   }
 

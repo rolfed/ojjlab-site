@@ -16,136 +16,137 @@ import { BaseElement } from '../base/BaseElement'
 import { getLeadSource } from '@/data/source'
 
 const INPUT_CLASS = `w-full bg-neutral-800 border border-neutral-700 text-white placeholder-neutral-500
-  rounded-md px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2
-  focus-visible:ring-brand-accent focus-visible:border-transparent`
+rounded-md px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2
+focus-visible:ring-brand-accent focus-visible:border-transparent`
 
 export class OJJTrialForm extends BaseElement {
   static observedAttributes = ['action']
 
   protected render(): void {
-    const action = this.getAttribute('action') ?? '/api/trial'
-
     this.innerHTML = `
-      <div class="max-w-xl mx-auto" data-form-wrapper>
-        <form
-          novalidate
-          data-trial-form
-          class="flex flex-col gap-4"
-        >
-          <div class="grid grid-cols-2 gap-4">
-            <div class="flex flex-col gap-1.5">
-              <label for="trial-first-name" class="text-sm font-semibold text-neutral-200">
-                First Name <span class="text-brand-accent" aria-hidden="true">*</span>
-              </label>
-              <input
-                id="trial-first-name"
-                name="firstName"
-                type="text"
-                required
-                autocomplete="given-name"
-                placeholder="Jane"
-                class="${INPUT_CLASS}"
-              />
-              <p class="text-brand-accent text-xs hidden" role="alert" data-error="firstName">
-                Please enter your first name.
-              </p>
-            </div>
-
-            <div class="flex flex-col gap-1.5">
-              <label for="trial-last-name" class="text-sm font-semibold text-neutral-200">
-                Last Name <span class="text-brand-accent" aria-hidden="true">*</span>
-              </label>
-              <input
-                id="trial-last-name"
-                name="lastName"
-                type="text"
-                required
-                autocomplete="family-name"
-                placeholder="Smith"
-                class="${INPUT_CLASS}"
-              />
-              <p class="text-brand-accent text-xs hidden" role="alert" data-error="lastName">
-                Please enter your last name.
-              </p>
-            </div>
-          </div>
-
-          <div class="flex flex-col gap-1.5">
-            <label for="trial-email" class="text-sm font-semibold text-neutral-200">
-              Email Address <span class="text-brand-accent" aria-hidden="true">*</span>
-            </label>
-            <input
-              id="trial-email"
-              name="email"
-              type="email"
-              required
-              autocomplete="email"
-              placeholder="you@example.com"
-              class="${INPUT_CLASS}"
-            />
-            <p class="text-brand-accent text-xs hidden" role="alert" data-error="email">
-              Please enter a valid email address.
-            </p>
-          </div>
-
-          <div class="flex flex-col gap-1.5">
-            <label for="trial-phone" class="text-sm font-semibold text-neutral-200">
-              Phone Number <span class="text-neutral-500 font-normal text-xs">(optional)</span>
-            </label>
-            <input
-              id="trial-phone"
-              name="phone"
-              type="tel"
-              autocomplete="tel"
-              placeholder="(503) 555-0100"
-              class="${INPUT_CLASS}"
-            />
-          </div>
-
-          <button
-            type="submit"
-            class="w-full bg-brand-accent text-white font-bold text-base py-4 rounded-md
-                   hover:bg-red-700 transition-colors focus-visible:outline-none
-                   focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2
-                   focus-visible:ring-offset-neutral-950 disabled:opacity-50"
-            data-submit-btn
-          >
-            Book My Free Trial
-          </button>
-        </form>
-
-        <!-- Success state (shown if redirect doesn't fire) -->
-        <div
-          role="status"
-          aria-live="polite"
-          class="hidden text-center py-8"
-          data-success
-        >
-          <p class="text-3xl mb-3" aria-hidden="true">🥋</p>
-          <h3 class="text-white font-bold text-xl mb-2">You're on the mat!</h3>
-          <p class="text-neutral-400">We'll be in touch shortly with your trial class details.</p>
-        </div>
-
-        <!-- Error state -->
-        <p
-          class="hidden text-brand-accent text-sm text-center mt-3"
-          role="alert"
-          data-submit-error
-        >
-          Something went wrong — please try again or call us at (503) 308-8455.
+<div class="max-w-xl mx-auto" data-form-wrapper>
+  <form
+    novalidate
+    data-trial-form
+    class="flex flex-col gap-4"
+  >
+    <div class="grid grid-cols-2 gap-4">
+      <div class="flex flex-col gap-1.5">
+        <label for="trial-first-name" class="text-sm font-semibold text-neutral-200">
+          First Name <span class="text-brand-accent" aria-hidden="true">*</span>
+        </label>
+        <input
+          id="trial-first-name"
+          name="firstName"
+          type="text"
+          required
+          autocomplete="given-name"
+          placeholder="Jane"
+          class="${INPUT_CLASS}"
+        />
+        <p class="text-brand-accent text-xs hidden" role="alert" data-error="firstName">
+          Please enter your first name.
         </p>
       </div>
-    `
+
+      <div class="flex flex-col gap-1.5">
+        <label for="trial-last-name" class="text-sm font-semibold text-neutral-200">
+          Last Name <span class="text-brand-accent" aria-hidden="true">*</span>
+        </label>
+        <input
+          id="trial-last-name"
+          name="lastName"
+          type="text"
+          required
+          autocomplete="family-name"
+          placeholder="Smith"
+          class="${INPUT_CLASS}"
+        />
+        <p class="text-brand-accent text-xs hidden" role="alert" data-error="lastName">
+          Please enter your last name.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label for="trial-email" class="text-sm font-semibold text-neutral-200">
+        Email Address <span class="text-brand-accent" aria-hidden="true">*</span>
+      </label>
+      <input
+        id="trial-email"
+        name="email"
+        type="email"
+        required
+        autocomplete="email"
+        placeholder="you@example.com"
+        class="${INPUT_CLASS}"
+      />
+      <p class="text-brand-accent text-xs hidden" role="alert" data-error="email">
+        Please enter a valid email address.
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label for="trial-phone" class="text-sm font-semibold text-neutral-200">
+        Phone Number <span class="text-neutral-500 font-normal text-xs">(optional)</span>
+      </label>
+      <input
+        data-trial-form-phone
+        id="trial-phone"
+        name="phone"
+        type="tel"
+        autocomplete="tel"
+        placeholder="(503) 555-0100"
+        class="${INPUT_CLASS}"
+      />
+    </div>
+
+    <button
+      type="submit"
+      class="w-full bg-brand-accent text-white font-bold text-base py-4 rounded-md
+      hover:bg-red-700 transition-colors focus-visible:outline-none
+      focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2
+      focus-visible:ring-offset-neutral-950 disabled:opacity-50"
+      data-submit-btn
+    >
+      Book My Free Trial
+    </button>
+  </form>
+
+  <!-- Success state (shown if redirect doesn't fire) -->
+  <div
+    role="status"
+    aria-live="polite"
+    class="hidden text-center py-8"
+    data-success
+  >
+    <p class="text-3xl mb-3" aria-hidden="true">🥋</p>
+    <h3 class="text-white font-bold text-xl mb-2">You're on the mat!</h3>
+    <p class="text-neutral-400">We'll be in touch shortly with your trial class details.</p>
+  </div>
+
+  <!-- Error state -->
+  <p
+    class="hidden text-brand-accent text-sm text-center mt-3"
+    role="alert"
+    data-submit-error
+  >
+    Something went wrong — please try again or call us at (503) 308-8455.
+  </p>
+</div>
+`
   }
 
   protected override bindEvents(): void {
     const form = this.querySelector<HTMLFormElement>('[data-trial-form]')
-    if (!form) return
+    if (!form) { return };
+
+    this._bindPhoneInputMask(this.querySelector<HTMLInputElement>('[data-trial-form-phone]'));
 
     form.addEventListener('submit', (e) => {
       e.preventDefault()
       if (!this._validate(form)) {
-        return
+        return;
       }
 
       const formData = new FormData(form);
@@ -154,42 +155,46 @@ export class OJJTrialForm extends BaseElement {
         return typeof val === 'string' ? val : ''
       }
 
+      const phone = this._normalizePhoneForApi(getStr('phone'));
       const newLead: StartLeadInput = {
-        firstName: getStr('firstName'),
-        lastName:  getStr('lastName'),
-        email:     getStr('email'),
-        phone:     getStr('phone') || undefined,
+        firstName: getStr('firstName').trim(),
+        lastName:  getStr('lastName').trim(),
+        email:     getStr('email').trim(),
+        phone
       };
 
       this.emit('trial-submit', {
-        firstName: getStr('firstName'),
-        lastName:  getStr('lastName'),
-        email:     getStr('email'),
-        phone:     getStr('phone') || undefined,
+        firstName: getStr('firstName').trim(),
+        lastName:  getStr('lastName').trim(),
+        email:     getStr('email').trim(),
+        phone:     this._normalizePhoneForApi(getStr('phone'))
       })
 
       this._setSubmitting(true)
 
-      console.log('New lead: ', newLead);
-      this.onSubmit(newLead).catch(() => {
+      this.onSubmit(newLead).catch((error) => {
+        console.log('[on submit] ', error);
         this._setSubmitting(false)
         const errorEl = this.querySelector<HTMLElement>('[data-submit-error]')
-        errorEl?.classList.remove('hidden')
+        errorEl?.classList.remove('hidden');
       })
     })
   }
 
-  private async onSubmit(formData: StartLeadInput) {
+  private async onSubmit(formData: StartLeadInput): Promise<void> {
     try {
-      const source = getLeadSource() ?? 'ojjlab-home-trial-form';
+      const source = getLeadSource();
+
       const finalRequest = {
         ...formData, 
-        source: getLeadSource() ?? 'ojjlab-home-trial-form',
+        source,
         tags: [source]
       };
-      const result = await startLead(finalRequest);
+      const result = await startLead(finalRequest)
+        .catch((error) => console.error('Error: ', error));
+
       // TODO implement logging
-      console.log('Lead accepted: ', result.data.accepted);
+      console.log('Lead accepted: ', result?.data.accepted);
     } catch(error) {
       if (error) {
         // TODO implement logging
@@ -197,6 +202,50 @@ export class OJJTrialForm extends BaseElement {
       }
 
     }
+  }
+
+  private _normalizePhoneForApi(value: string): string | undefined {
+    const digits = value.replace(/\D/g, '')
+
+    // 11-digit US number with leading country code
+    if (digits.length === 11 && digits.startsWith('1')) {
+      return `+${digits}`
+    }
+
+    // 10-digit US number
+    if (digits.length === 10) {
+      return `+1${digits}`
+    }
+
+    return undefined
+  }
+  private _bindPhoneInputMask(input: HTMLInputElement): void {
+    if (!input) {
+      return;
+    }
+
+    input.addEventListener('input', (e) => {
+      const target = e.target as HTMLInputElement; 
+      target.value = this._formatPhoneInput(target.value)
+    })
+  } 
+
+  private _formatPhoneInput(value: string): string {
+    const digits = value.replace(/\D/g, '').slice(0, 10);
+
+    const area = digits.slice(0,3);
+    const prefix = digits.slice(3, 6);
+    const line = digits.slice(6, 10);
+
+    if (digits.length <= 3) {
+      return area;
+    }
+
+    if (digits.length <= 6) {
+      return `(${area}) ${prefix}`
+    }
+
+    return `(${area}) ${prefix}-${line}`;
   }
 
   private _validate(form: HTMLFormElement): boolean {

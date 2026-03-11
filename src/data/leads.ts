@@ -76,7 +76,7 @@ export async function startLead(
     let json: StartLeadResponse | null = null;
 
     try {
-      json = (await response.json()) as StartLeadResponse;
+      json = (await response.json());
     } catch {
       throw new StartLeadRequestError(
         'The server returned an invalid response.',
@@ -87,10 +87,10 @@ export async function startLead(
 
     if (!response.ok || !json.success) {
       throw new StartLeadRequestError(
-        json?.success === false
+        !(json?.success)
           ? json.error.message
           : 'Failed to submit lead.',
-        json?.success === false ? json.error.code : 'request_failed',
+        !(json?.success) ? json.error.code : 'request_failed',
         response.status,
       );
     }
