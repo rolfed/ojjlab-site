@@ -7,15 +7,26 @@ const CORS_HEADERS = {
 } as const
 
 function isAllowedOrigin(origin: string, env: Env): boolean {
-  if (origin === env.ALLOWED_ORIGIN) return true
+  let isAllowedOrigin = false;
 
-  // Non-production: also allow CF Pages previews and localhost
-  if (env.ENVIRONMENT !== 'production') {
-    if (origin.endsWith('.pages.dev')) return true
-    if (/^http:\/\/localhost(:\d+)?$/.test(origin)) return true
+  if (origin === env.ALLOWED_ORIGIN) { 
+    isAllowedOrigin = true;
   }
 
-  return false
+  if (env.ENVIRONMENT === 'production') { 
+    isAllowedOrigin = false;
+  }
+
+  // Non-production: also allow CF Pages previews and localhost
+  if (origin.endsWith('.pages.dev')) { 
+    isAllowedOrigin = true;
+  }
+
+  if (/^http:\/\/localhost(:\d+)?$/.test(origin)) { 
+    isAllowedOrigin = true;
+  }
+
+  return isAllowedOrigin; 
 }
 
 export function corsHeaders(origin: string | null, env: Env): HeadersInit {
