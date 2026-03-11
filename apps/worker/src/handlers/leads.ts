@@ -99,8 +99,11 @@ export async function handleLeadsStart(
       request, 
       env, 
       {
-        ok: true,
-        contactId: ghlResponse.contact?.id ?? null,
+        success: true,
+        data: {
+          contactId: ghlResponse.contact?.id ?? null,
+          accepted: true
+        }
       },
       201
     );

@@ -18012,8 +18012,11 @@ async function handleLeadsStart(request, env2, ctx, startTime) {
       request,
       env2,
       {
-        ok: true,
-        contactId: ghlResponse.contact?.id ?? null
+        success: true,
+        data: {
+          contactId: ghlResponse.contact?.id ?? null,
+          accepted: true
+        }
       },
       201
     );
@@ -18135,7 +18138,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env2, _ctx, middlewareCtx
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-iU4tB6/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-1Fuujk/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -18167,7 +18170,7 @@ function __facade_invoke__(request, env2, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-iU4tB6/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-1Fuujk/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
